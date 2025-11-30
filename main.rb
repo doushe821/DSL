@@ -2,5 +2,8 @@
 require_relative "Generic/base"
 require_relative "Generic/builder"
 require_relative "Target/RISC-V/32I.rb"
+require_relative "Target/RISC-V/decoder.rb"
 
 SimInfra.serialize
+# SimInfra::DecoderGenerator.generate("zxc")
+

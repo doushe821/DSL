@@ -28,13 +28,13 @@ module SimInfra
     end
     #
     class Var
-        def+(other); @scope.add(self, other); end
-        def-(other); @scope.sub(self, other); end
+        def+(other);  @scope.add(self, other); end
+        def-(other);  @scope.sub(self, other); end
         def<<(other); @scope.sll(self, other); end # TODO dont be gay
         def>=(other); @scope.slt(self, other); end # TODO dont be gay
         def>>(other); @scope.srl(self, other); end # TODO dont be gay
-        def^(other); @scope.xor(self, other); end
-        def|(other); @scope.or(self, other); end
-        def&(other); @scope.and(self, other); end
+        def^(other);  @scope.xor(self, other); end
+        def|(other);  @scope.or(self, other);  end
+        def&(other);  @scope.and(self, other); end
     end
 end
