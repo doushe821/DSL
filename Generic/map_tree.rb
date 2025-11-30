@@ -2,7 +2,7 @@ module MapTree
   class TreeNode
     attr_accessor :value, :children, :parent
 
-    def initialize(value)
+    def initialize(value = nil)
       @value = value
       @children = {}
       @parent = nil
@@ -52,6 +52,19 @@ module MapTree
       end
       
       current
+    end
+
+    def dump_text(node = @root, level = 0, output = [])
+      return output if node.nil?
+      
+      indent = "  " * level
+      output << "#{indent}#{node.value} (Children: #{node.children.keys.join(', ')})"
+      
+      node.children.each do |key, child|
+        dump_text(child, level + 1, output)
+      end
+      
+      output
     end
 
     def add_node_at_path(path_keys, value)

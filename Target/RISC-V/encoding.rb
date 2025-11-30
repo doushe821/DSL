@@ -20,14 +20,14 @@ module SimInfra
         {
             add: [0, 0],
             sub: [0, 0b0100000],
-            # sll: [0b001, 0],
-            # slt: [0b010, 0],
-            # sltu: [0b011, 0],
-            # xor: [0b100, 0],
-            # srl: [0b101, 0],
-            # sra: [0b101, 0b0100000],
-            # or: [0b110, 0],
-            # and: [0b111, 0]
+            sll: [0b001, 0],
+            slt: [0b010, 0],
+            sltu: [0b011, 0],
+            xor: [0b100, 0],
+            srl: [0b101, 0],
+            sra: [0b101, 0b0100000],
+            or: [0b110, 0],
+            and: [0b111, 0]
         }[name]
         format_r(0b0110011, funct3, funct7, rd, rs1, rs2)
     end
