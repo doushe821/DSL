@@ -19,7 +19,7 @@ module SimInfra
         funct3, funct7 =
         {
             add: [0, 0],
-            sub: [0, 0b0100000],
+            sub: [0, 0b0110000],
             sll: [0b001, 0],
             slt: [0b010, 0],
             sltu: [0b011, 0],

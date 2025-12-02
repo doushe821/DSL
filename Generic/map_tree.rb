@@ -1,4 +1,6 @@
 module MapTree
+
+  Node = Struct.new(:bit_indexes, :width, :nodes)
   class TreeNode
     attr_accessor :value, :children, :parent
 

@@ -1,0 +1,10 @@
+
+mask 0 6
+switch format
+case A
+  mask to from
+  switch functN
+    mask to from 
+    switch functN 
+      ...
+case B
