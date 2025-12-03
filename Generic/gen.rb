@@ -11,7 +11,8 @@ module SimGen
       yaml = File.read('IR.yaml')
       @@parsed_ir = YAML.safe_load(yaml,
         permitted_classes: [SimInfra::Field, SimInfra::Scope, SimInfra::IrStmt,
-        SimInfra::Var, SimInfra::XReg, Symbol], aliases: true)
+        SimInfra::Var, SimInfra::XReg, SimInfra::ImmFieldPart, SimInfra::XImm, 
+        Symbol], aliases: true)
       # Make an array with default encodings of every instruction to 
       # later determine constant fields.
       @@parsed_ir.each do |instr|
@@ -39,24 +40,83 @@ module SimGen
     end
     #LeadBitsAndMask = Struct.new(:bits, :mask)
 
+    #def get_lead_bits(bin_instruction_subset)
+    #  return [] if  bin_instruction_subset.length <= 1
+    #  
+    #  #result = 0
+    #  #bin_instruction_subset.each do |inst|
+    #  #  result = result ^ inst.bin_value
+    #  #end
+    #  #lead_bits = []
+    #  #(0...result.bit_length).each do |i|
+    #  #  if (result & (1 << i)) != 0
+    #  #    lead_bits << i
+    #  #  end
+    #  #end
+    #  #lead_bits
+    #end
 
-    def get_lead_bits(bin_instruction_subset)
-      result = 0
-      bin_instruction_subset.each do |inst|
-        result = result ^ inst.bin_value
-      end
-      lead_bits = []
-      (0...result.bit_length).each do |i|
-        if (result & (1 << i)) != 0
-          lead_bits << i
+    def get_lead_bits(instructions)
+      return [] if bin_instruction_subset.length <= 1 
+
+      all_possible_bits = (0...32).to_a 
+      selected_bits = []
+
+      current_patterns = Array.new(instructions.length) { "" } 
+
+      while selected_bits.length < 32
+        best_bit = nil
+        max_unique_count = current_patterns.uniq.length
+
+        if max_unique_count == instructions.length
+          break 
         end
+        best_patterns = []
+        (all_possible_bits - selected_bits).each do |bit_idx|
+          potential_patterns = []
+          instructions.each_with_index do |instr, i|
+            bit_val = (instr.bin_value >> bit_idx) & 1
+            existing_pattern = current_patterns[i]
+            potential_patterns << existing_pattern + bit_val.to_s 
+          end
+
+          unique_count = potential_patterns.uniq.length
+          
+          if unique_count > max_unique_count
+            max_unique_count = unique_count
+            best_bit = bit_idx
+            best_patterns = potential_patterns.dup 
+          end
+        end
+
+        # If no bit was found that increases uniqueness, it implies either:
+        # 1. We have already distinguished all instructions (handled by the break above).
+        # 2. There are duplicate instructions in the subset (meaning they are indistinguishable by constant fields).
+        # In case 2, we cannot proceed further with this method for *these specific instructions*.
+        # For now, we break the loop to prevent infinite recursion. 
+        # A more robust system might flag this ambiguity.
+        if best_bit.nil?
+          puts "Warning: Could not find a bit to further distinguish #{instructions.length} instructions." if bin_instruction_subset.length > current_patterns.uniq.length
+          puts "This might indicate duplicate definitions or instructions indistinguishable by constant fields." if bin_instruction_subset.length > current_patterns.uniq.length
+          break # Exit the loop to avoid infinite recursion
+        end
+
+        # Add the best bit found in this iteration to the selection
+        selected_bits << best_bit
+        
+        # Update the patterns for the next iteration based on the bit we just added
+        current_patterns = best_patterns
       end
-      lead_bits
+
+      # Return the list of selected bit indexes that achieve maximum distinguishability
+      # for the given subset.
+      selected_bits 
     end
 
     def filter_instructions(instructions, lead_bits, target_pattern)
 
       instructions.select do |instr|
+        puts "lead_bits: " + lead_bits.to_s
         extracted_bits = []
         lead_bits.each do |idx|
           bit_val = (instr.bin_value >> idx) & 1
@@ -72,6 +132,9 @@ module SimGen
     end
 
     def make_child(bit_pattern, instructions, width, lead_bits)
+      if lead_bits == nil
+        return nil, nil
+      end
       sublist = filter_instructions(instructions, lead_bits, bit_pattern)
 
       if sublist.empty?
@@ -150,7 +213,7 @@ module SimGen
 
     private
 
-    def traverse_and_write_node(io, node, parent_id, node_counter)
+    def traverse_and_write_node(io, node, parent_id, node_counter, parent_pattern = nil)
       # Generate a unique ID for the current node
       current_node_id = "node_#{node_counter}"
       node_counter += 1 # Increment counter for potential children
@@ -168,14 +231,15 @@ module SimGen
 
       # Write an edge from the parent to this node (if not the root)
       if parent_id != "root"
-        io.puts "  #{parent_id} -> #{current_node_id};"
+        label_attr = parent_pattern ? " [label=\"#{parent_pattern}\"]" : ""
+        io.puts "  #{parent_id} -> #{current_node_id}#{label_attr};"
       end
 
       # Iterate through the children in the 'nodes' hash
       node.nodes.each do |pattern, child_value|
         if child_value.is_a?(MapTree::Node) # Child is another internal node/subtree
           # Recursively process the child node
-          traverse_and_write_node(io, child_value, current_node_id, node_counter)
+          traverse_and_write_node(io, child_value, current_node_id, node_counter, pattern)
           # The edge to this child will be created in the recursive call when it defines its own ID
         else # Child is a leaf (e.g., an instruction object)
           # Generate a unique ID for the leaf node
@@ -184,7 +248,7 @@ module SimGen
 
           # Create a label for the leaf node
           # Customize this based on the structure of your instruction objects
-          leaf_label = child_value[:name].to_s + ',' + child_value[:bin_value].to_s(2) # AHAHAAAHA, false assumption)) Assuming the instruction object has a good to_s representation
+          leaf_label = child_value[:name].to_s + ',' + child_value[:bin_value].to_s(2) # Assuming the instruction object has a good to_s representation
 
           # Write the leaf node definition
           io.puts "  #{leaf_id} [label=\"#{leaf_label}\", shape=ellipse];" # Use ellipse for leaves

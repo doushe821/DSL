@@ -23,7 +23,7 @@ module SimInfra
     end
 
     Field = Struct.new(:name, :from, :to, :value)
-    ImmFieldPart = Struct.new(:name, :from, :to, :hi, :lo)
+    ImmFieldPart = Struct.new(:name, :from, :to, :hi, :lo, :value)
 
     def field(name, from, to, value = nil)
         Field.new(name, from, to, value).freeze

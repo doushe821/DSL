@@ -15,7 +15,6 @@ module RV32I
         asm { "SUB #{rd}, #{rs1}, #{rs2}" }
         code { rd[]= rs1 - rs2 }
     }
-
     Instruction(:SLL, XReg(:rd), XReg(:rs1), XReg(:rs2)) {
         encoding *format_r_alu(:sll, rd, rs1, rs2)
         asm { "SLL #{rd}, #{rs1}, #{rs2}" }
@@ -67,5 +66,46 @@ module RV32I
         asm { "AND #{rd}, #{rs1}, #{rs2}" }
         code { rd[] = rs1 & rs2 }
     }
+
+    # All semantics and asms below are incorrect
+    Instruction(:ADDI,  XReg(:rd), XReg(:rs1), XReg(:rs2), XImm(:imm11)) {
+        encoding *format_i_alu(:addi, rd, rs1, rs2, imm11)
+        asm { "ADDI #{rd}, #{rs1}, #{rs2}" }
+        code { rd[] = rs1 & rs2 }
+    }
+
+    Instruction(:SLTI,  XReg(:rd), XReg(:rs1), XReg(:rs2), XImm(:imm11)) {
+        encoding *format_i_alu(:slti, rd, rs1, rs2, imm11)
+        asm { "ADDI #{rd}, #{rs1}, #{rs2}" }
+        code { rd[] = rs1 & rs2 }
+    }
+
+    Instruction(:SLTIU,  XReg(:rd), XReg(:rs1), XReg(:rs2), XImm(:imm11)) {
+        encoding *format_i_alu(:sltiu, rd, rs1, rs2, imm11)
+        asm { "ADDI #{rd}, #{rs1}, #{rs2}" }
+        code { rd[] = rs1 & rs2 }
+    }
+
+    Instruction(:XORI,  XReg(:rd), XReg(:rs1), XReg(:rs2), XImm(:imm11)) {
+        encoding *format_i_alu(:xori, rd, rs1, rs2, imm11)
+        asm { "ADDI #{rd}, #{rs1}, #{rs2}" }
+        code { rd[] = rs1 & rs2 }
+    }
+
+    Instruction(:ORI,  XReg(:rd), XReg(:rs1), XReg(:rs2), XImm(:imm11)) {
+        encoding *format_i_alu(:ori, rd, rs1, rs2, imm11)
+        asm { "ADDI #{rd}, #{rs1}, #{rs2}" }
+        code { rd[] = rs1 & rs2 }
+    }
+
+    Instruction(:ANDI,  XReg(:rd), XReg(:rs1), XReg(:rs2), XImm(:imm11)) {
+        encoding *format_i_alu(:andi, rd, rs1, rs2, imm11)
+        asm { "ADDI #{rd}, #{rs1}, #{rs2}" }
+        code { rd[] = rs1 & rs2 }
+    }
+    
+    
+    
+    
     
 end
