@@ -27,18 +27,31 @@ module SimGen
         end
         @@bin_instrs.push(BinInstr.new(instr[:name], binary_value))
       end
+      generate_short_isa_description
     end
 
     BinInstr = Struct.new(:name, :bin_value)
+
     def generate_decoder
       tree = make_head(@@bin_instrs)
       dump_tree_to_graphviz(tree, 'dtree.dot')
     end
 
-    def tree_gen(instruction_subset)
-      
+    def generate_short_isa_description
+      File.open('ShortISADescription.hpp', 'w') do |file|
+        file.write "#pragma once\n"
+        file.write "namespace ISA {
+  enum class InstructionCodes {\n"
+        @@bin_instrs.each do |instr|
+          file.write "      " + instr.name.to_s + ','
+          file.write "\n"
+        end
+        file.write "      INVALID\n"
+
+        file.write "  };
+} // namespace ISA\n"
+      end
     end
-    #LeadBitsAndMask = Struct.new(:bits, :mask)
 
     #def get_lead_bits(bin_instruction_subset)
     #  return [] if  bin_instruction_subset.length <= 1
@@ -57,7 +70,7 @@ module SimGen
     #end
 
     def get_lead_bits(instructions)
-      return [] if bin_instruction_subset.length <= 1 
+      return [] if instructions.length <= 1 
 
       all_possible_bits = (0...32).to_a 
       selected_bits = []
@@ -96,8 +109,8 @@ module SimGen
         # For now, we break the loop to prevent infinite recursion. 
         # A more robust system might flag this ambiguity.
         if best_bit.nil?
-          puts "Warning: Could not find a bit to further distinguish #{instructions.length} instructions." if bin_instruction_subset.length > current_patterns.uniq.length
-          puts "This might indicate duplicate definitions or instructions indistinguishable by constant fields." if bin_instruction_subset.length > current_patterns.uniq.length
+          puts "Warning: Could not find a bit to further distinguish #{instructions.length} instructions." if instructions.length > current_patterns.uniq.length
+          puts "This might indicate duplicate definitions or instructions indistinguishable by constant fields." if instructions.length > current_patterns.uniq.length
           break # Exit the loop to avoid infinite recursion
         end
 
@@ -180,7 +193,7 @@ module SimGen
       root
     end
 
-    # Everything below is AI generated (except some comments)
+    # Everything below is AI generated (except some comments and minor changes)
 
     def dump_tree_to_graphviz(root_node, output_file_path = nil)
       # Initialize the output string with the graph header
