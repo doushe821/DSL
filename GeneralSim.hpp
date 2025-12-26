@@ -57,9 +57,10 @@ struct Operand {
   std::variant<Immediate, Register> Value;
 };
 
-inline uint64_t getMaskedValue(uint32_t Value, int StartBit, int FinishBit) {
+inline uint32_t getMaskedValue(uint32_t Value, int StartBit, int FinishBit) {
   return (Value >> StartBit) & ((1 << (FinishBit - StartBit + 1)) - 1);
 }
+
 
 } // namespace GeneralSim
 

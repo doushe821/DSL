@@ -33,41 +33,65 @@ module SimGen
     BinInstr = Struct.new(:name, :bin_value)
 
     def generate_decoder
-      tree = make_head(@@bin_instrs)
-      dump_tree_to_graphviz(tree, 'dtree.dot')
+      tree_root = make_head(@@bin_instrs)
+      dump_tree_to_graphviz(tree_root, 'dtree.dot')
+      traverse_decode_tree(tree_root)
+    end
+
+    def traverse_decode_tree(tree_root)
+      File.open('decoder.cpp', 'w') do |file|
+        file.write(
+        "// Generated code //\n" + 
+        "#include \"decoder.hpp\"\n" +
+        "#include \"ShortISADescription.hpp\"\n" +
+        "#include \"GeneralSim.hpp\"\n" +
+        "\n" +
+        "ISA::InstructionCodes Decode(int /*replace with actual undecoded instruction type here*/ instr) {\n" # TODO in comment
+        )
+        tab_counter = 1
+        gen_cpp_from_layer(tree_root, tab_counter, file)
+        file.write("}\n")
+      end
+    end
+
+    def gen_cpp_from_layer(node, tab_counter, file)
+      tab_counter += 1
+      bit_pattern = node[:bit_indexes]
+      bit_pattern_string = bit_pattern.to_s
+      file.write(' ' * tab_counter + "switch(GetMaskedValue(instr, " + bit_pattern_string + ")) {\n")
+      node[:nodes].each do |child_node|
+        puts child_node
+        puts
+        file.write("  " * tab_counter + "case " + child_node[0].to_s + ": {\n")
+        
+        if child_node[1].is_a? SimGen::UltimateGenerator::BinInstr # reflexion power!
+          file.write("  " * (tab_counter + 1) + "return " + child_node[1][:name].to_s + ";\n")
+        else # another switch
+          gen_cpp_from_layer(child_node, tab_counter, file) # TODO might be source of shifted tabs, check later when tree is big enouogh to notice
+        end
+        file.write("  " * (tab_counter) + "}\n")
+      end
+      tab_counter -= 1
+      file.write("  " * tab_counter + "}\n")
+
     end
 
     def generate_short_isa_description
       File.open('ShortISADescription.hpp', 'w') do |file|
         file.write "#pragma once\n"
-        file.write "namespace ISA {
-  enum class InstructionCodes {\n"
+        file.write "namespace ISA {\n" +
+        "  enum class InstructionCodes {\n"
         @@bin_instrs.each do |instr|
-          file.write "      " + instr.name.to_s + ','
+          file.write "    " + instr.name.to_s + ','
           file.write "\n"
         end
         file.write "      INVALID\n"
 
-        file.write "  };
-} // namespace ISA\n"
+        file.write "  };\n" +
+        "} // namespace ISA\n"
+
       end
     end
-
-    #def get_lead_bits(bin_instruction_subset)
-    #  return [] if  bin_instruction_subset.length <= 1
-    #  
-    #  #result = 0
-    #  #bin_instruction_subset.each do |inst|
-    #  #  result = result ^ inst.bin_value
-    #  #end
-    #  #lead_bits = []
-    #  #(0...result.bit_length).each do |i|
-    #  #  if (result & (1 << i)) != 0
-    #  #    lead_bits << i
-    #  #  end
-    #  #end
-    #  #lead_bits
-    #end
 
     def get_lead_bits(instructions)
       return [] if instructions.length <= 1 
@@ -193,27 +217,22 @@ module SimGen
       root
     end
 
-    # Everything below is AI generated (except some comments and minor changes)
+    # Everything below is AI generated
 
     def dump_tree_to_graphviz(root_node, output_file_path = nil)
-      # Initialize the output string with the graph header
       graphviz_output = StringIO.new
       graphviz_output.puts "digraph InstructionDecodeTree {"
-      graphviz_output.puts "  node [shape=box];" # Optional: make nodes rectangular
-      graphviz_output.puts "  rankdir=TB;"      # Optional: Top to Bottom layout
+      graphviz_output.puts "  node [shape=box];"
+      graphviz_output.puts "  rankdir=TB;"
 
-      # Start the recursive traversal from the root
-      node_counter = 0 # To generate unique node IDs in the graph
+      node_counter = 0
       traverse_and_write_node(graphviz_output, root_node, "root", node_counter)
 
-      # Close the graph definition
       graphviz_output.puts "}"
 
-      # Get the final string
       result_string = graphviz_output.string
-      graphviz_output.close # Good practice
+      graphviz_output.close
 
-      # Output the result
       if output_file_path
         File.write(output_file_path, result_string)
         puts "Graphviz DOT output written to #{output_file_path}"
@@ -221,52 +240,39 @@ module SimGen
         puts result_string
       end
 
-      result_string # Return the string in case you want to use it elsewhere
+      result_string
     end
 
     private
 
     def traverse_and_write_node(io, node, parent_id, node_counter, parent_pattern = nil)
-      # Generate a unique ID for the current node
       current_node_id = "node_#{node_counter}"
-      node_counter += 1 # Increment counter for potential children
+      node_counter += 1
 
-      # Create a label for the current node
-      # You might want to customize this label based on your needs
       label_parts = [
         "Indexes: #{node.bit_indexes.inspect}",
         "Width: #{node.width}"
       ]
-      node_label = label_parts.join("\\n") # Use \n for line breaks in DOT
+      node_label = label_parts.join("\\n")
 
-      # Write the node definition
       io.puts "  #{current_node_id} [label=\"#{node_label}\"];"
 
-      # Write an edge from the parent to this node (if not the root)
       if parent_id != "root"
         label_attr = parent_pattern ? " [label=\"#{parent_pattern}\"]" : ""
         io.puts "  #{parent_id} -> #{current_node_id}#{label_attr};"
       end
 
-      # Iterate through the children in the 'nodes' hash
       node.nodes.each do |pattern, child_value|
-        if child_value.is_a?(MapTree::Node) # Child is another internal node/subtree
-          # Recursively process the child node
+        if child_value.is_a?(MapTree::Node)
           traverse_and_write_node(io, child_value, current_node_id, node_counter, pattern)
-          # The edge to this child will be created in the recursive call when it defines its own ID
-        else # Child is a leaf (e.g., an instruction object)
-          # Generate a unique ID for the leaf node
+        else
           leaf_id = "leaf_#{node_counter}"
-          node_counter += 1 # Increment counter
+          node_counter += 1
 
-          # Create a label for the leaf node
-          # Customize this based on the structure of your instruction objects
-          leaf_label = child_value[:name].to_s + ',' + child_value[:bin_value].to_s(2) # Assuming the instruction object has a good to_s representation
+          leaf_label = child_value[:name].to_s + ',' + child_value[:bin_value].to_s(2)
 
-          # Write the leaf node definition
-          io.puts "  #{leaf_id} [label=\"#{leaf_label}\", shape=ellipse];" # Use ellipse for leaves
+          io.puts "  #{leaf_id} [label=\"#{leaf_label}\", shape=ellipse];"
 
-          # Write the edge from the current node to the leaf
           io.puts "  #{current_node_id} -> #{leaf_id} [label=\"#{pattern}\"];"
         end
       end
