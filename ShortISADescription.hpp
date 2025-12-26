@@ -1,4 +1,6 @@
 #pragma once
+namespace ISA {
+  enum class InstructionCodes {
     ADD,
     SUB,
     SLL,
@@ -16,3 +18,5 @@
     ORI,
     ANDI,
       INVALID
+  };
+} // namespace ISA

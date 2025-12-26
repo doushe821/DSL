@@ -4,54 +4,54 @@
 #include "GeneralSim.hpp"
 
 ISA::InstructionCodes Decode(int /*replace with actual undecoded instruction type here*/ instr) {
-  switch(GetMaskedValue(instr, [1, 12, 14, 13, 30])) {
+  switch(instr & 0b1000000000000000111000000000010) {
     case 0: {
-      return ADDI;
+      return ISA::InstructionCodes::ADDI;
     }
     case 2: {
-      return SLTI;
+      return ISA::InstructionCodes::SLTI;
     }
     case 4: {
-      return XORI;
+      return ISA::InstructionCodes::XORI;
     }
     case 6: {
-      return ORI;
+      return ISA::InstructionCodes::ORI;
     }
     case 10: {
-      return SLTIU;
+      return ISA::InstructionCodes::SLTIU;
     }
     case 14: {
-      return ANDI;
+      return ISA::InstructionCodes::ANDI;
     }
     case 16: {
-      return ADD;
+      return ISA::InstructionCodes::ADD;
     }
     case 17: {
-      return SUB;
+      return ISA::InstructionCodes::SUB;
     }
     case 18: {
-      return SLT;
+      return ISA::InstructionCodes::SLT;
     }
     case 20: {
-      return XOR;
+      return ISA::InstructionCodes::XOR;
     }
     case 22: {
-      return OR;
+      return ISA::InstructionCodes::OR;
     }
     case 24: {
-      return SLL;
+      return ISA::InstructionCodes::SLL;
     }
     case 26: {
-      return SLTU;
+      return ISA::InstructionCodes::SLTU;
     }
     case 28: {
-      return SRL;
+      return ISA::InstructionCodes::SRL;
     }
     case 29: {
-      return SRA;
+      return ISA::InstructionCodes::SRA;
     }
     case 30: {
-      return AND;
+      return ISA::InstructionCodes::AND;
     }
   }
 }

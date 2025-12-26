@@ -57,15 +57,14 @@ module SimGen
     def gen_cpp_from_layer(node, tab_counter, file)
       tab_counter += 1
       bit_pattern = node[:bit_indexes]
-      bit_pattern_string = bit_pattern.to_s
-      file.write(' ' * tab_counter + "switch(GetMaskedValue(instr, " + bit_pattern_string + ")) {\n")
+      file.write(' ' * tab_counter + "switch(instr & " + bit_pattern_to_mask(bit_pattern) + ") {\n")
       node[:nodes].each do |child_node|
         puts child_node
         puts
         file.write("  " * tab_counter + "case " + child_node[0].to_s + ": {\n")
         
         if child_node[1].is_a? SimGen::UltimateGenerator::BinInstr # reflexion power!
-          file.write("  " * (tab_counter + 1) + "return " + child_node[1][:name].to_s + ";\n")
+          file.write("  " * (tab_counter + 1) + "return ISA::InstructionCodes::" + child_node[1][:name].to_s + ";\n")
         else # another switch
           gen_cpp_from_layer(child_node, tab_counter, file) # TODO might be source of shifted tabs, check later when tree is big enouogh to notice
         end
@@ -217,7 +216,18 @@ module SimGen
       root
     end
 
-    # Everything below is AI generated
+    def bit_pattern_to_mask(bit_pattern)
+      return "0b0" if bit_pattern.empty?
+
+      mask_value = 0
+      bit_pattern.each do |bit_index|
+        mask_value |= (1 << bit_index)
+      end
+      
+      "0b" + mask_value.to_s(2)
+    end
+
+    # Everything below is AI generated ((as well as everything above) <-- that's a joke obviously)
 
     def dump_tree_to_graphviz(root_node, output_file_path = nil)
       graphviz_output = StringIO.new
