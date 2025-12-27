@@ -104,8 +104,51 @@ module RV32I
         code { rd[] = rs1 & rs2 }
     }
     
+    Instruction(:MUL,  XReg(:rd), XReg(:rs1), XReg(:rs2)) {
+        encoding *format_r_alu(:mul, rd, rs1, rs2)
+        asm { "ADDI #{rd}, #{rs1}, #{rs2}" }
+        code { rd[] = rs1 & rs2 }
+    }
     
+    Instruction(:MULH,  XReg(:rd), XReg(:rs1), XReg(:rs2)) {
+        encoding *format_r_alu(:mulh, rd, rs1, rs2)
+        asm { "ADDI #{rd}, #{rs1}, #{rs2}" }
+        code { rd[] = rs1 & rs2 }
+    }
     
-    
-    
+    Instruction(:MULHSU,  XReg(:rd), XReg(:rs1), XReg(:rs2)) {
+        encoding *format_r_alu(:mulhsu, rd, rs1, rs2)
+        asm { "ADDI #{rd}, #{rs1}, #{rs2}" }
+        code { rd[] = rs1 & rs2 }
+    }
+
+    Instruction(:MULHU,  XReg(:rd), XReg(:rs1), XReg(:rs2)) {
+        encoding *format_r_alu(:mulhu, rd, rs1, rs2)
+        asm { "ADDI #{rd}, #{rs1}, #{rs2}" }
+        code { rd[] = rs1 & rs2 }
+    }
+
+    Instruction(:DIV,  XReg(:rd), XReg(:rs1), XReg(:rs2)) {
+        encoding *format_r_alu(:div, rd, rs1, rs2)
+        asm { "ADDI #{rd}, #{rs1}, #{rs2}" }
+        code { rd[] = rs1 & rs2 }
+    }
+
+    Instruction(:DIVU,  XReg(:rd), XReg(:rs1), XReg(:rs2)) {
+        encoding *format_r_alu(:divu, rd, rs1, rs2)
+        asm { "ADDI #{rd}, #{rs1}, #{rs2}" }
+        code { rd[] = rs1 & rs2 }
+    }
+
+    Instruction(:REM,  XReg(:rd), XReg(:rs1), XReg(:rs2)) {
+        encoding *format_r_alu(:rem, rd, rs1, rs2)
+        asm { "ADDI #{rd}, #{rs1}, #{rs2}" }
+        code { rd[] = rs1 & rs2 }
+    }
+
+    Instruction(:REMU,  XReg(:rd), XReg(:rs1), XReg(:rs2)) {
+        encoding *format_r_alu(:remu, rd, rs1, rs2)
+        asm { "ADDI #{rd}, #{rs1}, #{rs2}" }
+        code { rd[] = rs1 & rs2 }
+    }
 end

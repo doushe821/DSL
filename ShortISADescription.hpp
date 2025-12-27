@@ -17,6 +17,14 @@ namespace ISA {
     XORI,
     ORI,
     ANDI,
+    MUL,
+    MULH,
+    MULHSU,
+    MULHU,
+    DIV,
+    DIVU,
+    REM,
+    REMU,
       INVALID
   };
 } // namespace ISA

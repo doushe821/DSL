@@ -13,8 +13,6 @@ module SimGen
         permitted_classes: [SimInfra::Field, SimInfra::Scope, SimInfra::IrStmt,
         SimInfra::Var, SimInfra::XReg, SimInfra::ImmFieldPart, SimInfra::XImm, 
         Symbol], aliases: true)
-      # Make an array with default encodings of every instruction to 
-      # later determine constant fields.
       @@parsed_ir.each do |instr|
         binary_value = 0
         instr[:fields].each do |field|
@@ -46,7 +44,7 @@ module SimGen
         "#include \"ShortISADescription.hpp\"\n" +
         "#include \"GeneralSim.hpp\"\n" +
         "\n" +
-        "ISA::InstructionCodes Decode(int /*replace with actual undecoded instruction type here*/ instr) {\n" # TODO in comment
+        "ISA::InstructionCodes Decode(uint32_t /*replace with actual undecoded instruction type here*/ instr) {\n" # TODO in comment
         )
         tab_counter = 1
         gen_cpp_from_layer(tree_root, tab_counter, file)
@@ -63,7 +61,7 @@ module SimGen
         puts
         file.write("  " * tab_counter + "case " + child_node[0].to_s + ": {\n")
         
-        if child_node[1].is_a? SimGen::UltimateGenerator::BinInstr # reflexion power!
+        if child_node[1].is_a? SimGen::UltimateGenerator::BinInstr # I love Ruby
           file.write("  " * (tab_counter + 1) + "return ISA::InstructionCodes::" + child_node[1][:name].to_s + ";\n")
         else # another switch
           gen_cpp_from_layer(child_node, tab_counter, file) # TODO might be source of shifted tabs, check later when tree is big enouogh to notice
