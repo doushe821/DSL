@@ -2,6 +2,7 @@ require_relative 'base'
 require 'yaml'
 require 'set'
 require_relative 'map_tree.rb'
+require_relative 'decoder_tree.rb'
 
 module SimGen
   class UltimateGenerator
@@ -140,10 +141,24 @@ module SimGen
     ###
     ##
     # Arguments fetch section
+  
+
+    ### Decoder tree builder
 
     BinInstr = Struct.new(:name, :bin_value)
-
+    include DecoderTree
+    extend DecoderTree
     def generate_decoder
+
+      tree = build_tree(@@bin_instrs)
+      print_tree(tree)
+
+      File.write("decoding_tree.dot", generate_dot(tree))
+      puts "\nGraphViz dot file written to decoding_tree.dot"
+
+      raise "Finished" if true
+
+
       tree_root = make_head(@@bin_instrs)
       dump_tree_to_graphviz(tree_root, 'dtree.dot')
       traverse_decode_tree(tree_root)
@@ -154,7 +169,7 @@ module SimGen
         file.write(
         "// Generated code //\n" + 
         "#include \"decoder.hpp\"\n" +
-        "#include \"ShortISADescription.hpp\"\n" +
+        "#include \"ISADescription.hpp\"\n" +
         "#include \"GeneralSim.hpp\"\n" +
         "\n" +
         "ISA::InstructionCodes Decode(uint32_t /*replace with actual undecoded instruction type here*/ instr) {\n" # TODO in comment
@@ -183,10 +198,9 @@ module SimGen
       end
       tab_counter -= 1
       file.write("  " * tab_counter + "}\n")
-
     end
 
-    def generate_short_isa_description
+    def generate_short_isa_description # FIXME generate informative ISA description, containing register number, list of forbidden (for user) regs e.t.c
       File.open('ShortISADescription.hpp', 'w') do |file|
         file.write "#pragma once\n"
         file.write "namespace ISA {\n" +
