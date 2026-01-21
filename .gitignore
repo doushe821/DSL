@@ -11,7 +11,7 @@
 /tmp/
 *.dot
 *.pdf
-*.txt
+
 *.png
 *.lock
 # Used by dotenv library to load environment variables.
@@ -23,6 +23,8 @@
 ## Specific to RubyMotion:
 .dat*
 .repl_history
+.cache
+sim
 build/
 *.bridgesupport
 build-iPhoneOS/

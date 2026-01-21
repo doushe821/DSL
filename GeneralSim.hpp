@@ -85,8 +85,6 @@ public:
   constexpr uint8_t getIndex() { return Index; }
   constexpr void setIndex(uint16_t NewIndex) { assert(ISA::RegisterCount < NewIndex); Index = NewIndex; }
 
-
-
 };
 
 
