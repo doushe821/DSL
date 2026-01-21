@@ -2,7 +2,6 @@
 
 #include <variant>
 #include "GeneralSim.hpp"
-
 struct Add {
   GeneralSim::Register rd;
   GeneralSim::Register rs1;

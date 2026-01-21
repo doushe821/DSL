@@ -1,5 +1,8 @@
 #pragma once
 #include <cstdint>
+#include <cassert>
+#include "ISADescription.hpp"
+
 #include <vector>
 #include <variant>
 
@@ -13,40 +16,77 @@ enum InstructionIdentity { // Expected to be Encoding format + opcode inside the
 }; // Might be in another header
 
 namespace {
-enum class ImmediateType {
+enum class ImmediateType : uint8_t {
   Unsigned,
   Signed
 };
 
 } // namespace
 
+static inline int32_t signExtend(uint32_t value, int bits) {
+    return (int32_t)(value << (32 - bits)) >> (32 - bits);
+}
 class Immediate {
 private:
-  unsigned Value;
-  unsigned BitSize;
-  ImmediateType Type;
+  unsigned RawValue = 0;
+  unsigned BitSize = 0;
+  ImmediateType Type = ImmediateType::Unsigned;
 public:
+  constexpr Immediate() = default;
+  constexpr Immediate(uint32_t raw,
+                      uint8_t bits,
+                      ImmediateType type)
+    : RawValue(raw), BitSize(bits), Type(type) {}
 
-  inline int32_t signExtend(uint32_t value, int bits) {
-      return (int32_t)(value << (32 - bits)) >> (32 - bits);
+  constexpr uint32_t raw() const {
+    return RawValue;
   }
 
+  constexpr uint8_t bits() const {
+    return BitSize;
+  }
 
-  bool isSigned() const {
+  constexpr bool isSigned() const {
     return Type == ImmediateType::Signed;
   }
 
-  bool isUnsigned() const {
+  constexpr bool isUnsigned() const {
     return Type == ImmediateType::Unsigned;
+  }
+
+  constexpr int32_t asSigned() const {
+    assert(isSigned());
+    return signExtend(RawValue, BitSize);
+  }
+
+  constexpr uint32_t asUnsigned() const {
+    assert(isUnsigned());
+    return RawValue;
+  }
+
+  constexpr void set(uint32_t raw,
+                     uint8_t bits,
+                     ImmediateType type) {
+    RawValue = raw;
+    BitSize  = bits;
+    Type     = type;
   }
 };
 
-class Register { // Questionable
+
+// TODO add forbidden registers list and forbidden registers list checks.
+class Register {
 private:
-  unsigned Number;
+  uint16_t Index = 0;
 public:
-  unsigned getNumber() { return Number; }
-  void setNumber(unsigned Number) { Register::Number = Number; }
+  constexpr Register() = default;
+  constexpr explicit Register(uint8_t _Index) { assert(ISA::RegisterCount < _Index); Index = _Index; }
+
+  constexpr uint8_t getIndex() { return Index; }
+  constexpr void setIndex(uint16_t NewIndex) { assert(ISA::RegisterCount < NewIndex); Index = NewIndex; }
+
+
+
 };
 
 

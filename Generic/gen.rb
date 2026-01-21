@@ -121,7 +121,7 @@ module SimGen
         extract_expr = "(#{word_var} >> #{shift}) & #{mask}"
 
         if defined?(SimInfra::XImm) && f.value.is_a?(SimInfra::XImm)
-          assign_expr = "sign_extend(#{extract_expr}, #{width})"
+          assign_expr = "SignExtend(#{extract_expr}, #{width})"
         else
           assign_expr = extract_expr
         end
@@ -203,7 +203,7 @@ module SimGen
       end
     end
 
-    def get_lead_bits(instructions)
+    def get_lead_bits(instructions) # FIXME Fix this
       return [] if instructions.length <= 1 
 
       all_possible_bits = (0...32).to_a 

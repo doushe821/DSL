@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 namespace ISA {
   enum class InstructionCodes {
     ADD,
@@ -27,4 +28,7 @@ namespace ISA {
     REMU,
       INVALID
   };
+
+  constexpr uint16_t RegisterCount = 32;
+
 } // namespace ISA
