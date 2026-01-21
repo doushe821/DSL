@@ -25,8 +25,121 @@ module SimGen
         end
         @@bin_instrs.push(BinInstr.new(instr[:name], binary_value))
       end
+      generate_general_instruction_description
       generate_short_isa_description
     end
+
+    # Generate general instruction description
+    ##
+    ###
+    def cpp_struct_name(sym)
+      sym.to_s.split('_').map(&:capitalize).join
+    end
+
+    def operand_field?(field)
+      !field.value.is_a?(Integer) 
+    end
+
+    def cpp_type_for(field)
+      case field.value
+      when :reg
+        "GeneralSim::Register"
+      when SimInfra::XReg
+        "GeneralSim::Register"
+      when SimInfra::XImm, SimInfra::ImmFieldPart
+        "GeneralSim::Immediate"
+      else
+        "GeneralSim::Immediate"
+      end
+    end
+    def generate_general_instruction_description # TODO namespace for descriptions
+
+      structs = []
+      variant_types = []
+
+      @@parsed_ir.each do |instr|
+        name   = instr[:name]
+        fields = instr[:fields]
+
+        operands = fields.select { |f| operand_field?(f) }
+
+        struct_name = cpp_struct_name(name)
+        variant_types << struct_name
+
+        body = operands.map do |f|
+          "  #{cpp_type_for(f)} #{f.name};"
+        end.join("\n")
+
+        structs << <<~CPP
+          struct #{struct_name} {
+          #{body}
+          };
+        CPP
+      end
+
+      output = <<~CPP
+        #pragma once
+
+        #include <variant>
+        #include "GeneralSim.hpp"
+        #{structs.join("\n")}
+
+        using Instruction = std::variant<
+            #{variant_types.join(",\n    ")}
+        >;
+      CPP
+
+      File.write("instructions.hpp", output)
+    end
+    ###
+    ##
+    #
+  
+    # Arguments fetch section
+    ##
+    ###
+    def fetch_arguments(instr, word_var: "BinaryInstruction")
+      name   = instr[:name]
+      fields = instr[:fields]
+
+      struct_name = name.to_s.split('_').map(&:capitalize).join
+
+      operand_fields = fields.select { |f| !f.value.is_a?(Integer) }
+
+      lines = []
+      lines << "#{struct_name} inst{};"
+      lines << "#ifdef DEBUG_DECODE"
+      lines << "std::cerr << \"Decoding #{struct_name}, word=0x\""
+      lines << "          << std::hex << #{word_var} << std::dec << \"\\n\";"
+      lines << "#endif"
+
+      operand_fields.each do |f|
+        width = f.from - f.to + 1
+        mask  = "(1u << #{width}) - 1"
+        shift = f.to
+
+        extract_expr = "(#{word_var} >> #{shift}) & #{mask}"
+
+        if defined?(SimInfra::XImm) && f.value.is_a?(SimInfra::XImm)
+          assign_expr = "sign_extend(#{extract_expr}, #{width})"
+        else
+          assign_expr = extract_expr
+        end
+
+        lines << "inst.#{f.name} = #{assign_expr};"
+
+        lines << "#ifdef DEBUG_DECODE"
+        lines << "std::cerr << \"  #{f.name} [#{f.from}:#{f.to}] = \""
+        lines << "          << inst.#{f.name} << \" (raw=0x\""
+        lines << "          << std::hex << (#{extract_expr}) << std::dec << \")\\n\";"
+        lines << "#endif"
+      end
+
+      lines.join("\n")
+    end
+    ###
+    ##
+    # Arguments fetch section
 
     BinInstr = Struct.new(:name, :bin_value)
 
@@ -288,3 +401,6 @@ module SimGen
 
   end
 end
+
+
+

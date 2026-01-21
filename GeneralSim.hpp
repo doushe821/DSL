@@ -12,12 +12,6 @@ enum InstructionIdentity { // Expected to be Encoding format + opcode inside the
 // GENERATED
 }; // Might be in another header
 
-class Operand;
-struct Instruction {
-  InstructionIdentity InstrId;
-  std::vector<Operand> Operands;
-};
-
 namespace {
 enum class ImmediateType {
   Unsigned,
@@ -32,15 +26,17 @@ private:
   unsigned BitSize;
   ImmediateType Type;
 public:
-  void SignExtend() {
 
+  inline int32_t signExtend(uint32_t value, int bits) {
+      return (int32_t)(value << (32 - bits)) >> (32 - bits);
   }
 
-  bool IsSigned() const {
+
+  bool isSigned() const {
     return Type == ImmediateType::Signed;
   }
 
-  bool IsUnsigned() const {
+  bool isUnsigned() const {
     return Type == ImmediateType::Unsigned;
   }
 };
@@ -49,13 +45,10 @@ class Register { // Questionable
 private:
   unsigned Number;
 public:
-  unsigned GetNumber() { return Number; }
-  void SetNumber(unsigned Number) { Register::Number = Number; }
+  unsigned getNumber() { return Number; }
+  void setNumber(unsigned Number) { Register::Number = Number; }
 };
 
-struct Operand {
-  std::variant<Immediate, Register> Value;
-};
 
 inline uint32_t getMaskedValue(uint32_t Value, int StartBit, int FinishBit) {
   return (Value >> StartBit) & ((1 << (FinishBit - StartBit + 1)) - 1);
