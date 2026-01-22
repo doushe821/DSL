@@ -49,6 +49,12 @@ module SimInfra
             return Constant.new(self, "const_#{next_counter}", what) if (what.class== Integer)
         end
 
+        def memory
+            @memory ||= Memory.new(self)
+        end
+
+        alias M memory
+
         def binOp(a,b, op);
             a = resolve_const(a); b = resolve_const(b)
             # TODO: check constant size <= bitsize(var)
@@ -73,8 +79,8 @@ module SimInfra
         end
 
         # Aliases for comfort
-        def s(x) = as_signed(x)
-        def u(x) = as_unsigned(x)
+        alias s as_signed
+        alias u as_unsigned
 
         def sext(a, from:, to:)
             a = resolve_const(a)
