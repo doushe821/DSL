@@ -64,12 +64,12 @@ module SimInfra
 
         def as_signed(a)
             a = resolve_const(a)
-            stmt :as_signed, [tmp(a.type), a]
+            stmt :as_signed, [tmpvar(a.type), a]
         end
 
         def as_unsigned(a)
             a = resolve_const(a)
-            stmt :as_unsigned, [tmp(a.type), a]
+            stmt :as_unsigned, [tmpvar(a.type), a]
         end
 
         # Aliases for comfort

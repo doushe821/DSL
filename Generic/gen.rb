@@ -3,6 +3,7 @@ require 'yaml'
 require 'set'
 require_relative 'map_tree.rb'
 require_relative 'decoder_tree.rb'
+require_relative 'helpers.rb'
 
 module SimGen
   class UltimateGenerator
@@ -14,6 +15,9 @@ module SimGen
         permitted_classes: [SimInfra::Field, SimInfra::Scope, SimInfra::IrStmt,
         SimInfra::Var, SimInfra::XReg, SimInfra::ImmFieldPart, SimInfra::XImm, 
         Symbol, SimInfra::Scope::Type], aliases: true)
+
+      SimInfra::IRPrettyPrinter.new(@@parsed_ir).run # pretty dump for debug
+
       @@parsed_ir.each do |instr|
         binary_value = 0
         instr[:fields].each do |field|

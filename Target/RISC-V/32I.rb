@@ -8,7 +8,7 @@ module RV32I
         encoding *format_r_alu(:add, rd, rs1, rs2)
         asm { "ADD #{rd}, #{rs1}, #{rs2}" }
         code { 
-               rd[]= rs1 + rs2
+               rd[]= rs1 + rs2  
             }
     }
     #Instruction(:SUB, XReg(:rd), XReg(:rs1), XReg(:rs2)) {
