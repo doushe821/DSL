@@ -1,5 +1,6 @@
 require_relative "base"
 require_relative "var"
+require_relative "memory"
 
 module SimInfra
     class Scope
@@ -50,10 +51,22 @@ module SimInfra
         end
 
         def memory
-            @memory ||= Memory.new(self)
+            @memory ||= SimInfra::Memory.new(self)
         end
 
-        alias M memory
+        alias m memory
+
+        def load(addr, type: Type.s(32))
+            addr = resolve_const(addr)
+            tmp  = tmpvar(type)
+            stmt(:load, [tmp, addr])
+        end
+
+        def store(addr, value)
+            addr  = resolve_const(addr)
+            value = resolve_const(value)
+            stmt(:store, [addr, value])
+        end
 
         def binOp(a,b, op);
             a = resolve_const(a); b = resolve_const(b)

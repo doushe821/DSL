@@ -6,22 +6,14 @@ module SimInfra
     def initialize(scope)
       @scope = scope
     end
-    
-    # Load: rd[] = M[address]
+
     def [](addr)
-      addr = @scope.resolve_const(addr)
-      tmp = @scope.tmpvar(Type.s(32))
-      @scope.stmt(:load, [tmp, addr])
-      tmp
+      @scope.load(addr)     # Scope generates SSA temp internally
     end
-    
-    # Store: M[address] = value
+
     def []=(addr, value)
-      addr  = @scope.resolve_const(addr)
-      value = @scope.resolve_const(value)
-      @scope.stmt(:store, [addr, value])
+      @scope.store(addr, value)
     end
   end
-
 
 end
