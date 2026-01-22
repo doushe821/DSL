@@ -7,8 +7,8 @@ module SimInfra
       @scope = scope
     end
 
-    def [](addr)
-      @scope.load(addr)     # Scope generates SSA temp internally
+    def [](addr, width)
+      @scope.load(addr)
     end
 
     def []=(addr, value)

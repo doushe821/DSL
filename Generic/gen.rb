@@ -14,7 +14,7 @@ module SimGen
       @@parsed_ir = YAML.safe_load(yaml,
         permitted_classes: [SimInfra::Field, SimInfra::Scope, SimInfra::IrStmt,
         SimInfra::Var, SimInfra::XReg, SimInfra::ImmFieldPart, SimInfra::XImm, 
-        Symbol, SimInfra::Scope::Type], aliases: true)
+        Symbol, SimInfra::Scope::Type, SimInfra::Memory], aliases: true)
 
       SimInfra::IRPrettyPrinter.new(@@parsed_ir).run # pretty dump for debug
 
@@ -160,8 +160,6 @@ module SimGen
       File.write("decoding_tree.dot", generate_dot(tree))
       puts "\nGraphViz dot file written to decoding_tree.dot"
       return
-      raise "Finished" if true
-
 
       tree_root = make_head(@@bin_instrs)
       dump_tree_to_graphviz(tree_root, 'dtree.dot')

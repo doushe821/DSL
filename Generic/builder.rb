@@ -57,10 +57,6 @@ module SimInfra
 
             scope.instance_eval &block
 
-            dst_arg = @info.args.find { |a| a.name == :rd } # add other registers here
-            if dst_arg
-                scope.stmt(:setreg, [dst_arg, dst_arg.name])
-            end
         end
     end
 

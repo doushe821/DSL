@@ -1,6 +1,10 @@
 require_relative "base"
 
 module SimInfra
+
+    def syscall(name, *args)
+      @scope.syscall(name, *args)
+    end
     IrStmt = Struct.new(:name, :oprnds, :attrs)
     class Var
         attr_reader :scope, :name, :type
@@ -35,5 +39,6 @@ module SimInfra
         def zext(to) # TODO make it work
             scope.zext(self, from: type.bits, to: to)
         end
+
     end
 end
