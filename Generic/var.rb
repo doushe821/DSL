@@ -20,21 +20,20 @@ module SimInfra
     class Constant
         attr_reader :scope, :name, :type, :value
         def initialize(scope, name, value);
-            @const = value; @scope = scope; @type = :iconst; @value = value
-            @scope.stmt(:new_const, [@const]);
+            @const = value; @scope = scope; @type = Scope::Type.s(32); @value = value
+            @scope.stmt(:new_const, [self]); # was [@const], fix might be wrong
         end
         def let(other); raise "Assign to constant"; end
         def inspect; "#{@name}:#{@type} (#{@scope.object_id}) {=#{@const}}"; end
     end
     #
     class Var
-        def+(other);  @scope.add(self, other); end
-        def-(other);  @scope.sub(self, other); end
-        def<<(other); @scope.sll(self, other); end # TODO dont be gay
-        def>=(other); @scope.slt(self, other); end # TODO dont be gay
-        def>>(other); @scope.srl(self, other); end # TODO dont be gay
-        def^(other);  @scope.xor(self, other); end
-        def|(other);  @scope.or(self, other);  end
-        def&(other);  @scope.and(self, other); end
+        [:+, :-, :<<, :>>, :<].each do |op|
+            define_method(op) { |other| @scope.binOp(self, other, op) }
+        end
+
+        def zext(to) # TODO make it work
+            scope.zext(self, from: type.bits, to: to)
+        end
     end
 end

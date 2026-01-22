@@ -37,18 +37,27 @@ end
 module SimInfra
     class InstructionInfoBuilder
     include SimInfra
+
+        def arg_type(arg) # For future use (Freg, vector regs, etc)
+            case arg
+                when XReg then Scope::Type.s(32)
+                when XImm then Scope::Type.s(32)
+            else
+                raise "Unknown arg type #{arg.class}"
+            end
+        end
         def code(&block)
             @info.code = scope = Scope.new(nil) # root scope
             @info.args.each do |arg|
-                scope.add_var(arg.name, :i32)
-                if [:rs1, :rs2].include?(arg.name)
+                scope.add_var(arg.name, arg_type(arg))
+                if [:rs1, :rs2].include?(arg.name) # add other registers here
                     scope.stmt(:getreg, [arg.name, arg])
                 end
             end
 
             scope.instance_eval &block
 
-            dst_arg = @info.args.find { |a| a.name == :rd }
+            dst_arg = @info.args.find { |a| a.name == :rd } # add other registers here
             if dst_arg
                 scope.stmt(:setreg, [dst_arg, dst_arg.name])
             end

@@ -13,7 +13,7 @@ module SimGen
       @@parsed_ir = YAML.safe_load(yaml,
         permitted_classes: [SimInfra::Field, SimInfra::Scope, SimInfra::IrStmt,
         SimInfra::Var, SimInfra::XReg, SimInfra::ImmFieldPart, SimInfra::XImm, 
-        Symbol], aliases: true)
+        Symbol, SimInfra::Scope::Type], aliases: true)
       @@parsed_ir.each do |instr|
         binary_value = 0
         instr[:fields].each do |field|
@@ -155,7 +155,7 @@ module SimGen
 
       File.write("decoding_tree.dot", generate_dot(tree))
       puts "\nGraphViz dot file written to decoding_tree.dot"
-
+      return
       raise "Finished" if true
 
 

@@ -4,15 +4,42 @@ require_relative "var"
 module SimInfra
     class Scope
 
+        Type = Struct.new(:kind, :bits, :signed) do
+            def self.s(bits) = new(:int, bits, true)
+            def self.u(bits) = new(:int, bits, false)
+            def self.mem     = new(:mem, nil, nil)
+
+            def int? = kind == :int
+            def mem? = kind == :mem
+
+            def to_s
+                return "mem" if mem?
+                signed ? "i#{bits}" : "u#{bits}"
+            end
+        end
+
+
         include GlobalCounter # used for temp variables IDs
         attr_reader :tree, :vars, :parent
-        def initialize(parent); @tree = []; @vars = {}; end
+        def initialize(parent = nil) 
+            @parent = parent
+            @tree = []
+            @vars = {}
+        end
         # resolve allows to convert Ruby Integer constants to Constant instance
 
         def var(name, type)
+            unless type.is_a?(Type)
+                raise TypeError, "Var #{name} has invalid type #{type.inspect}, expected Type"
+            end
             @vars[name] = SimInfra::Var.new(self, name, type) # return var
-            instance_eval "def #{name.to_s}(); return @vars[:#{name.to_s}]; end"
+            #instance_eval "def #{name.to_s}(); return @vars[:#{name.to_s}]; end" # Replaced with method_missing
             stmt :new_var, [@vars[name]] # returns @vars[name]
+        end
+
+        def method_missing(name, *)
+            return @vars[name] if @vars.key?(name) # Instead of instance eval in var
+            super
         end
 
         def add_var(name, type); var(name, type); self; end
@@ -30,22 +57,48 @@ module SimInfra
             stmt op, [tmpvar(a.type), a, b]
         end
 
-        def add(a,b);   binOp(a, b, :add);  end
-        def sub(a,b);   binOp(a, b, :sub);  end
-        def sll(a, b);  binOp(a, b, :sll);  end
-        def slt(a, b);  binOp(a, b, :slt);  end
-        def sltu(a, b); binOp(a, b, :sltu); end 
-        def xor(a, b);  binOp(a, b, :xor);  end 
-        def srl(a, b);  binOp(a, b, :srl);  end
-        def sra(a, b);  binOp(a, b, :sra);  end
-        def or(a, b);   binOp(a, b, :or);   end
-        def and(a, b);  binOp(a, b, :and);  end
+        def unOp(a, op);
+            a = resolve_const(a)
+            stmt op, [tmpvar(a.type), a]
+        end
 
-        private def tmpvar(type); var("_tmp#{next_counter}".to_sym, type); end
+        def as_signed(a)
+            a = resolve_const(a)
+            stmt :as_signed, [tmp(a.type), a]
+        end
+
+        def as_unsigned(a)
+            a = resolve_const(a)
+            stmt :as_unsigned, [tmp(a.type), a]
+        end
+
+        # Aliases for comfort
+        def s(x) = as_signed(x)
+        def u(x) = as_unsigned(x)
+
+        def sext(a, from:, to:)
+            a = resolve_const(a)
+            stmt :sext, [tmpvar(Type.s(to)), a], { from:, to: }
+        end
+
+        def zext(a, from:, to:)
+            a = resolve_const(a)
+            stmt :zext, [tmpvar(Type.u(to)), a], { from:, to: }
+        end
+
+        def bitrev(a)
+            unOp(a, :bitrev)
+        end
+
+        # Var.new is better than calling var, because it pollutes :vars for no reason
+        private def tmpvar(type); Var.new(self, :"_tmp#{next_counter}".to_sym, type); end
+        
         # stmtadds statement into tree and retursoperand[0]
         # which result in near all cases
         def stmt(name, operands, attrs= nil);
-            @tree << IrStmt.new(name, operands, attrs); operands[0]
+            result = operands.first
+            @tree << IrStmt.new(name, operands, attrs)
+            result
         end
     end
 end
