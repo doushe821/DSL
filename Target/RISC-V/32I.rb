@@ -183,7 +183,7 @@ module RV32I
   }
   # I-shift
   Instruction(:SLLI, XReg(:rd), XReg(:rs1), XImm(:imm)) {
-    encoding *format_i_alu(:slli, rd, rs1, imm)
+    encoding *format_i_alu_shift(:slli, rd, rs1, imm)
     asm { "SLLI #{rd}, #{rs1}, #{imm}" }
     code {
       rd[] = rs1 << imm
@@ -192,7 +192,7 @@ module RV32I
   }
 
   Instruction(:SRLI, XReg(:rd), XReg(:rs1), XImm(:imm)) {
-    encoding *format_i_alu(:srli, rd, rs1, imm)
+    encoding *format_i_alu_shift(:srli, rd, rs1, imm)
     asm { "SRLI #{rd}, #{rs1}, #{imm}" }
     code {
       rd[] = as_unsigned(rs1) >> imm
@@ -201,7 +201,7 @@ module RV32I
   }
 
   Instruction(:SRAI, XReg(:rd), XReg(:rs1), XImm(:imm)) {
-    encoding *format_i_alu(:srai, rd, rs1, imm)
+    encoding *format_i_alu_shift(:srai, rd, rs1, imm)
     asm { "SRAI #{rd}, #{rs1}, #{imm}" }
     code {
       rd[] = as_signed(rs1) >> imm
@@ -339,13 +339,4 @@ module RV32I
       syscall(0)
     }
   }
-
-  Instruction(:EBREAK) {
-    encoding *format_sys(:ebreak)
-    asm { "EBREAK" }
-    code {
-      syscall(1)
-    }
-  }
-
 end

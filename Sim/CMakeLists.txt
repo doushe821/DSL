@@ -5,6 +5,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 set(EXECUTABLE sim)
 add_executable (${EXECUTABLE}
     src/main.cpp
+    src/Exec.cpp
+    src/Decoder.cpp
 )
 
 find_package(PkgConfig REQUIRED)

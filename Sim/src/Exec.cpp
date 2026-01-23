@@ -1,6 +1,7 @@
 #include "GeneralSim.hpp"
 namespace ExecTable {
-void EXEC_ADD(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::XReg rs2)
+using XReg = uint16_t;
+void EXEC_ADD(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction ADD
 {
   uint64_t v_rd = 0;
@@ -17,7 +18,7 @@ void EXEC_ADD(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, G
 }
 
 
-void EXEC_SUB(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::XReg rs2)
+void EXEC_SUB(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction SUB
 {
   uint64_t v_rd = 0;
@@ -34,7 +35,7 @@ void EXEC_SUB(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, G
 }
 
 
-void EXEC_SLL(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::XReg rs2)
+void EXEC_SLL(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction SLL
 {
   uint64_t v_rd = 0;
@@ -55,7 +56,7 @@ void EXEC_SLL(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, G
 }
 
 
-void EXEC_SLT(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::XReg rs2)
+void EXEC_SLT(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction SLT
 {
   uint64_t v_rd = 0;
@@ -72,7 +73,7 @@ void EXEC_SLT(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, G
 }
 
 
-void EXEC_SLTU(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::XReg rs2)
+void EXEC_SLTU(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction SLTU
 {
   uint64_t v_rd = 0;
@@ -89,7 +90,7 @@ void EXEC_SLTU(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, 
 }
 
 
-void EXEC_XOR(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::XReg rs2)
+void EXEC_XOR(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction XOR
 {
   uint64_t v_rd = 0;
@@ -106,7 +107,7 @@ void EXEC_XOR(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, G
 }
 
 
-void EXEC_SRL(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::XReg rs2)
+void EXEC_SRL(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction SRL
 {
   uint64_t v_rd = 0;
@@ -129,7 +130,7 @@ void EXEC_SRL(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, G
 }
 
 
-void EXEC_SRA(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::XReg rs2)
+void EXEC_SRA(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction SRA
 {
   uint64_t v_rd = 0;
@@ -152,7 +153,7 @@ void EXEC_SRA(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, G
 }
 
 
-void EXEC_OR(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::XReg rs2)
+void EXEC_OR(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction OR
 {
   uint64_t v_rd = 0;
@@ -169,7 +170,7 @@ void EXEC_OR(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, Ge
 }
 
 
-void EXEC_AND(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::XReg rs2)
+void EXEC_AND(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction AND
 {
   uint64_t v_rd = 0;
@@ -186,7 +187,7 @@ void EXEC_AND(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, G
 }
 
 
-void EXEC_MUL(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::XReg rs2)
+void EXEC_MUL(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction MUL
 {
   uint64_t v_rd = 0;
@@ -203,7 +204,7 @@ void EXEC_MUL(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, G
 }
 
 
-void EXEC_DIV(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::XReg rs2)
+void EXEC_DIV(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction DIV
 {
   uint64_t v_rd = 0;
@@ -220,7 +221,7 @@ void EXEC_DIV(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, G
 }
 
 
-void EXEC_REM(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::XReg rs2)
+void EXEC_REM(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction REM
 {
   uint64_t v_rd = 0;
@@ -237,7 +238,7 @@ void EXEC_REM(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, G
 }
 
 
-void EXEC_ADDI(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::Immediate imm)
+void EXEC_ADDI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction ADDI
 {
   uint64_t v_rd = 0;
@@ -254,7 +255,7 @@ void EXEC_ADDI(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, 
 }
 
 
-void EXEC_SLTI(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SLTI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction SLTI
 {
   uint64_t v_rd = 0;
@@ -271,7 +272,7 @@ void EXEC_SLTI(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, 
 }
 
 
-void EXEC_SLTIU(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SLTIU(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction SLTIU
 {
   uint64_t v_rd = 0;
@@ -292,7 +293,7 @@ void EXEC_SLTIU(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1,
 }
 
 
-void EXEC_XORI(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::Immediate imm)
+void EXEC_XORI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction XORI
 {
   uint64_t v_rd = 0;
@@ -309,7 +310,7 @@ void EXEC_XORI(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, 
 }
 
 
-void EXEC_ORI(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::Immediate imm)
+void EXEC_ORI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction ORI
 {
   uint64_t v_rd = 0;
@@ -326,7 +327,7 @@ void EXEC_ORI(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, G
 }
 
 
-void EXEC_ANDI(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::Immediate imm)
+void EXEC_ANDI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction ANDI
 {
   uint64_t v_rd = 0;
@@ -343,7 +344,7 @@ void EXEC_ANDI(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, 
 }
 
 
-void EXEC_SLLI(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SLLI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction SLLI
 {
   uint64_t v_rd = 0;
@@ -360,7 +361,7 @@ void EXEC_SLLI(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, 
 }
 
 
-void EXEC_SRLI(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SRLI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction SRLI
 {
   uint64_t v_rd = 0;
@@ -379,7 +380,7 @@ void EXEC_SRLI(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, 
 }
 
 
-void EXEC_SRAI(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SRAI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction SRAI
 {
   uint64_t v_rd = 0;
@@ -398,7 +399,7 @@ void EXEC_SRAI(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, 
 }
 
 
-void EXEC_LB(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::Immediate imm)
+void EXEC_LB(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction LB
 {
   uint64_t v_rd = 0;
@@ -419,7 +420,7 @@ void EXEC_LB(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, Ge
 }
 
 
-void EXEC_LH(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::Immediate imm)
+void EXEC_LH(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction LH
 {
   uint64_t v_rd = 0;
@@ -440,7 +441,7 @@ void EXEC_LH(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, Ge
 }
 
 
-void EXEC_LW(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::Immediate imm)
+void EXEC_LW(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction LW
 {
   uint64_t v_rd = 0;
@@ -459,7 +460,7 @@ void EXEC_LW(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, Ge
 }
 
 
-void EXEC_LBU(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::Immediate imm)
+void EXEC_LBU(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction LBU
 {
   uint64_t v_rd = 0;
@@ -480,7 +481,7 @@ void EXEC_LBU(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, G
 }
 
 
-void EXEC_LHU(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::Immediate imm)
+void EXEC_LHU(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction LHU
 {
   uint64_t v_rd = 0;
@@ -501,7 +502,7 @@ void EXEC_LHU(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, G
 }
 
 
-void EXEC_SB(GeneralSim::CPU& CPU, GeneralSim::XReg rs2, GeneralSim::XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SB(GeneralSim::CPU& CPU, XReg rs2, XReg rs1, GeneralSim::Immediate imm)
 // Instruction SB
 {
   uint64_t v_rs2 = 0;
@@ -521,7 +522,7 @@ void EXEC_SB(GeneralSim::CPU& CPU, GeneralSim::XReg rs2, GeneralSim::XReg rs1, G
 }
 
 
-void EXEC_SH(GeneralSim::CPU& CPU, GeneralSim::XReg rs2, GeneralSim::XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SH(GeneralSim::CPU& CPU, XReg rs2, XReg rs1, GeneralSim::Immediate imm)
 // Instruction SH
 {
   uint64_t v_rs2 = 0;
@@ -541,7 +542,7 @@ void EXEC_SH(GeneralSim::CPU& CPU, GeneralSim::XReg rs2, GeneralSim::XReg rs1, G
 }
 
 
-void EXEC_SW(GeneralSim::CPU& CPU, GeneralSim::XReg rs2, GeneralSim::XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SW(GeneralSim::CPU& CPU, XReg rs2, XReg rs1, GeneralSim::Immediate imm)
 // Instruction SW
 {
   uint64_t v_rs2 = 0;
@@ -561,7 +562,7 @@ void EXEC_SW(GeneralSim::CPU& CPU, GeneralSim::XReg rs2, GeneralSim::XReg rs1, G
 }
 
 
-void EXEC_JAL(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::Immediate imm)
+void EXEC_JAL(GeneralSim::CPU& CPU, XReg rd, GeneralSim::Immediate imm)
 // Instruction JAL
 {
   uint64_t v_rd = 0;
@@ -584,7 +585,7 @@ void EXEC_JAL(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::Immediate i
 }
 
 
-void EXEC_JALR(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, GeneralSim::Immediate imm)
+void EXEC_JALR(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction JALR
 {
   uint64_t v_rd = 0;
@@ -612,7 +613,7 @@ void EXEC_JALR(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::XReg rs1, 
 }
 
 
-void EXEC_LUI(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::Immediate imm)
+void EXEC_LUI(GeneralSim::CPU& CPU, XReg rd, GeneralSim::Immediate imm)
 // Instruction LUI
 {
   uint64_t v_rd = 0;
@@ -628,7 +629,7 @@ void EXEC_LUI(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::Immediate i
 }
 
 
-void EXEC_AUIPC(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::Immediate imm)
+void EXEC_AUIPC(GeneralSim::CPU& CPU, XReg rd, GeneralSim::Immediate imm)
 // Instruction AUIPC
 {
   uint64_t v_rd = 0;
@@ -648,7 +649,7 @@ void EXEC_AUIPC(GeneralSim::CPU& CPU, GeneralSim::XReg rd, GeneralSim::Immediate
 }
 
 
-void EXEC_BEQ(GeneralSim::CPU& CPU, GeneralSim::XReg rs1, GeneralSim::XReg rs2, GeneralSim::Immediate imm)
+void EXEC_BEQ(GeneralSim::CPU& CPU, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
 // Instruction BEQ
 {
   uint64_t v_rs1 = 0;
@@ -677,13 +678,5 @@ void EXEC_ECALL(GeneralSim::CPU& CPU)
 {
   uint64_t v__tmp75 = 0;
   CPU.syscall(v__tmp75);
-}
-
-
-void EXEC_EBREAK(GeneralSim::CPU& CPU)
-// Instruction EBREAK
-{
-  uint64_t v__tmp76 = 0;
-  CPU.syscall(v__tmp76);
 }
 } // namespace ExecTable

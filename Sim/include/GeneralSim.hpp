@@ -3,8 +3,6 @@
 #include <cassert>
 
 #include <memory>
-#include <vector>
-#include <variant>
 
 namespace GeneralSim {
 
@@ -12,7 +10,6 @@ enum class ImmediateType : uint8_t {
   Unsigned,
   Signed
 };
-
 
 class Immediate {
 private:
@@ -32,10 +29,10 @@ private:
 
 public:
   constexpr Immediate() = default;
-  constexpr Immediate(uint32_t raw,
-                      uint8_t bits,
-                      ImmediateType type)
-    : RawValue(raw), BitSize(bits), Type(type) {}
+  constexpr Immediate(uint32_t Raw,
+                      uint8_t Bits,
+                      ImmediateType Type)
+    : RawValue(Raw), BitSize(Bits), Type(Type) {}
 
   constexpr uint32_t raw() const {
     return RawValue;
@@ -63,19 +60,19 @@ public:
     return RawValue;
   }
 
-  constexpr void set(uint32_t raw,
-                     uint8_t bits,
-                     ImmediateType type) {
-    RawValue = raw;
-    BitSize  = bits;
-    Type     = type;
+  constexpr void set(uint32_t Raw,
+                     uint8_t Bits,
+                     ImmediateType Type_) {
+    RawValue = Raw;
+    BitSize  = Bits;
+    Type     = Type_;
   }
 };
 
 using XReg = uint16_t;
 
 
-inline uint32_t getMaskedValue(uint32_t Value, int StartBit, int FinishBit) {
+static inline uint32_t getMaskedValue(uint32_t Value, int StartBit, int FinishBit) {
   return (Value >> StartBit) & ((1 << (FinishBit - StartBit + 1)) - 1);
 }
 
@@ -83,38 +80,39 @@ namespace {
 class RegState { // interface for generated classes
 public:
   virtual ~RegState();
-  virtual uint64_t getReg(XReg r) { assert("Not implemented\n"); };
-  virtual void     setReg(XReg r, uint64_t v) { assert("Not implemented\n"); };
-  virtual uint64_t getRegSystem(XReg r) { assert("Not implemented\n"); };
-  virtual void     setRegSystem(XReg r, uint64_t v) { assert("Not implemented\n"); };
+  virtual uint64_t getReg(XReg R) { assert("Not implemented\n"); };
+  virtual void     setReg(XReg R, uint64_t V) { assert("Not implemented\n"); };
+  virtual uint64_t getRegSystem(XReg R) { assert("Not implemented\n"); };
+  virtual void     setRegSystem(XReg R, uint64_t V) { assert("Not implemented\n"); };
 };
 } // namespace
 
 class CPU {
 private:
   uint64_t PC;
+  bool Finished{false};
   std::unique_ptr<RegState> RState;
-  constexpr uint64_t getRegSystem(XReg r) { return RState->getRegSystem(r); }
-  constexpr void     setRegSystem(XReg r, uint64_t v) { RState->setRegSystem(r, v); };
+  constexpr uint64_t getRegSystem(XReg R) { return RState->getRegSystem(R); }
+  constexpr void     setRegSystem(XReg R, uint64_t V) { RState->setRegSystem(R, V); };
 public:
 
   constexpr uint64_t getPC() { return PC; };
   constexpr void setPC(uint64_t NewPC) { PC = NewPC; };
 
-  constexpr uint64_t getReg(XReg r) { return  RState->getReg(r); };
-  constexpr void     setReg(XReg r, uint64_t v) { RState->setReg(r, v); };
+  constexpr uint64_t getReg(XReg R) { return  RState->getReg(R); };
+  constexpr void     setReg(XReg R, uint64_t V) { RState->setReg(R, V); };
 
-  constexpr uint64_t load(uint64_t addr, int bits);
-  constexpr void     store(uint64_t addr, uint64_t value, int bits);
+  constexpr uint64_t load(uint64_t Addr, int Bits);
+  constexpr void     store(uint64_t Addr, uint64_t Value, int Bits);
 
-  constexpr void syscall(int num) { };
+  constexpr void syscall(int Code) { if (Code == 1) { Finished = true; } else { assert("Not implemented\n"); } };
 
   constexpr int bitrev(int Val, int NBits = 32) { // Does it in log(n)
     assert(NBits <= 64);
     uint64_t Mask = (NBits == 64) ? ~0ULL : ((1ULL << NBits) - 1);
     Val &= Mask;
 
-    for (unsigned Step = 1; Step < NBits; Step <<= 1) {
+    for (int Step = 1; Step < NBits; Step <<= 1) {
         uint64_t M =
             ((1ULL << Step) - 1) |
             (((1ULL << Step) - 1) << (2 * Step));
@@ -140,12 +138,12 @@ public:
     return Val;
   }
 
-  constexpr uint64_t zext(uint64_t v, unsigned N)
+  constexpr uint64_t zext(uint64_t V, unsigned N)
   {
     assert(N <= 64);
     if (N == 64)
-        return v;
-    return v & ((1ULL << N) - 1);
+        return V;
+    return V & ((1ULL << N) - 1);
   }
 
   constexpr int saturateUnsigned(unsigned Val, unsigned N) {
@@ -161,8 +159,4 @@ class Memory {
 
 };
 
-
-
 } // namespace GeneralSim
-
-

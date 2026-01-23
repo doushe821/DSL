@@ -70,18 +70,40 @@ module SimInfra
   def format_i_alu(name, rd, rs1, imm)
     funct3 =
       {
-        addi: 0b000,
-        slli: 0b001,
-        slti: 0b010,
-        sltiu:0b011,
-        xori: 0b100,
-        srli: 0b101,
-        srai: 0b101,
-        ori:  0b110,
-        andi: 0b111
+        addi:  0b000,
+        slti:  0b010,
+        sltiu: 0b011,
+        xori:  0b100,
+        ori:   0b110,
+        andi:  0b111
       }[name]
-    funct7 = (name == :srai) ? 0b0100000 : 0
+
     format_i(0b0010011, funct3, rd, rs1, imm)
+  end
+
+  # I- shift
+  def format_i_shift(opcode, funct3, funct7, rd, rs1, imm)
+    return :I_SHIFT, [
+      field(:opcode, 6, 0, opcode),
+      field(:funct3, 14, 12, funct3),
+      field(rd.name, 11, 7, :reg),
+      field(rs1.name, 19, 15, :reg),
+      field(:shamt, 24, 20, imm),
+      field(:funct7, 31, 25, funct7)
+    ]
+  end
+
+  def format_i_alu_shift(name, rd, rs1, imm)
+    funct3 =
+      {
+        slli: 0b001,
+        srli: 0b101,
+        srai: 0b101
+      }[name]
+
+    funct7 = (name == :srai) ? 0b0100000 : 0b0000000
+
+    format_i_shift(0b0010011, funct3, funct7, rd, rs1, imm)
   end
 
   # I-load
@@ -100,22 +122,21 @@ module SimInfra
   # I - jalr?
   
   def format_i_jalr(name, rd, rs1, imm)
-    funct3 = 0b000  # JALR always uses funct3 = 0
+    funct3 = 0b000
     opcode = 0b1100111
     format_i(opcode, funct3, rd, rs1, imm)
   end
 
   # S-type
   def format_s(opcode, funct3, rs1, rs2, imm)
-    imm_lo = :imm_lo
-    imm_hi = :imm_hi
     return :S, [
       field(:opcode, 6, 0, opcode),
       field(:funct3, 14, 12, funct3),
       field(rs1.name, 19, 15, :reg),
       field(rs2.name, 24, 20, :reg),
-      field(:imm_lo, 11, 7, imm_lo),
-      field(:imm_hi, 31, 25, imm_hi)
+
+      immpart(:imm, 11, 7,  4, 0),
+      immpart(:imm, 31, 25, 11, 5),
     ]
   end
 
@@ -136,10 +157,11 @@ module SimInfra
       field(:funct3, 14, 12, funct3),
       field(rs1.name, 19, 15, :reg),
       field(rs2.name, 24, 20, :reg),
-      field(:imm_11, 7, 7, :imm_11),
-      field(:imm_4_1, 11, 8, :imm_4_1),
-      field(:imm_10_5, 30, 25, :imm_10_5),
-      field(:imm_12, 31, 31, :imm_12)
+
+    immpart(:imm1,  31, 31, 12, 12),
+    immpart(:imm6,  30, 25, 10, 5),
+    immpart(:imm4,  11, 8,  4, 1),
+    immpart(:imm1,  7,  7,  11, 11),
     ]
   end
 
@@ -173,17 +195,18 @@ module SimInfra
     format_u(opcode, rd, imm)
   end
 
-  # J-type
-  def format_j(name, rd, imm)
-    return :J, [
-      field(:opcode, 6, 0, 0b1101111),
-      field(rd.name, 11, 7, :reg),
-      field(:imm_19_12, 19, 12, :imm),
-      field(:imm_11, 20, 20, :imm),
-      field(:imm_10_1, 30, 21, :imm),
-      field(:imm_20, 31, 31, :imm)
-    ]
-  end
+# J-type
+def format_j(name, rd, imm)
+  return :J, [
+    field(:opcode, 6, 0, 0b1101111),
+    field(rd.name, 11, 7, :reg),
+
+    immpart(:imm1,  31, 31, 20, 20),
+    immpart(:imm10, 30, 21, 10, 1),
+    immpart(:imm1,  20, 20, 11, 11),
+    immpart(:imm8,  19, 12, 19, 12),
+  ]
+end
 
   def format_j_(name, rd, imm)
     opcode = {
@@ -203,7 +226,6 @@ module SimInfra
     opcode =
       {
         ecall:  0b1110011,
-        ebreak: 0b1110011
       }[name]
 
     format_sys(opcode)

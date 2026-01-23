@@ -8,4 +8,3 @@ SimInfra.serialize
 # SimInfra::DecoderGenerator.generate("zxc")
 
 UGen = SimGen::UltimateGenerator.new
-UGen.generate_decoder

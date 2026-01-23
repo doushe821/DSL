@@ -1,6 +1,8 @@
 module SimInfra
   
   class CppEmitter
+
+    Indent = "  "
     def initialize
       @out = []
       @declared = {}
@@ -22,7 +24,7 @@ module SimInfra
     def declare_ssa(var)
       name = ssa(var)
       raise "Double declaration: #{name.inspect}" if @declared[name]
-      emit "  " + "uint64_t #{name} = 0;"
+      emit Indent + "uint64_t #{name} = 0;"
       @declared[name] = true
     end
 
@@ -44,9 +46,7 @@ module SimInfra
     end
 
     def emit_exec_function(instr)
-      puts instr[:name]
       decl = emit_exec_decl(instr)
-      puts instr[:name]
       body = emit_instruction(instr)
 
       <<~CPP
@@ -61,9 +61,6 @@ module SimInfra
 
       emitter.emit "// Instruction #{instr[:name]}"
       emitter.emit "{"
-
-      puts instr[:name]
-      puts 'hoot hoot'
 
       scope.tree.each do |stmt|
         emitter.emit_stmt(stmt)
@@ -84,7 +81,7 @@ module SimInfra
       args.each do |arg|
         case arg
         when SimInfra::XReg
-          params << "GeneralSim::XReg #{arg.name}"
+          params << "XReg #{arg.name}"
         when SimInfra::XImm
           params << "GeneralSim::Immediate #{arg.name}"
         else
@@ -99,110 +96,109 @@ module SimInfra
       name = stmt.name
       ops  = stmt.oprnds
       attrs = stmt.attrs || {}
-      puts "Current statement: #{stmt.name}"
       case name
       when :new_var
         declare_ssa(ops[0])
-      when :new_const # FIXME
+      when :new_const
         nconst, value = ops
         declare_ssa(nconst)
-        emit "  " + "#{ssa(nconst)} = #{value};"
+        emit Indent + "#{ssa(nconst)} = #{value};"
       when :getreg
         var_ir, xreg = ops
-        emit "  " + "v_#{var_ir} = CPU.getReg(#{xreg});\n"
+        emit Indent + "v_#{var_ir} = CPU.getReg(#{xreg});\n"
       when :getimm
         var_ir, ximm = ops
-        emit "  " + "v_#{var_ir} = #{ximm}.raw();\n"
+        emit Indent + "v_#{var_ir} = #{ximm}.raw();\n"
       when :let
         dst, src = ops
-        emit "  " + "#{ssa(dst)} = #{operand(src)};"
+        emit Indent + "#{ssa(dst)} = #{operand(src)};"
       when :+, :-, :*, :&, :|, :^, :<<, :>>, :/, :%
         dst, a, b = ops
         declare_ssa(dst)
-        emit "  " + "#{ssa(dst)} = #{operand(a)} #{name} #{operand(b)};"
+        emit Indent + "#{ssa(dst)} = #{operand(a)} #{name} #{operand(b)};"
       when :<, :== # Remove?
         dst, a, b = ops
         declare_ssa(dst)
-        emit "  " + "#{ssa(dst)} = (#{operand(a)} #{name} #{operand(b)});"
+        emit Indent + "#{ssa(dst)} = (#{operand(a)} #{name} #{operand(b)});"
       when :~
         dst, a = ops
         declare_ssa(dst)
-        emit "  " + "#{ssa(dst)} = #{name}#{operand(a)};"
+        emit Indent + "#{ssa(dst)} = #{name}#{operand(a)};"
       when :bitrev
         dst, src = ops
         declare_ssa(dst)
-        emit "  " + "#{ssa(dst)} = CPU.bitrev(#{operand(src)});"
+        emit Indent + "#{ssa(dst)} = CPU.bitrev(#{operand(src)});"
       when :as_signed
         dst, src = ops
         declare_ssa(dst)
-        emit "  " + "#{ssa(dst)} = static_cast<int64_t>(#{operand(src)});"
+        emit Indent + "#{ssa(dst)} = static_cast<int64_t>(#{operand(src)});"
       when :as_unsigned
         dst, src = ops
         declare_ssa(dst)
-        emit "  " + "#{ssa(dst)} = static_cast<uint64_t>(#{operand(src)});"
+        emit Indent + "#{ssa(dst)} = static_cast<uint64_t>(#{operand(src)});"
       when :sext
         dst, src = ops
         from = attrs[:from]
         declare_ssa(dst)
-        emit "  " + "#{ssa(dst)} = CPU.sext(#{operand(src)}, #{from});"
+        emit Indent + "#{ssa(dst)} = CPU.sext(#{operand(src)}, #{from});"
       when :zext
         dst, src = ops
         from = attrs[:from]
         declare_ssa(dst)
-        emit "  " + "#{ssa(dst)} = CPU.zext(#{operand(src)}, #{from});"
+        emit Indent + "#{ssa(dst)} = CPU.zext(#{operand(src)}, #{from});"
       when :load
         dst, addr = ops
         declare_ssa(dst)
         bits = dst.type[:bits]
-        emit "  " + "#{ssa(dst)} = CPU.load(#{operand(addr)}, #{bits});"
+        emit Indent + "#{ssa(dst)} = CPU.load(#{operand(addr)}, #{bits});"
       when :store
         addr, val = ops
         bits = val.type[:bits]
-        emit "  " + "CPU.store(#{operand(addr)}, #{operand(val)}, #{bits});"
+        emit Indent + "CPU.store(#{operand(addr)}, #{operand(val)}, #{bits});"
       when :setreg
         reg, var = ops
-        emit "  " + "CPU.setReg(#{reg.name}, #{ssa(var)});"
+        emit Indent + "CPU.setReg(#{reg.name}, #{ssa(var)});"
       when :syscall
         code = ops.first
         declare_ssa(code)
-        emit "  " + "CPU.syscall(#{operand(code)});"
+        emit Indent + "CPU.syscall(#{operand(code)});"
       when :cmp_eq
         a, b = operand(ops[1]), operand(ops[2])
         dst = ops[0]
         declare_ssa(dst)
-        emit "  " + "#{ssa(dst)} = (#{a} == #{b});"
+        emit Indent + "#{ssa(dst)} = (#{a} == #{b});"
       when :cmp_ne
         a, b = operand(ops[1]), operand(ops[2])
         dst = ops[0]
         declare_ssa(dst)
-        emit "  " + "#{ssa(dst)} = (#{a} != #{b});"
+        emit Indent + "#{ssa(dst)} = (#{a} != #{b});"
       when :cmp_lt
         a, b = operand(ops[1]), operand(ops[2])
         dst = ops[0]
         declare_ssa(dst)
-        emit "  " + "#{ssa(dst)} = (static_cast<int32_t>(#{a}) < static_cast<int32_t>(#{b}));"
+        emit Indent + "#{ssa(dst)} = (static_cast<int32_t>(#{a}) < static_cast<int32_t>(#{b}));"
       when :cmp_ge
         a, b = operand(ops[1]), operand(ops[2])
         dst = ops[0]
         declare_ssa(dst)
-        emit "  " + "#{ssa(dst)} = (static_cast<int32_t>(#{a}) >= static_cast<int32_t>(#{b}));"
+        emit Indent + "#{ssa(dst)} = (static_cast<int32_t>(#{a}) >= static_cast<int32_t>(#{b}));"
       when :cmp_ltu
         a, b = operand(ops[1]), operand(ops[2])
         dst = ops[0]
         declare_ssa(dst)
-        emit "  " + "#{ssa(dst)} = (#{a} < #{b});"
+        emit Indent + "#{ssa(dst)} = (#{a} < #{b});"
       when :cmp_geu
         a, b = operand(ops[1]), operand(ops[2])
         dst = ops[0]
         declare_ssa(dst)
-        emit "  " + "#{ssa(dst)} = (#{a} >= #{b});"
+        emit Indent + "#{ssa(dst)} = (#{a} >= #{b});"
       when :getpc
         var_ir = ops[0]
         declare_ssa(var_ir)
-        emit "  " + "#{ssa(var_ir)} = CPU.getPC();"
+        emit Indent + "#{ssa(var_ir)} = CPU.getPC();"
       when :setpc
         var = ops[1]
-        emit "  " + "CPU.setPC(#{ssa(var)});"
+        emit Indent + "CPU.setPC(#{ssa(var)});"
       else
         raise "Unhandled IR operation: #{name}"
       end
@@ -212,5 +208,93 @@ module SimInfra
     def emit_all_instructions(instructions)
       instructions.map { |instr| emit_exec_function(instr) }.join("\n\n")
     end
+
+    def cpp_extract_bits(expr, from, to)
+      width = to - from + 1
+      "((#{expr} >> #{from}) & ((1u << #{width}) - 1))"
+    end
+
+    def assemble_scattered_imm(parts, instr_bits)
+      imm = 0
+
+      parts.each do |p|
+        part_val = extract_bits(instr_bits, p.from, p.to)
+
+        imm |= part_val << p.lo
+      end
+
+      imm
+    end
+
+    def emit_leaf(node, instr, indent)
+      lines = []
+      args  = []
+
+      imm_parts = []
+
+      instr[:fields].each do |field|
+        case field
+        when SimInfra::Field
+          case field.value
+          when :reg
+            expr = cpp_extract_bits("Instr", field.to, field.from)
+            lines << "#{indent}XReg #{field.name} = #{expr};"
+            args << field.name.to_s
+          when :imm
+            expr = cpp_extract_bits("Instr", field.to, field.from)
+            lines << "#{indent}auto Imm = GeneralSim::Immediate(#{expr}, 32, GeneralSim::ImmediateType::Unsigned);"
+            args << "Imm"
+          end
+
+        when SimInfra::ImmFieldPart
+          imm_parts << field
+        end
+      end
+
+      if !imm_parts.empty?
+        lines << "#{indent}uint32_t ImmRaw = 0;"
+        imm_parts.each do |part|
+          extract = cpp_extract_bits("Instr", part.to, part.from)
+          lines << "#{indent}ImmRaw |= (#{extract} << #{part.lo});"
+        end
+        lines << "#{indent}auto Imm = GeneralSim::Immediate(ImmRaw, 32, GeneralSim::ImmediateType::Unsigned);"  # Double definition may cause error but this is intended. (also might change in future, in case there are ISAS with multiple imms per instruction)
+        args << "Imm"
+      end
+
+      lines << "#{indent}return Instruction{ #{node.name}{ #{args.join(', ')} } };"
+      lines.join("\n")
+    end
+
+    def emit_node(node, instructions, indent = "")
+      return emit_leaf(node, instructions.find do |instr| instr[:name] == node.name end, indent) if node.leaf?
+
+      from = node.bit_start
+      to   = node.bit_end
+      width = to - from + 1
+
+      lines = []
+      lines << "#{indent}switch ((Instr >> #{from}) & ((1u << #{width}) - 1)) {"
+
+      node.children.each do |value, child|
+        lines << "#{indent}#{Indent}case #{value}: {"
+        lines << emit_node(child, instructions, indent + Indent * 2)
+        lines << "#{indent}#{Indent}}"
+      end
+
+      lines << "#{indent}#{Indent}default:"
+      lines << "#{indent}#{Indent * 2}assert(\"No such inst in ISA\");"
+      lines << "#{indent}}"
+
+      lines.join("\n")
+    end
+
+    def emit_decoder_tree(root, instructions)
+      <<~CPP
+      Instruction decode(uint32_t Instr) {
+      #{emit_node(root, instructions, Indent)}
+      }
+      CPP
+    end
+
   end
 end
