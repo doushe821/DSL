@@ -32,7 +32,7 @@ module SimInfra
     end
     #
     class Var
-        [:+, :-, :&, :|, :^, :<<, :>>, :<, :==].each do |op|
+        [:+, :-, :*, :/, :%, :&, :|, :^, :<<, :>>, :<, :==].each do |op|
             define_method(op) { |other| @scope.binOp(self, other, op) }
         end
 

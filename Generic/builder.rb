@@ -50,8 +50,10 @@ module SimInfra
             @info.code = scope = Scope.new(nil) # root scope
             @info.args.each do |arg|
                 scope.add_var(arg.name, arg_type(arg))
-                if [:rs1, :rs2].include?(arg.name) # add other registers here
+                if [:rs1, :rs2].include?(arg.name)
                     scope.stmt(:getreg, [arg.name, arg])
+                elsif [:imm].include?(arg.name)
+                    scope.stmt(:getimm, [arg.name, arg])
                 end
             end
 

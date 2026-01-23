@@ -93,10 +93,14 @@ public:
 
 class CPU {
 private:
+  uint64_t PC;
   std::unique_ptr<RegState> RState;
   constexpr uint64_t getRegSystem(XReg r) { return RState->getRegSystem(r); }
   constexpr void     setRegSystem(XReg r, uint64_t v) { RState->setRegSystem(r, v); };
 public:
+
+  constexpr uint64_t getPC() { return PC; };
+  constexpr void setPC(uint64_t NewPC) { PC = NewPC; };
 
   constexpr uint64_t getReg(XReg r) { return  RState->getReg(r); };
   constexpr void     setReg(XReg r, uint64_t v) { RState->setReg(r, v); };
@@ -104,7 +108,7 @@ public:
   constexpr uint64_t load(uint64_t addr, int bits);
   constexpr void     store(uint64_t addr, uint64_t value, int bits);
 
-  constexpr void syscall(int num);
+  constexpr void syscall(int num) { };
 
   constexpr int bitrev(int Val, int NBits = 32) { // Does it in log(n)
     assert(NBits <= 64);

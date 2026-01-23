@@ -19,7 +19,7 @@ module RV32I
   encoding *format_r_alu(:sub, rd, rs1, rs2)
   asm { "SUB #{rd}, #{rs1}, #{rs2}" }
   code {
-      rd[] = rs1 - rs2
+      rd[]= rs1 - rs2
       setreg rd
   }
   }
@@ -98,32 +98,32 @@ module RV32I
   }
 
   # R-mul
-  # Instruction(:MUL, XReg(:rd), XReg(:rs1), XReg(:rs2)) {
-  #   encoding *format_r_mul(:mul, rd, rs1, rs2)
-  #   asm { "MUL #{rd}, #{rs1}, #{rs2}" }
-  #   code {
-  #     rd[] = rs1 * rs2
-  #     setreg rd
-  #   }
-  # }
+  Instruction(:MUL, XReg(:rd), XReg(:rs1), XReg(:rs2)) {
+    encoding *format_r_mul(:mul, rd, rs1, rs2)
+    asm { "MUL #{rd}, #{rs1}, #{rs2}" }
+    code {
+      rd[] = rs1 * rs2
+      setreg rd
+    }
+  }
 
-  #Instruction(:DIV, XReg(:rd), XReg(:rs1), XReg(:rs2)) {
-  #  encoding *format_r_mul(:div, rd, rs1, rs2)
-  #  asm { "DIV #{rd}, #{rs1}, #{rs2}" }
-  #  code {
-  #    rd[] = rs1 / rs2
-  #    setreg rd
-  #  }
-  #}
+  Instruction(:DIV, XReg(:rd), XReg(:rs1), XReg(:rs2)) {
+    encoding *format_r_mul(:div, rd, rs1, rs2)
+    asm { "DIV #{rd}, #{rs1}, #{rs2}" }
+    code {
+      rd[] = rs1 / rs2
+      setreg rd
+    }
+  }
 
-  #Instruction(:REM, XReg(:rd), XReg(:rs1), XReg(:rs2)) {
-  #  encoding *format_r_mul(:rem, rd, rs1, rs2)
-  #  asm { "REM #{rd}, #{rs1}, #{rs2}" }
-  #  code {
-  #    rd[] = rs1 % rs2
-  #    setreg rd
-  #  }
-  #}
+  Instruction(:REM, XReg(:rd), XReg(:rs1), XReg(:rs2)) {
+    encoding *format_r_mul(:rem, rd, rs1, rs2)
+    asm { "REM #{rd}, #{rs1}, #{rs2}" }
+    code {
+      rd[] = rs1 % rs2
+      setreg rd
+    }
+  }
 
 
   # I-type
@@ -182,29 +182,29 @@ module RV32I
     }
   }
   # I-shift
-  Instruction(:SLLI, XReg(:rd), XReg(:rs1), XImm(:shamt)) {
-    encoding *format_i_shift(:slli, rd, rs1, shamt)
-    asm { "SLLI #{rd}, #{rs1}, #{shamt}" }
+  Instruction(:SLLI, XReg(:rd), XReg(:rs1), XImm(:imm)) {
+    encoding *format_i_alu(:slli, rd, rs1, imm)
+    asm { "SLLI #{rd}, #{rs1}, #{imm}" }
     code {
-      rd[] = rs1 << shamt
+      rd[] = rs1 << imm
       setreg rd
     }
   }
 
-  Instruction(:SRLI, XReg(:rd), XReg(:rs1), XImm(:shamt)) {
-    encoding *format_i_shift(:srli, rd, rs1, shamt)
-    asm { "SRLI #{rd}, #{rs1}, #{shamt}" }
+  Instruction(:SRLI, XReg(:rd), XReg(:rs1), XImm(:imm)) {
+    encoding *format_i_alu(:srli, rd, rs1, imm)
+    asm { "SRLI #{rd}, #{rs1}, #{imm}" }
     code {
-      rd[] = as_unsigned(rs1) >> shamt
+      rd[] = as_unsigned(rs1) >> imm
       setreg rd
     }
   }
 
-  Instruction(:SRAI, XReg(:rd), XReg(:rs1), XImm(:shamt)) {
-    encoding *format_i_shift(:srai, rd, rs1, shamt)
-    asm { "SRAI #{rd}, #{rs1}, #{shamt}" }
+  Instruction(:SRAI, XReg(:rd), XReg(:rs1), XImm(:imm)) {
+    encoding *format_i_alu(:srai, rd, rs1, imm)
+    asm { "SRAI #{rd}, #{rs1}, #{imm}" }
     code {
-      rd[] = as_signed(rs1) >> shamt
+      rd[] = as_signed(rs1) >> imm
       setreg rd
     }
   }
@@ -213,7 +213,7 @@ module RV32I
     encoding *format_i_load(:lb, rd, rs1, imm)
     asm { "LB #{rd}, #{imm}(#{rs1})" }
     code {
-      rd[] = sext(load(rs1 + imm, 8), 8)
+      rd[] = sext(load(rs1 + imm, 8), from: 8, to: 32)
       setreg rd
     }
   }
@@ -222,7 +222,7 @@ module RV32I
     encoding *format_i_load(:lh, rd, rs1, imm)
     asm { "LH #{rd}, #{imm}(#{rs1})" }
     code {
-      rd[] = sext(load(rs1 + imm, 16), 16)
+      rd[] = sext(load(rs1 + imm, 16), from: 16, to: 32)
       setreg rd
     }
   }
@@ -240,7 +240,7 @@ module RV32I
     encoding *format_i_load(:lbu, rd, rs1, imm)
     asm { "LBU #{rd}, #{imm}(#{rs1})" }
     code {
-      rd[] = zext(load(rs1 + imm, 8), 8)
+      rd[] = zext(load(rs1 + imm, 8), from: 8, to: 32)
       setreg rd
     }
   }
@@ -249,7 +249,7 @@ module RV32I
     encoding *format_i_load(:lhu, rd, rs1, imm)
     asm { "LHU #{rd}, #{imm}(#{rs1})" }
     code {
-      rd[] = zext(load(rs1 + imm, 16), 16)
+      rd[] = zext(load(rs1 + imm, 16), from: 16, to: 32)
       setreg rd
     }
   }
@@ -259,7 +259,7 @@ module RV32I
     encoding *format_s_store(:sb, rs2, rs1, imm)
     asm { "SB #{rs2}, #{imm}(#{rs1})" }
     code {
-      store(rs1 + imm, rs2, 8)
+      store(rs1 + imm, zext(rs2, from: 8, to: 32))
     }
   }
 
@@ -267,7 +267,7 @@ module RV32I
     encoding *format_s_store(:sh, rs2, rs1, imm)
     asm { "SH #{rs2}, #{imm}(#{rs1})" }
     code {
-      store(rs1 + imm, rs2, 16)
+      store(rs1 + imm, zext(rs2, from: 16, to: 32))
     }
   }
 
@@ -275,19 +275,19 @@ module RV32I
     encoding *format_s_store(:sw, rs2, rs1, imm)
     asm { "SW #{rs2}, #{imm}(#{rs1})" }
     code {
-      store(rs1 + imm, rs2, 32)
+      store(rs1 + imm, zext(rs2, from: 32, to: 32))
     }
   }
 
   # J-type
   Instruction(:JAL, XReg(:rd), XImm(:imm)) {
-    encoding *format_j(:jal, rd, imm)
+    encoding *format_j_(:jal, rd, imm)
     asm { "JAL #{rd}, #{imm}" }
     code {
       rd[] = pc + 4
       setreg rd
-      pc[] = pc + imm
-      setreg pc
+      newPC = pc + imm
+      setpc newPC
     }
   }
 
@@ -297,14 +297,14 @@ module RV32I
     code {
       rd[] = pc + 4
       setreg rd
-      pc[] = (rs1 + imm) & ~1
-      setreg pc
+      newPC = (rs1 + imm) & ~1
+      setpc newPC
     }
   }
 
   # U-type
   Instruction(:LUI, XReg(:rd), XImm(:imm)) {
-    encoding *format_u(:lui, rd, imm)
+    encoding *format_u_(:lui, rd, imm)
     asm { "LUI #{rd}, #{imm}" }
     code {
       rd[] = imm << 12
@@ -313,7 +313,7 @@ module RV32I
   }
 
   Instruction(:AUIPC, XReg(:rd), XImm(:imm)) {
-    encoding *format_u(:auipc, rd, imm)
+    encoding *format_u_(:auipc, rd, imm)
     asm { "AUIPC #{rd}, #{imm}" }
     code {
       rd[] = pc + (imm << 12)
@@ -322,13 +322,12 @@ module RV32I
   }
 
   # B-type
-  Instruction(:BEQ, XReg(:rs1), XReg(:rs2), XXImm(:imm)) {
-    encoding *format_b(:beq, rs1, rs2, imm)
+  Instruction(:BEQ, XReg(:rs1), XReg(:rs2), XImm(:imm)) {
+    encoding *format_b_branch(:beq, rs1, rs2, imm)
     asm { "BEQ #{rs1}, #{rs2}, #{imm}" }
     code {
-      cond = cmp_eq(rs1, rs2)
-      pc[] = pc + (cond * imm)
-      setreg pc
+      newPC = pc + (cmp_eq(rs1, rs2) * imm)
+      setpc newPC
     }
   }
 
@@ -348,11 +347,5 @@ module RV32I
       syscall(1)
     }
   }
-
-
-
-
-
-
 
 end

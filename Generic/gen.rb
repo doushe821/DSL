@@ -5,6 +5,7 @@ require_relative 'map_tree'
 require_relative 'decoder_tree'
 require_relative 'helpers'
 require_relative 'gen_regstate'
+require_relative 'codegen'
 
 module SimGen
   class UltimateGenerator
@@ -15,11 +16,11 @@ module SimGen
       @@parsed_ir = YAML.safe_load(yaml,
         permitted_classes: [SimInfra::Field, SimInfra::Scope, SimInfra::IrStmt,
         SimInfra::Var, SimInfra::XReg, SimInfra::ImmFieldPart, SimInfra::XImm, 
-        Symbol, SimInfra::Scope::Type, SimInfra::Memory], aliases: true)
+        Symbol, SimInfra::Scope::Type, SimInfra::Memory, SimInfra::Constant], aliases: true)
 
       SimInfra::IRPrettyPrinter.new(@@parsed_ir).run # pretty dump for debug
-      SimInfra::RegStateGenerator.new.generate
-      @@parsed_ir.each do |instr|
+      SimInfra::RegStateGenerator.new.generate 
+      @@parsed_ir.each do |instr| # useless, delete later after decoding tree changes
         binary_value = 0
         instr[:fields].each do |field|
           if field.value.is_a?(Integer)
@@ -31,10 +32,13 @@ module SimGen
         end
         @@bin_instrs.push(BinInstr.new(instr[:name], binary_value))
       end
-      generate_general_instruction_description
-      generate_short_isa_description
-    end
 
+      generate_general_instruction_description
+      exec = File.open('exec.cpp', 'w')
+      exec << ("#include \"GeneralSim.hpp\"\n" + "namespace ExecTable {\n" + SimInfra::CppEmitter.new.emit_all_instructions(@@parsed_ir) + "} // namespace ExecTable\n")
+
+      
+    end
     # Generate general instruction description
     ##
     ###
@@ -49,17 +53,17 @@ module SimGen
     def cpp_type_for(field)
       case field.value
       when :reg
-        "GeneralSim::Register"
+        "GeneralSim::XReg"
       when SimInfra::XReg
-        "GeneralSim::Register"
+        "GeneralSim::XReg"
       when SimInfra::XImm, SimInfra::ImmFieldPart
         "GeneralSim::Immediate"
       else
         "GeneralSim::Immediate"
       end
     end
-    def generate_general_instruction_description # TODO namespace for descriptions
 
+    def generate_general_instruction_description # TODO namespace for descriptions
       structs = []
       variant_types = []
 
@@ -201,23 +205,6 @@ module SimGen
       end
       tab_counter -= 1
       file.write("  " * tab_counter + "}\n")
-    end
-
-    def generate_short_isa_description # FIXME generate informative ISA description, containing register number, list of forbidden (for user) regs e.t.c
-      File.open('ShortISADescription.hpp', 'w') do |file|
-        file.write "#pragma once\n"
-        file.write "namespace ISA {\n" +
-        "  enum class InstructionCodes {\n"
-        @@bin_instrs.each do |instr|
-          file.write "    " + instr.name.to_s + ','
-          file.write "\n"
-        end
-        file.write "      INVALID\n"
-
-        file.write "  };\n" +
-        "} // namespace ISA\n"
-
-      end
     end
 
     def get_lead_bits(instructions) # FIXME Fix this

@@ -22,7 +22,7 @@ module SimInfra
     def declare_ssa(var)
       name = ssa(var)
       raise "Double declaration: #{name.inspect}" if @declared[name]
-      emit "uint64_t #{name} = 0;"
+      emit "  " + "uint64_t #{name} = 0;"
       @declared[name] = true
     end
 
@@ -44,7 +44,9 @@ module SimInfra
     end
 
     def emit_exec_function(instr)
+      puts instr[:name]
       decl = emit_exec_decl(instr)
+      puts instr[:name]
       body = emit_instruction(instr)
 
       <<~CPP
@@ -60,7 +62,10 @@ module SimInfra
       emitter.emit "// Instruction #{instr[:name]}"
       emitter.emit "{"
 
-      scope[:tree][:each] do |stmt|
+      puts instr[:name]
+      puts 'hoot hoot'
+
+      scope.tree.each do |stmt|
         emitter.emit_stmt(stmt)
       end
 
@@ -70,15 +75,16 @@ module SimInfra
 
 
     def emit_exec_decl(instr)
+
       name = instr[:name]
       args = instr[:args]
 
-      params = ["GeneralSim::CPU& cpu"]
+      params = ["GeneralSim::CPU& CPU"]
 
       args.each do |arg|
         case arg
         when SimInfra::XReg
-          params << "XReg #{arg.name}"
+          params << "GeneralSim::XReg #{arg.name}"
         when SimInfra::XImm
           params << "GeneralSim::Immediate #{arg.name}"
         else
@@ -93,88 +99,110 @@ module SimInfra
       name = stmt.name
       ops  = stmt.oprnds
       attrs = stmt.attrs || {}
-
+      puts "Current statement: #{stmt.name}"
       case name
       when :new_var
         declare_ssa(ops[0])
+      when :new_const # FIXME
+        nconst, value = ops
+        declare_ssa(nconst)
+        emit "  " + "#{ssa(nconst)} = #{value};"
       when :getreg
-        var_ir, xreg = stmt[:oprnds]
-        return "v_#{var_ir} = CPU.getReg(#{xreg});\n"
+        var_ir, xreg = ops
+        emit "  " + "v_#{var_ir} = CPU.getReg(#{xreg});\n"
+      when :getimm
+        var_ir, ximm = ops
+        emit "  " + "v_#{var_ir} = #{ximm}.raw();\n"
       when :let
         dst, src = ops
-        emit "#{ssa(dst)} = #{operand(src)};"
-      when :+, :-, :*, :&, :|, :^, :<<, :>>
+        emit "  " + "#{ssa(dst)} = #{operand(src)};"
+      when :+, :-, :*, :&, :|, :^, :<<, :>>, :/, :%
         dst, a, b = ops
         declare_ssa(dst)
-        emit "#{ssa(dst)} = #{operand(a)} #{name} #{operand(b)};"
-      when :<, :==
+        emit "  " + "#{ssa(dst)} = #{operand(a)} #{name} #{operand(b)};"
+      when :<, :== # Remove?
         dst, a, b = ops
         declare_ssa(dst)
-        emit "#{ssa(dst)} = (#{operand(a)} #{name} #{operand(b)});"
+        emit "  " + "#{ssa(dst)} = (#{operand(a)} #{name} #{operand(b)});"
       when :~
         dst, a = ops
         declare_ssa(dst)
-        emit "#{ssa(dst)} = #{name}#{operand(a)};"
+        emit "  " + "#{ssa(dst)} = #{name}#{operand(a)};"
       when :bitrev
         dst, src = ops
         declare_ssa(dst)
-        emit "#{ssa(dst)} = CPU.bitrev(#{operand(src)});"
+        emit "  " + "#{ssa(dst)} = CPU.bitrev(#{operand(src)});"
       when :as_signed
         dst, src = ops
         declare_ssa(dst)
-        emit "#{ssa(dst)} = static_cast<int64_t>(#{operand(src)});"
+        emit "  " + "#{ssa(dst)} = static_cast<int64_t>(#{operand(src)});"
       when :as_unsigned
         dst, src = ops
         declare_ssa(dst)
-        emit "#{ssa(dst)} = static_cast<uint64_t>(#{operand(src)});"
+        emit "  " + "#{ssa(dst)} = static_cast<uint64_t>(#{operand(src)});"
       when :sext
         dst, src = ops
         from = attrs[:from]
         declare_ssa(dst)
-        emit "#{ssa(dst)} = CPU.sext(#{operand(src)}, #{from});"
+        emit "  " + "#{ssa(dst)} = CPU.sext(#{operand(src)}, #{from});"
       when :zext
         dst, src = ops
         from = attrs[:from]
         declare_ssa(dst)
-        emit "#{ssa(dst)} = CPU.zext(#{operand{src}}, #{from});"
+        emit "  " + "#{ssa(dst)} = CPU.zext(#{operand(src)}, #{from});"
       when :load
         dst, addr = ops
         declare_ssa(dst)
-        bits = dst[:type][:bits]
-        emit "#{ssa(dst)} = CPU.load(#{operand(addr)}, #{bits});"
+        bits = dst.type[:bits]
+        emit "  " + "#{ssa(dst)} = CPU.load(#{operand(addr)}, #{bits});"
       when :store
         addr, val = ops
-        bits = val[:type][:bits]
-        emit "CPU.store(#{operand(addr)}, #{operand(val)}, #{bits});"
-      when :getreg
-        var_sym, reg = ops
-        var = @scope.vars[var_sym]
-        declare_ssa(var)
-        emit "#{ssa(var)} = CPU.getReg(#{reg.name});"
+        bits = val.type[:bits]
+        emit "  " + "CPU.store(#{operand(addr)}, #{operand(val)}, #{bits});"
       when :setreg
         reg, var = ops
-        emit "CPU.setReg(#{reg.name}, #{ssa(var)});"
+        emit "  " + "CPU.setReg(#{reg.name}, #{ssa(var)});"
       when :syscall
-        num = ops.first
-        emit "CPU.syscall(#{operand(num)});"
+        code = ops.first
+        declare_ssa(code)
+        emit "  " + "CPU.syscall(#{operand(code)});"
       when :cmp_eq
-        a, b = emit_operand(ops[1]), emit_operand(ops[2])
-        "auto #{dst} = (#{a} == #{b}) ? 1u : 0u;"
+        a, b = operand(ops[1]), operand(ops[2])
+        dst = ops[0]
+        declare_ssa(dst)
+        emit "  " + "#{ssa(dst)} = (#{a} == #{b});"
       when :cmp_ne
-        a, b = emit_operand(ops[1]), emit_operand(ops[2])
-        "auto #{dst} = (#{a} != #{b}) ? 1u : 0u;"
+        a, b = operand(ops[1]), operand(ops[2])
+        dst = ops[0]
+        declare_ssa(dst)
+        emit "  " + "#{ssa(dst)} = (#{a} != #{b});"
       when :cmp_lt
-        a, b = emit_operand(ops[1]), emit_operand(ops[2])
-        "auto #{dst} = (static_cast<int32_t>(#{a}) < static_cast<int32_t>(#{b})) ? 1u : 0u;"
+        a, b = operand(ops[1]), operand(ops[2])
+        dst = ops[0]
+        declare_ssa(dst)
+        emit "  " + "#{ssa(dst)} = (static_cast<int32_t>(#{a}) < static_cast<int32_t>(#{b}));"
       when :cmp_ge
-        a, b = emit_operand(ops[1]), emit_operand(ops[2])
-        "auto #{dst} = (static_cast<int32_t>(#{a}) >= static_cast<int32_t>(#{b})) ? 1u : 0u;"
+        a, b = operand(ops[1]), operand(ops[2])
+        dst = ops[0]
+        declare_ssa(dst)
+        emit "  " + "#{ssa(dst)} = (static_cast<int32_t>(#{a}) >= static_cast<int32_t>(#{b}));"
       when :cmp_ltu
-        a, b = emit_operand(ops[1]), emit_operand(ops[2])
-        "auto #{dst} = (#{a} < #{b}) ? 1u : 0u;"
+        a, b = operand(ops[1]), operand(ops[2])
+        dst = ops[0]
+        declare_ssa(dst)
+        emit "  " + "#{ssa(dst)} = (#{a} < #{b});"
       when :cmp_geu
-        a, b = emit_operand(ops[1]), emit_operand(ops[2])
-        "auto #{dst} = (#{a} >= #{b}) ? 1u : 0u;"
+        a, b = operand(ops[1]), operand(ops[2])
+        dst = ops[0]
+        declare_ssa(dst)
+        emit "  " + "#{ssa(dst)} = (#{a} >= #{b});"
+      when :getpc
+        var_ir = ops[0]
+        declare_ssa(var_ir)
+        emit "  " + "#{ssa(var_ir)} = CPU.getPC();"
+      when :setpc
+        var = ops[1]
+        emit "  " + "CPU.setPC(#{ssa(var)});"
       else
         raise "Unhandled IR operation: #{name}"
       end

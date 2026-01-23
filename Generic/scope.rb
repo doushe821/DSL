@@ -43,6 +43,15 @@ module SimInfra
         super
     end
 
+    def pc
+        stmt :getpc, [tmpvar(Type.u(64))]
+    end
+
+    def setpc(var)
+      raise "Cannot set SSA variable" if var.is_a?(SimInfra::XReg)
+      stmt(:setpc, [var.name, var])
+    end
+
     def setreg(reg_var)
       raise "Cannot set SSA variable" if reg_var.is_a?(SimInfra::XReg)
       stmt(:setreg, [reg_var.name, reg_var])
@@ -52,12 +61,12 @@ module SimInfra
 
     def resolve_const(what)
         return what if (what.class== Var) or (what.class== Constant) # or other known classes
-        return Constant.new(self, "const_#{next_counter}", what) if (what.class== Integer)
+        return new_tmp_const(what) if what.is_a?(Integer)
     end
 
     def syscall(name, *args)
       args = args.map { |a| resolve_const(a) }
-      ret = tmpvar(Type.u(32)) # make type adjustable?
+      ret = tmpvar(Type.u(32))
       stmt :syscall, [ret, name, *args]
     end
 
@@ -112,7 +121,7 @@ module SimInfra
 
     def zext(a, from:, to:)
         a = resolve_const(a)
-        stmt :zext, [tmpvar(Type.u(to)), a], { from:, to: }
+        stmt :zext, [tmpvar(Type.u(from)), a], { from:, to: }
     end
 
     def bitrev(a)
@@ -137,7 +146,11 @@ module SimInfra
 
     # Var.new is better than calling var, because it does not pollute :vars for no reason
     private def tmpvar(type); Var.new(self, :"_tmp#{next_counter}".to_sym, type); end
-        
+    private def new_tmp_const(value)
+        tmp = Var.new(self, :"_c#{next_counter}", Type.s(32))
+        stmt(:new_const, [tmp, value])
+    end
+
     # stmt adds statement into tree and returns operand[0]
     # which is result in near all cases
     def stmt(name, operands, attrs= nil);
