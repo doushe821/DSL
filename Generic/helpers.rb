@@ -1,5 +1,6 @@
 module SimInfra
   # AI generated
+  # And does not support syscalls for now
   class IRPrettyPrinter
     def initialize(instructions)
       @instructions = instructions

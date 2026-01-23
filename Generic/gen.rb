@@ -1,9 +1,10 @@
 require_relative 'base'
 require 'yaml'
 require 'set'
-require_relative 'map_tree.rb'
-require_relative 'decoder_tree.rb'
-require_relative 'helpers.rb'
+require_relative 'map_tree'
+require_relative 'decoder_tree'
+require_relative 'helpers'
+require_relative 'gen_regstate'
 
 module SimGen
   class UltimateGenerator
@@ -17,7 +18,7 @@ module SimGen
         Symbol, SimInfra::Scope::Type, SimInfra::Memory], aliases: true)
 
       SimInfra::IRPrettyPrinter.new(@@parsed_ir).run # pretty dump for debug
-
+      SimInfra::RegStateGenerator.new.generate
       @@parsed_ir.each do |instr|
         binary_value = 0
         instr[:fields].each do |field|

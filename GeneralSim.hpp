@@ -3,34 +3,34 @@
 #include <cassert>
 #include "ISADescription.hpp"
 
+#include <memory>
 #include <vector>
 #include <variant>
 
 namespace GeneralSim {
-// TODO: 
-// Generate instruction Identity enum -> generate hash table with functions,
-//  
 
-enum InstructionIdentity { // Expected to be Encoding format + opcode inside the format
-// GENERATED
-}; // Might be in another header
-
-namespace {
 enum class ImmediateType : uint8_t {
   Unsigned,
   Signed
 };
 
-} // namespace
 
-static inline int32_t signExtend(uint32_t value, int bits) {
-    return (int32_t)(value << (32 - bits)) >> (32 - bits);
-}
 class Immediate {
 private:
-  unsigned RawValue = 0;
-  unsigned BitSize = 0;
+  uint32_t RawValue = 0;
+  uint16_t BitSize = 0;
   ImmediateType Type = ImmediateType::Unsigned;
+
+  // I don't want to declare sext in the header for just
+  // 2 uses of it, so I copied it here.
+  constexpr uint64_t sext(uint64_t Val, int N) const {
+    if (Val & (1 << (N - 1))) {
+      int Mask = ~((1 << N) - 1);
+      Val |= Mask;
+    }
+    return Val;
+  }
+
 public:
   constexpr Immediate() = default;
   constexpr Immediate(uint32_t raw,
@@ -54,9 +54,9 @@ public:
     return Type == ImmediateType::Unsigned;
   }
 
-  constexpr int32_t asSigned() const {
+  constexpr uint64_t asSigned() const {
     assert(isSigned());
-    return signExtend(RawValue, BitSize);
+    return sext(RawValue, BitSize);
   }
 
   constexpr uint32_t asUnsigned() const {
@@ -73,11 +73,10 @@ public:
   }
 };
 
-
-// TODO add forbidden registers list and forbidden registers list checks.
+using XReg = uint16_t;
 class Register {
 private:
-  uint16_t Index = 0;
+  XReg Index = 0;
 public:
   constexpr Register() = default;
   constexpr explicit Register(uint8_t _Index) { assert(ISA::RegisterCount < _Index); Index = _Index; }
@@ -91,6 +90,85 @@ public:
 inline uint32_t getMaskedValue(uint32_t Value, int StartBit, int FinishBit) {
   return (Value >> StartBit) & ((1 << (FinishBit - StartBit + 1)) - 1);
 }
+
+namespace {
+class RegState { // interface
+public:
+  virtual ~RegState();
+  virtual uint64_t getReg(XReg r) { assert("Not implemented\n"); };
+  virtual void     setReg(XReg r, uint64_t v) { assert("Not implemented\n"); };
+  virtual uint64_t getRegSystem(XReg r) { assert("Not implemented\n"); };
+  virtual void     setRegSystem(XReg r, uint64_t v) { assert("Not implemented\n"); };
+};
+} // namespace
+
+class CPU {
+private:
+  std::unique_ptr<RegState> RState;
+  constexpr uint64_t getRegSystem(XReg r) { return RState->getRegSystem(r); }
+  constexpr void     setRegSystem(XReg r, uint64_t v) { RState->setRegSystem(r, v); };
+public:
+
+  constexpr uint64_t getReg(XReg r) { return  RState->getReg(r); };
+  constexpr void     setReg(XReg r, uint64_t v) { RState->setReg(r, v); };
+
+  constexpr uint64_t load(uint64_t addr, int bits);
+  constexpr void     store(uint64_t addr, uint64_t value, int bits);
+
+  constexpr void syscall(int num);
+
+  constexpr int bitrev(int Val, int NBits = 32) { // Does it in log(n)
+    assert(NBits <= 64);
+    uint64_t Mask = (NBits == 64) ? ~0ULL : ((1ULL << NBits) - 1);
+    Val &= Mask;
+
+    for (unsigned Step = 1; Step < NBits; Step <<= 1) {
+        uint64_t M =
+            ((1ULL << Step) - 1) |
+            (((1ULL << Step) - 1) << (2 * Step));
+
+        uint64_t Pattern = 0;
+        for (unsigned I = 0; I < 64; I += 2 * Step)
+            Pattern |= M << I;
+
+        uint64_t A = (Val & Pattern);
+        uint64_t B = (Val & (Pattern << Step));
+
+        Val = (A << Step) | (B >> Step);
+    }
+
+    return Val & Mask;
+  }
+
+  constexpr uint64_t sext(uint64_t Val, int N) {
+    if (Val & (1 << (N - 1))) {
+      int Mask = ~((1 << N) - 1);
+      Val |= Mask;
+    }
+    return Val;
+  }
+
+  constexpr uint64_t zext(uint64_t v, unsigned N)
+  {
+    assert(N <= 64);
+    if (N == 64)
+        return v;
+    return v & ((1ULL << N) - 1);
+  }
+
+  constexpr int saturateUnsigned(unsigned Val, unsigned N) {
+    unsigned Limit = (1 << N) - 1;
+    if (Val > Limit) {
+      Val = Limit;
+    }
+    return Val;
+  }
+};
+
+class Memory {
+
+};
+
 
 
 } // namespace GeneralSim
