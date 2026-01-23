@@ -61,7 +61,7 @@ module SimInfra
     end
 
     def emit_header
-      hpp_name = "#{@arch_name}RegState.hpp"
+      hpp_name = "Sim/include/#{@arch_name}RegState.hpp"
 
       File.open(hpp_name, "w") do |f|
         f.puts header_preamble

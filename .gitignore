@@ -11,7 +11,7 @@
 /tmp/
 *.dot
 *.pdf
-
+*.yaml
 *.png
 *.lock
 # Used by dotenv library to load environment variables.

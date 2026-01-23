@@ -2,6 +2,7 @@
 
 #include <variant>
 #include "GeneralSim.hpp"
+
 struct Add {
   GeneralSim::XReg rd;
   GeneralSim::XReg rs1;

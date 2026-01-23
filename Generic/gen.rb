@@ -34,7 +34,7 @@ module SimGen
       end
 
       generate_general_instruction_description
-      exec = File.open('exec.cpp', 'w')
+      exec = File.open('Sim/src/exec.cpp', 'w')
       exec << ("#include \"GeneralSim.hpp\"\n" + "namespace ExecTable {\n" + SimInfra::CppEmitter.new.emit_all_instructions(@@parsed_ir) + "} // namespace ExecTable\n")
 
       
@@ -172,7 +172,7 @@ module SimGen
     end
 
     def traverse_decode_tree(tree_root)
-      File.open('decoder.cpp', 'w') do |file|
+      File.open('Sim/src/decoder.cpp', 'w') do |file|
         file.write(
         "// Generated code //\n" + 
         "#include \"decoder.hpp\"\n" +
