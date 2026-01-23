@@ -32,13 +32,24 @@ module SimInfra
     end
     #
     class Var
-        [:+, :-, :<<, :>>, :<].each do |op|
+        [:+, :-, :&, :|, :^, :<<, :>>, :<, :==].each do |op|
             define_method(op) { |other| @scope.binOp(self, other, op) }
+        end
+
+        [:~].each do |op|
+            define_method(op) { |other| @scope.unOp(self, op) }
         end
 
         def zext(to) # TODO make it work
             scope.zext(self, from: type.bits, to: to)
         end
+
+        def eq(other)  = @scope.cmp_eq(self, other)
+        def ne(other)  = @scope.cmp_ne(self, other)
+        def lt(other)  = @scope.cmp_lt(self, other)
+        def ge(other)  = @scope.cmp_ge(self, other)
+        def ltu(other) = @scope.cmp_ltu(self, other)
+        def geu(other) = @scope.cmp_geu(self, other)
 
     end
 end

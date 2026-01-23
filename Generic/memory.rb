@@ -8,7 +8,7 @@ module SimInfra
     end
 
     def [](addr, width)
-      @scope.load(addr)
+      @scope.load(addr, width)
     end
 
     def []=(addr, value)

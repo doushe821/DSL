@@ -67,7 +67,7 @@ module SimInfra
 
     alias m memory
 
-    def load(addr, width = 32)
+    def load(addr, width)
         type = Type.u(width)
         addr = resolve_const(addr)
         tmp  = tmpvar(type)
@@ -117,6 +117,22 @@ module SimInfra
 
     def bitrev(a)
         unOp(a, :bitrev)
+    end
+
+    def cmp_eq(a, b)  = cmp_bin(a, b, :cmp_eq)
+    def cmp_ne(a, b)  = cmp_bin(a, b, :cmp_ne)
+
+    def cmp_lt(a, b)  = cmp_bin(a, b, :cmp_lt)
+    def cmp_ge(a, b)  = cmp_bin(a, b, :cmp_ge)
+
+    def cmp_ltu(a, b) = cmp_bin(a, b, :cmp_ltu)
+    def cmp_geu(a, b) = cmp_bin(a, b, :cmp_geu)
+
+
+    def cmp_bin(a, b, op)
+        a = resolve_const(a)
+        b = resolve_const(b)
+        stmt(op, [tmpvar(Type.s(32)), a, b])
     end
 
     # Var.new is better than calling var, because it does not pollute :vars for no reason

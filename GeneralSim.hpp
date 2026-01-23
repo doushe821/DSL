@@ -21,7 +21,7 @@ private:
   uint16_t BitSize = 0;
   ImmediateType Type = ImmediateType::Unsigned;
 
-  // I don't want to declare sext in the header for just
+  // I don't want to declare sext outside of the classes for just
   // 2 uses of it, so I copied it here.
   constexpr uint64_t sext(uint64_t Val, int N) const {
     if (Val & (1 << (N - 1))) {
@@ -74,17 +74,6 @@ public:
 };
 
 using XReg = uint16_t;
-class Register {
-private:
-  XReg Index = 0;
-public:
-  constexpr Register() = default;
-  constexpr explicit Register(uint8_t _Index) { assert(ISA::RegisterCount < _Index); Index = _Index; }
-
-  constexpr uint8_t getIndex() { return Index; }
-  constexpr void setIndex(uint16_t NewIndex) { assert(ISA::RegisterCount < NewIndex); Index = NewIndex; }
-
-};
 
 
 inline uint32_t getMaskedValue(uint32_t Value, int StartBit, int FinishBit) {
@@ -92,7 +81,7 @@ inline uint32_t getMaskedValue(uint32_t Value, int StartBit, int FinishBit) {
 }
 
 namespace {
-class RegState { // interface
+class RegState { // interface for generated classes
 public:
   virtual ~RegState();
   virtual uint64_t getReg(XReg r) { assert("Not implemented\n"); };
