@@ -9,134 +9,85 @@
 #include <cstdlib>
 #include <cstring>
 
-#include <stdexcept>
 #include <string>
+#include <vector>
 
-static void loadToMemory(uint64_t addr,
-                           const uint8_t *data,
-                           size_t size)
+#include <cassert>
+
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <libelf.h>
+#include <gelf.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <cstring>
+#include <cassert>
+
+namespace {
+
+void checkCompatability(Elf& ELF)
 {
-    printf("Loading %zu bytes at VA 0x%lx\n", size, addr);
+    GElf_Ehdr Ehdr;
+    if (!gelf_getehdr(&ELF, &Ehdr)) {
+        assert("gelf_getehdr failed" & 0);
+    }
+    if (Ehdr.e_machine != EM_RISCV) {
+        assert("ELF is not RISC-V" & 0);
+    }
+    if (Ehdr.e_ident[EI_DATA] != ELFDATA2LSB) {
+        assert("ELF is not little-endian" & 0);
+    }
+    if (Ehdr.e_type != ET_EXEC && Ehdr.e_type != ET_DYN) {
+        assert("unsupported ELF type" & 0);
+    }
 }
 
-class ElfLoader {
-public:
-    explicit ElfLoader(const std::string &_path)
-        : path(_path) {}
-
-    uint64_t load()
-    {
-        initLibelf();
-        openFile();
-        readHeader();
-        checkRelocations();
-        loadExecSections();
-        cleanup();
-        return entry;
-    }
-
-private:
-    std::string path;
-    int fd = -1;
-    Elf *elf = nullptr;
-    uint64_t entry = 0;
-
-
-    static void fail(const char *msg) // TODO move to separate helper file
-    {
-        throw std::runtime_error(msg);
-    }
-
-    static void failElf(const char *msg)
-    {
-        std::string err = msg;
-        err += ": ";
-        err += elf_errmsg(-1);
-        throw std::runtime_error(err);
-    }
-
-    void initLibelf()
-    {
-        if (elf_version(EV_CURRENT) == EV_NONE)
-            fail("libelf initialization failed");
-    }
-
-    void openFile()
-    {
-        fd = open(path.c_str(), O_RDONLY);
-        if (fd < 0)
-            fail("failed to open ELF file");
-
-        elf = elf_begin(fd, ELF_C_READ, nullptr);
-        if (!elf)
-            failElf("elf_begin failed");
-    }
-
-    void readHeader()
-    {
-        GElf_Ehdr ehdr;
-        if (!gelf_getehdr(elf, &ehdr))
-            failElf("gelf_getehdr failed");
-
-        // TODO Generate architecture specific checks?
-        if (ehdr.e_machine != EM_RISCV)
-            fail("ELF is not RISC-V");
-
-        if (ehdr.e_ident[EI_DATA] != ELFDATA2LSB)
-            fail("ELF is not little-endian");
-
-        if (ehdr.e_type != ET_EXEC && ehdr.e_type != ET_DYN)
-            fail("unsupported ELF type");
-
-        entry = ehdr.e_entry;
-    }
-
-    void checkRelocations()
-    {
-        Elf_Scn *scn = nullptr;
-        while ((scn = elf_nextscn(elf, scn)) != nullptr) {
-            GElf_Shdr shdr;
-            gelf_getshdr(scn, &shdr);
-
-            if (shdr.sh_type == SHT_RELA ||
-                shdr.sh_type == SHT_REL) {
-                fail("ELF contains relocations (not supported)"); // TODO 
-            }
+void checkRelocations(Elf& ELF)
+{
+    Elf_Scn *Scn = nullptr;
+    while ((Scn = elf_nextscn(&ELF, Scn)) != nullptr) {
+        GElf_Shdr Shdr;
+        gelf_getshdr(Scn, &Shdr);
+        if (Shdr.sh_type == SHT_RELA ||
+            Shdr.sh_type == SHT_REL) {
+            assert("ELF contains relocations (not supported)" & 0); // TODO 
         }
     }
+}
 
-    void loadExecSections()
-    {
-        Elf_Scn *scn = nullptr;
+uint64_t loadElf(const std::string& ElfPath, std::vector<uint8_t>& Buf) {
+    assert(elf_version(EV_CURRENT) != EV_NONE);
 
-        while ((scn = elf_nextscn(elf, scn)) != nullptr) {
-            GElf_Shdr shdr;
-            gelf_getshdr(scn, &shdr);
+    int Fd = open(ElfPath.c_str(), O_RDONLY);
+    assert(Fd >= 0);
 
-            if (!(shdr.sh_flags & SHF_EXECINSTR)) {
-                continue;
-            }
+    Elf* ElfFile = elf_begin(Fd, ELF_C_READ, nullptr);
+    assert(ElfFile != nullptr);
+    assert(elf_kind(ElfFile) == ELF_K_ELF);
 
-            if (shdr.sh_size == 0) {
-                continue;
-            }
+    checkCompatability(*ElfFile);
+    checkRelocations(*ElfFile);
 
-            Elf_Data *data = elf_getdata(scn, nullptr);
-            if (!data || !data->d_buf)
-                fail("failed to read section data");
+    GElf_Ehdr Ehdr;
+    uint64_t Entry = Ehdr.e_entry;
+    elf_end(ElfFile); 
+    close(Fd);
+    
 
-            const uint8_t *bytes =
-                static_cast<const uint8_t *>(data->d_buf);
+    std::ifstream In(ElfPath, std::ios::binary | std::ios::ate);
+    assert(In.is_open());
 
-            loadToMemory(shdr.sh_addr, bytes, data->d_size);
-        }
-    }
+    std::streamsize FileSize = In.tellg();
+    assert(FileSize >= 0);
+    In.seekg(0, std::ios::beg);
 
-    void cleanup()
-    {
-        if (elf)
-            elf_end(elf);
-        if (fd >= 0)
-            close(fd);
-    }
-};
+    Buf.reserve(FileSize);
+    assert(In.read(reinterpret_cast<char*>(Buf.data()), FileSize));
+
+    return Entry;
+}
+
+} // namespace
+

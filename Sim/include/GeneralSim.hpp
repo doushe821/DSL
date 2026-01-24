@@ -1,10 +1,17 @@
 #pragma once
 #include <cstdint>
 #include <cassert>
+#include <cstring>
 
 #include <memory>
+#include <array>
+#include <string>
+
+#include "ElfLoader.hpp"
 
 namespace GeneralSim {
+
+static const size_t kMemorySize = UINT16_MAX; // TODO Make CLI-defined with defauly value
 
 enum class ImmediateType : uint8_t {
   Unsigned,
@@ -87,14 +94,52 @@ public:
 };
 } // namespace
 
+class Memory { // TODO turn this into interface for Architecture-defined memory model
+private:
+  static const unsigned kOctWordSize = 32;
+  static const unsigned kQuadWordSize = 16;
+  static const unsigned kDoubleWordSize = 8;
+  static const unsigned kWordSize = 4;
+  static const unsigned kHalfWordSize = 2;
+  static const unsigned kByteSize = 1;
+
+  std::array<char, kMemorySize> RAM;
+
+public:
+
+  void write(const void* Source, unsigned N, unsigned DestinationAddress) {
+    assert(Source && "Invalid source pointer\n");
+    assert((DestinationAddress < kMemorySize && DestinationAddress + N < kMemorySize) && "Trying to write to unreachable address\n");
+    memcpy(reinterpret_cast<char*>(RAM.data()) + DestinationAddress, Source, N);
+  }
+
+  void read(void* Destination, unsigned N, unsigned SourceAddress) const {
+    assert(Destination && "Invalid destination pointer\n");
+    assert((SourceAddress < kMemorySize && SourceAddress + N < kMemorySize) && "Trying to read from unreachable address\n");
+    memcpy(Destination, reinterpret_cast<const char*>(RAM.data()) + SourceAddress, N);
+  }
+};
+
 class CPU {
 private:
-  uint64_t PC;
+  uint64_t PC = UINT64_MAX;
   bool Finished{false};
   std::unique_ptr<RegState> RState;
+  Memory RAM;
   constexpr uint64_t getRegSystem(XReg R) { return RState->getRegSystem(R); }
   constexpr void     setRegSystem(XReg R, uint64_t V) { RState->setRegSystem(R, V); };
 public:
+
+  CPU(uint64_t EntryAddress, std::vector<uint8_t> RawElf) : PC(EntryAddress) { RAM.write(RawElf.data(), RawElf.size(), 0); }
+
+  void execute() {
+    assert(PC != UINT64_MAX);
+    while(!Finished) {
+      uint32_t RawInstr = 0;
+      RAM.read(&RawInstr, sizeof(RawInstr), PC);
+
+    }
+  }
 
   constexpr uint64_t getPC() { return PC; };
   constexpr void setPC(uint64_t NewPC) { PC = NewPC; };
@@ -102,7 +147,7 @@ public:
   constexpr uint64_t getReg(XReg R) { return  RState->getReg(R); };
   constexpr void     setReg(XReg R, uint64_t V) { RState->setReg(R, V); };
 
-  constexpr uint64_t load(uint64_t Addr, int Bits);
+  constexpr uint64_t load(uint64_t Addr, int Bits) { return 0; };
   constexpr void     store(uint64_t Addr, uint64_t Value, int Bits);
 
   constexpr void syscall(int Code) { if (Code == 1) { Finished = true; } else { assert("Not implemented\n"); } };
@@ -153,10 +198,6 @@ public:
     }
     return Val;
   }
-};
-
-class Memory {
-
 };
 
 } // namespace GeneralSim
