@@ -50,7 +50,7 @@ module SimGen
         exec << ("#include \"GeneralSim.hpp\"\n" + "namespace ExecTable {\nusing XReg = uint16_t;\n" + emitter.emit_all_instructions(@@parsed_ir) + "} // namespace ExecTable\n")
       end
       File.open('Sim/src/Decoder.cpp', 'w') do |decode|
-        decode << ("#include \"GeneralSim.hpp\"\n" + "#include \"Instructions.hpp\"\nusing XReg = uint16_t;\n" + "namespace Decoder {\n" + emitter.emit_decoder_tree(root, @@parsed_ir) + "} // namespace Decoder\n")
+        decode << ("#include \"GeneralSim.hpp\"\n#include \"Decoder.hpp\"\n" + "#include \"Instructions.hpp\"\nusing XReg = uint16_t;\n" + "namespace Decoder {\n" + emitter.emit_decoder_tree(root, @@parsed_ir) + "} // namespace Decoder\n")
       end
 
     end

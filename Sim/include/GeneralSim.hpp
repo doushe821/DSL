@@ -5,9 +5,8 @@
 
 #include <memory>
 #include <array>
-#include <string>
 
-#include "ElfLoader.hpp"
+#include "Decoder.hpp"
 
 namespace GeneralSim {
 
@@ -96,13 +95,6 @@ public:
 
 class Memory { // TODO turn this into interface for Architecture-defined memory model
 private:
-  static const unsigned kOctWordSize = 32;
-  static const unsigned kQuadWordSize = 16;
-  static const unsigned kDoubleWordSize = 8;
-  static const unsigned kWordSize = 4;
-  static const unsigned kHalfWordSize = 2;
-  static const unsigned kByteSize = 1;
-
   std::array<char, kMemorySize> RAM;
 
 public:
@@ -137,7 +129,8 @@ public:
     while(!Finished) {
       uint32_t RawInstr = 0;
       RAM.read(&RawInstr, sizeof(RawInstr), PC);
-
+      auto Instr = Decoder::decode(RawInstr);
+      
     }
   }
 

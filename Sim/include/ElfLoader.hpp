@@ -25,9 +25,7 @@
 #include <cstring>
 #include <cassert>
 
-namespace {
-
-void checkCompatability(Elf& ELF)
+static inline void checkCompatability(Elf& ELF)
 {
     GElf_Ehdr Ehdr;
     if (!gelf_getehdr(&ELF, &Ehdr)) {
@@ -44,7 +42,7 @@ void checkCompatability(Elf& ELF)
     }
 }
 
-void checkRelocations(Elf& ELF)
+static inline void checkRelocations(Elf& ELF)
 {
     Elf_Scn *Scn = nullptr;
     while ((Scn = elf_nextscn(&ELF, Scn)) != nullptr) {
@@ -57,7 +55,7 @@ void checkRelocations(Elf& ELF)
     }
 }
 
-uint64_t loadElf(const std::string& ElfPath, std::vector<uint8_t>& Buf) {
+static inline uint64_t loadElf(const std::string& ElfPath, std::vector<uint8_t>& Buf) {
     assert(elf_version(EV_CURRENT) != EV_NONE);
 
     int Fd = open(ElfPath.c_str(), O_RDONLY);
@@ -88,6 +86,3 @@ uint64_t loadElf(const std::string& ElfPath, std::vector<uint8_t>& Buf) {
 
     return Entry;
 }
-
-} // namespace
-

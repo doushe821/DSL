@@ -1,4 +1,4 @@
-#include "GeneralSim.hpp"
+#include "Decoder.hpp"
 #include "Instructions.hpp"
 using XReg = uint16_t;
 namespace Decoder {
