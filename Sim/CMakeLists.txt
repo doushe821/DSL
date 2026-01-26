@@ -5,16 +5,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 set(EXECUTABLE sim)
 add_executable (${EXECUTABLE}
     src/main.cpp
-    src/Exec.cpp
-    src/Decoder.cpp
+    src/ElfLoader.cpp
 )
-
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(LIBELF REQUIRED libelf)
-
-
-target_include_directories(sim PRIVATE ${LIBELF_INCLUDE_DIRS})
-target_link_libraries(sim PRIVATE ${LIBELF_LIBRARIES})
 
 target_include_directories (${EXECUTABLE}
     PRIVATE
@@ -51,7 +43,6 @@ target_compile_options (${EXECUTABLE}
 
         $<$<CONFIG:Release>:
             -O2
-            -flto
             -DNDEBUG
         >
 )
@@ -70,7 +61,6 @@ target_link_options (${EXECUTABLE}
 
         $<$<CONFIG:Release>:
             -O2
-            -flto
         >
 )
 

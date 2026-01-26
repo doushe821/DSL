@@ -1,7 +1,7 @@
 #include "GeneralSim.hpp"
 namespace ExecTable {
-  using XReg = uint16_t;
-  void EXEC_ADD(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
+using XReg = uint16_t;
+void EXEC_ADD(GeneralSim::CPU &CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction ADD
 {
   uint64_t v_rd = 0;
@@ -17,8 +17,7 @@ namespace ExecTable {
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_SUB(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
+void EXEC_SUB(GeneralSim::CPU &CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction SUB
 {
   uint64_t v_rd = 0;
@@ -34,8 +33,7 @@ void EXEC_SUB(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_SLL(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
+void EXEC_SLL(GeneralSim::CPU &CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction SLL
 {
   uint64_t v_rd = 0;
@@ -55,8 +53,7 @@ void EXEC_SLL(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_SLT(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
+void EXEC_SLT(GeneralSim::CPU &CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction SLT
 {
   uint64_t v_rd = 0;
@@ -72,8 +69,7 @@ void EXEC_SLT(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_SLTU(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
+void EXEC_SLTU(GeneralSim::CPU &CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction SLTU
 {
   uint64_t v_rd = 0;
@@ -89,8 +85,7 @@ void EXEC_SLTU(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_XOR(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
+void EXEC_XOR(GeneralSim::CPU &CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction XOR
 {
   uint64_t v_rd = 0;
@@ -106,8 +101,7 @@ void EXEC_XOR(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_SRL(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
+void EXEC_SRL(GeneralSim::CPU &CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction SRL
 {
   uint64_t v_rd = 0;
@@ -129,8 +123,7 @@ void EXEC_SRL(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_SRA(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
+void EXEC_SRA(GeneralSim::CPU &CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction SRA
 {
   uint64_t v_rd = 0;
@@ -152,8 +145,7 @@ void EXEC_SRA(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_OR(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
+void EXEC_OR(GeneralSim::CPU &CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction OR
 {
   uint64_t v_rd = 0;
@@ -169,8 +161,7 @@ void EXEC_OR(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_AND(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
+void EXEC_AND(GeneralSim::CPU &CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction AND
 {
   uint64_t v_rd = 0;
@@ -186,8 +177,7 @@ void EXEC_AND(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_MUL(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
+void EXEC_MUL(GeneralSim::CPU &CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction MUL
 {
   uint64_t v_rd = 0;
@@ -203,8 +193,7 @@ void EXEC_MUL(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_DIV(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
+void EXEC_DIV(GeneralSim::CPU &CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction DIV
 {
   uint64_t v_rd = 0;
@@ -220,8 +209,7 @@ void EXEC_DIV(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_REM(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
+void EXEC_REM(GeneralSim::CPU &CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction REM
 {
   uint64_t v_rd = 0;
@@ -237,8 +225,7 @@ void EXEC_REM(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_ADDI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_ADDI(GeneralSim::CPU &CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction ADDI
 {
   uint64_t v_rd = 0;
@@ -254,8 +241,7 @@ void EXEC_ADDI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate im
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_SLTI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SLTI(GeneralSim::CPU &CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction SLTI
 {
   uint64_t v_rd = 0;
@@ -271,8 +257,7 @@ void EXEC_SLTI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate im
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_SLTIU(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SLTIU(GeneralSim::CPU &CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction SLTIU
 {
   uint64_t v_rd = 0;
@@ -292,8 +277,7 @@ void EXEC_SLTIU(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate i
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_XORI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_XORI(GeneralSim::CPU &CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction XORI
 {
   uint64_t v_rd = 0;
@@ -309,8 +293,7 @@ void EXEC_XORI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate im
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_ORI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_ORI(GeneralSim::CPU &CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction ORI
 {
   uint64_t v_rd = 0;
@@ -326,8 +309,7 @@ void EXEC_ORI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_ANDI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_ANDI(GeneralSim::CPU &CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction ANDI
 {
   uint64_t v_rd = 0;
@@ -343,8 +325,7 @@ void EXEC_ANDI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate im
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_SLLI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SLLI(GeneralSim::CPU &CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction SLLI
 {
   uint64_t v_rd = 0;
@@ -360,8 +341,7 @@ void EXEC_SLLI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate im
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_SRLI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SRLI(GeneralSim::CPU &CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction SRLI
 {
   uint64_t v_rd = 0;
@@ -379,8 +359,7 @@ void EXEC_SRLI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate im
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_SRAI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SRAI(GeneralSim::CPU &CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction SRAI
 {
   uint64_t v_rd = 0;
@@ -398,8 +377,7 @@ void EXEC_SRAI(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate im
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_LB(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_LB(GeneralSim::CPU &CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction LB
 {
   uint64_t v_rd = 0;
@@ -419,8 +397,7 @@ void EXEC_LB(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_LH(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_LH(GeneralSim::CPU &CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction LH
 {
   uint64_t v_rd = 0;
@@ -440,8 +417,7 @@ void EXEC_LH(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_LW(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_LW(GeneralSim::CPU &CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction LW
 {
   uint64_t v_rd = 0;
@@ -459,8 +435,7 @@ void EXEC_LW(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_LBU(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_LBU(GeneralSim::CPU &CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction LBU
 {
   uint64_t v_rd = 0;
@@ -480,8 +455,7 @@ void EXEC_LBU(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_LHU(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_LHU(GeneralSim::CPU &CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction LHU
 {
   uint64_t v_rd = 0;
@@ -501,8 +475,7 @@ void EXEC_LHU(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_SB(GeneralSim::CPU& CPU, XReg rs2, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SB(GeneralSim::CPU &CPU, XReg rs2, XReg rs1, GeneralSim::Immediate imm)
 // Instruction SB
 {
   uint64_t v_rs2 = 0;
@@ -521,8 +494,7 @@ void EXEC_SB(GeneralSim::CPU& CPU, XReg rs2, XReg rs1, GeneralSim::Immediate imm
   CPU.store(v__tmp48, v__tmp49, 8);
 }
 
-
-void EXEC_SH(GeneralSim::CPU& CPU, XReg rs2, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SH(GeneralSim::CPU &CPU, XReg rs2, XReg rs1, GeneralSim::Immediate imm)
 // Instruction SH
 {
   uint64_t v_rs2 = 0;
@@ -541,8 +513,7 @@ void EXEC_SH(GeneralSim::CPU& CPU, XReg rs2, XReg rs1, GeneralSim::Immediate imm
   CPU.store(v__tmp50, v__tmp51, 16);
 }
 
-
-void EXEC_SW(GeneralSim::CPU& CPU, XReg rs2, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SW(GeneralSim::CPU &CPU, XReg rs2, XReg rs1, GeneralSim::Immediate imm)
 // Instruction SW
 {
   uint64_t v_rs2 = 0;
@@ -561,8 +532,7 @@ void EXEC_SW(GeneralSim::CPU& CPU, XReg rs2, XReg rs1, GeneralSim::Immediate imm
   CPU.store(v__tmp52, v__tmp53, 32);
 }
 
-
-void EXEC_JAL(GeneralSim::CPU& CPU, XReg rd, GeneralSim::Immediate imm)
+void EXEC_JAL(GeneralSim::CPU &CPU, XReg rd, GeneralSim::Immediate imm)
 // Instruction JAL
 {
   uint64_t v_rd = 0;
@@ -584,8 +554,7 @@ void EXEC_JAL(GeneralSim::CPU& CPU, XReg rd, GeneralSim::Immediate imm)
   CPU.setPC(v__tmp58);
 }
 
-
-void EXEC_JALR(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_JALR(GeneralSim::CPU &CPU, XReg rd, XReg rs1, GeneralSim::Immediate imm)
 // Instruction JALR
 {
   uint64_t v_rd = 0;
@@ -612,8 +581,7 @@ void EXEC_JALR(GeneralSim::CPU& CPU, XReg rd, XReg rs1, GeneralSim::Immediate im
   CPU.setPC(v__tmp64);
 }
 
-
-void EXEC_LUI(GeneralSim::CPU& CPU, XReg rd, GeneralSim::Immediate imm)
+void EXEC_LUI(GeneralSim::CPU &CPU, XReg rd, GeneralSim::Immediate imm)
 // Instruction LUI
 {
   uint64_t v_rd = 0;
@@ -628,8 +596,7 @@ void EXEC_LUI(GeneralSim::CPU& CPU, XReg rd, GeneralSim::Immediate imm)
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_AUIPC(GeneralSim::CPU& CPU, XReg rd, GeneralSim::Immediate imm)
+void EXEC_AUIPC(GeneralSim::CPU &CPU, XReg rd, GeneralSim::Immediate imm)
 // Instruction AUIPC
 {
   uint64_t v_rd = 0;
@@ -648,8 +615,7 @@ void EXEC_AUIPC(GeneralSim::CPU& CPU, XReg rd, GeneralSim::Immediate imm)
   CPU.setReg(rd, v_rd);
 }
 
-
-void EXEC_BEQ(GeneralSim::CPU& CPU, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
+void EXEC_BEQ(GeneralSim::CPU &CPU, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
 // Instruction BEQ
 {
   uint64_t v_rs1 = 0;
@@ -672,13 +638,12 @@ void EXEC_BEQ(GeneralSim::CPU& CPU, XReg rs1, XReg rs2, GeneralSim::Immediate im
   CPU.setPC(v__tmp74);
 }
 
-
-void EXEC_ECALL(GeneralSim::CPU& CPU)
+void EXEC_ECALL(GeneralSim::CPU &CPU)
 // Instruction ECALL
 {
   uint64_t v__tmp75 = 0;
   CPU.syscall(v__tmp75);
 }
- 
+
 } // namespace ExecTable
 ")
