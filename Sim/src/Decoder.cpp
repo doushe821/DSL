@@ -1,11 +1,12 @@
+#include "GeneralSim.hpp"
 #include "Decoder.hpp"
 #include "Instructions.hpp"
 using XReg = uint16_t;
 namespace Decoder {
-Instruction decode(uint32_t Instr) {
+  Instruction decode(uint32_t Instr) {
   switch ((Instr >> 1) & ((1u << 6) - 1)) {
     case 25: {
-      switch ((Instr >> 9) & ((1u << 6) - 1)) {
+      switch ((Instr >> 12) & ((1u << 3) - 1)) {
         case 0: {
           switch ((Instr >> 25) & ((1u << 6) - 1)) {
             case 0: {
@@ -30,33 +31,33 @@ Instruction decode(uint32_t Instr) {
               assert("No such inst in ISA");
           }
         }
-        case 8: {
+        case 1: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
           XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
           return Instruction{ SLL{ rd, rs1, rs2 } };
         }
-        case 16: {
+        case 2: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
           XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
           return Instruction{ SLT{ rd, rs1, rs2 } };
         }
-        case 24: {
+        case 3: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
           XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
           return Instruction{ SLTU{ rd, rs1, rs2 } };
         }
-        case 32: {
-          switch ((Instr >> 20) & ((1u << 6) - 1)) {
+        case 4: {
+          switch ((Instr >> 25) & ((1u << 1) - 1)) {
             case 0: {
               XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
               XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
               XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
               return Instruction{ XOR{ rd, rs1, rs2 } };
             }
-            case 32: {
+            case 1: {
               XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
               XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
               XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
@@ -66,15 +67,15 @@ Instruction decode(uint32_t Instr) {
               assert("No such inst in ISA");
           }
         }
-        case 40: {
-          switch ((Instr >> 25) & ((1u << 6) - 1)) {
+        case 5: {
+          switch ((Instr >> 30) & ((1u << 1) - 1)) {
             case 0: {
               XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
               XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
               XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
               return Instruction{ SRL{ rd, rs1, rs2 } };
             }
-            case 32: {
+            case 1: {
               XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
               XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
               XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
@@ -84,15 +85,15 @@ Instruction decode(uint32_t Instr) {
               assert("No such inst in ISA");
           }
         }
-        case 48: {
-          switch ((Instr >> 20) & ((1u << 6) - 1)) {
+        case 6: {
+          switch ((Instr >> 25) & ((1u << 1) - 1)) {
             case 0: {
               XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
               XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
               XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
               return Instruction{ OR{ rd, rs1, rs2 } };
             }
-            case 32: {
+            case 1: {
               XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
               XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
               XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
@@ -102,7 +103,7 @@ Instruction decode(uint32_t Instr) {
               assert("No such inst in ISA");
           }
         }
-        case 56: {
+        case 7: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
           XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
@@ -113,56 +114,56 @@ Instruction decode(uint32_t Instr) {
       }
     }
     case 9: {
-      switch ((Instr >> 9) & ((1u << 6) - 1)) {
+      switch ((Instr >> 12) & ((1u << 3) - 1)) {
         case 0: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
           auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
           return Instruction{ ADDI{ rd, rs1, Imm } };
         }
-        case 16: {
+        case 2: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
           auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
           return Instruction{ SLTI{ rd, rs1, Imm } };
         }
-        case 24: {
+        case 3: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
           auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
           return Instruction{ SLTIU{ rd, rs1, Imm } };
         }
-        case 32: {
+        case 4: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
           auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
           return Instruction{ XORI{ rd, rs1, Imm } };
         }
-        case 48: {
+        case 6: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
           auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
           return Instruction{ ORI{ rd, rs1, Imm } };
         }
-        case 56: {
+        case 7: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
           auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
           return Instruction{ ANDI{ rd, rs1, Imm } };
         }
-        case 8: {
+        case 1: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
           return Instruction{ SLLI{ rd, rs1 } };
         }
-        case 40: {
-          switch ((Instr >> 25) & ((1u << 6) - 1)) {
+        case 5: {
+          switch ((Instr >> 30) & ((1u << 1) - 1)) {
             case 0: {
               XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
               XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
               return Instruction{ SRLI{ rd, rs1 } };
             }
-            case 32: {
+            case 1: {
               XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
               XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
               return Instruction{ SRAI{ rd, rs1 } };
@@ -176,32 +177,32 @@ Instruction decode(uint32_t Instr) {
       }
     }
     case 1: {
-      switch ((Instr >> 9) & ((1u << 6) - 1)) {
+      switch ((Instr >> 12) & ((1u << 3) - 1)) {
         case 0: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
           auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
           return Instruction{ LB{ rd, rs1, Imm } };
         }
-        case 8: {
+        case 1: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
           auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
           return Instruction{ LH{ rd, rs1, Imm } };
         }
-        case 16: {
+        case 2: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
           auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
           return Instruction{ LW{ rd, rs1, Imm } };
         }
-        case 32: {
+        case 4: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
           auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
           return Instruction{ LBU{ rd, rs1, Imm } };
         }
-        case 40: {
+        case 5: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
           auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
@@ -212,7 +213,7 @@ Instruction decode(uint32_t Instr) {
       }
     }
     case 17: {
-      switch ((Instr >> 8) & ((1u << 6) - 1)) {
+      switch ((Instr >> 12) & ((1u << 2) - 1)) {
         case 0: {
           XReg rs2 = ((Instr >> 15) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 20) & ((1u << 5) - 1));
@@ -222,7 +223,7 @@ Instruction decode(uint32_t Instr) {
           auto Imm = GeneralSim::Immediate(ImmRaw, 32, GeneralSim::ImmediateType::Unsigned);
           return Instruction{ SB{ rs2, rs1, Imm } };
         }
-        case 16: {
+        case 1: {
           XReg rs2 = ((Instr >> 15) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 20) & ((1u << 5) - 1));
           uint32_t ImmRaw = 0;
@@ -231,7 +232,7 @@ Instruction decode(uint32_t Instr) {
           auto Imm = GeneralSim::Immediate(ImmRaw, 32, GeneralSim::ImmediateType::Unsigned);
           return Instruction{ SH{ rs2, rs1, Imm } };
         }
-        case 32: {
+        case 2: {
           XReg rs2 = ((Instr >> 15) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 20) & ((1u << 5) - 1));
           uint32_t ImmRaw = 0;
@@ -288,4 +289,5 @@ Instruction decode(uint32_t Instr) {
       assert("No such inst in ISA");
   }
 }
-} // namespace Decoder
+
+} // namespace Decoder"

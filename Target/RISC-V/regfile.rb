@@ -12,8 +12,11 @@ module SimInfra
     end
 
     def XReg(name); XReg.new(name); end
-
-    class XImm
+    # TODO register description
+    # TODO Make infra in Generic folder
+    # :name, :size, :hw[value]
+    # alias zero hw[0] (example)
+    class XImm # for regs used as imm (shamt)
         attr_reader :name
         def initialize(name)
             @name = name

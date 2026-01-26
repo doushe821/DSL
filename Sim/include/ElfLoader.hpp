@@ -25,20 +25,20 @@
 #include <cstring>
 #include <cassert>
 
-static inline void checkCompatability(Elf& ELF)
+static inline void checkCompatability(Elf& ELF) // TODO mapping
 {
     GElf_Ehdr Ehdr;
     if (!gelf_getehdr(&ELF, &Ehdr)) {
-        assert("gelf_getehdr failed" & 0);
+        assert("gelf_getehdr failed" && 0);
     }
     if (Ehdr.e_machine != EM_RISCV) {
-        assert("ELF is not RISC-V" & 0);
+        assert("ELF is not RISC-V" && 0);
     }
     if (Ehdr.e_ident[EI_DATA] != ELFDATA2LSB) {
-        assert("ELF is not little-endian" & 0);
+        assert("ELF is not little-endian" && 0);
     }
     if (Ehdr.e_type != ET_EXEC && Ehdr.e_type != ET_DYN) {
-        assert("unsupported ELF type" & 0);
+        assert("unsupported ELF type" && 0);
     }
 }
 
@@ -50,12 +50,12 @@ static inline void checkRelocations(Elf& ELF)
         gelf_getshdr(Scn, &Shdr);
         if (Shdr.sh_type == SHT_RELA ||
             Shdr.sh_type == SHT_REL) {
-            assert("ELF contains relocations (not supported)" & 0); // TODO 
+            assert("ELF contains relocations (not supported)" && 0); // TODO 
         }
     }
 }
 
-static inline uint64_t loadElf(const std::string& ElfPath, std::vector<uint8_t>& Buf) {
+static inline uint64_t loadElf(const std::string& ElfPath, std::vector<uint8_t>& Buf) { // FIXME Load directly in mem
     assert(elf_version(EV_CURRENT) != EV_NONE);
 
     int Fd = open(ElfPath.c_str(), O_RDONLY);

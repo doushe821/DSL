@@ -114,6 +114,8 @@ module SimInfra
     alias s as_signed
     alias u as_unsigned
 
+
+
     def sext(a, from:, to:)
         a = resolve_const(a)
         stmt :sext, [tmpvar(Type.s(to)), a], { from:, to: }

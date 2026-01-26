@@ -35,22 +35,20 @@ module DecoderTree
     return nil if counts.size <= 1
 
     total = counts.sum.to_f
-
-    entropy =
+    conditional_entropy =
       counts.reduce(0.0) do |h, c|
         p = c / total
-        h - p * Math.log2(p)
+        p * Math.log2(p)
       end
 
     parent_entropy = Math.log2(total)
 
-    info_gain = parent_entropy - entropy
+    info_gain = parent_entropy - conditional_entropy
 
     avg = total / counts.size
     variance =
       counts.reduce(0.0) { |v, c| v + (c - avg)**2 } / counts.size
     std_dev = Math.sqrt(variance)
-
     {
       info_gain: info_gain,
       fanout: counts.size,
@@ -59,10 +57,10 @@ module DecoderTree
   end
 
 
-  def self.best_bit_slice(words,
+  def self.best_bit_slice(words, # TODO make determined
                           width: 32,
-                          max_slice: 6,
-                          alpha: -1,
+                          max_slice: 7,
+                          alpha: 0.15,
                           beta: -1,
                           gamma: -1)
 
@@ -70,7 +68,7 @@ module DecoderTree
     best_score = -Float::INFINITY
 
     (0...width).each do |start_bit|
-      (start_bit...[start_bit + max_slice, width].min).each do |end_bit|
+      (start_bit...[start_bit + max_slice, width].min).each do |end_bit|wh
         slice_width = end_bit - start_bit + 1
 
         result = score_slice(words, start_bit, end_bit)

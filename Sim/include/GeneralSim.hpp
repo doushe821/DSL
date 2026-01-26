@@ -5,8 +5,8 @@
 
 #include <memory>
 #include <array>
+#include <vector>
 
-#include "Decoder.hpp"
 
 namespace GeneralSim {
 
@@ -83,7 +83,7 @@ static inline uint32_t getMaskedValue(uint32_t Value, int StartBit, int FinishBi
 }
 
 namespace {
-class RegState { // interface for generated classes
+class RegState { // interface for generated classes make pimpl
 public:
   virtual ~RegState();
   virtual uint64_t getReg(XReg R) { assert("Not implemented\n"); };
@@ -129,7 +129,6 @@ public:
     while(!Finished) {
       uint32_t RawInstr = 0;
       RAM.read(&RawInstr, sizeof(RawInstr), PC);
-      auto Instr = Decoder::decode(RawInstr);
       
     }
   }

@@ -97,6 +97,7 @@ module RV32I
   }
   }
 
+  # TODO separate
   # R-mul
   Instruction(:MUL, XReg(:rd), XReg(:rs1), XReg(:rs2)) {
     encoding *format_r_mul(:mul, rd, rs1, rs2)
@@ -286,8 +287,8 @@ module RV32I
     code {
       rd[] = pc + 4
       setreg rd
-      newPC = pc + imm
-      setpc newPC
+      setpc  = pc + imm
+
     }
   }
 
@@ -340,3 +341,4 @@ module RV32I
     }
   }
 end
+# TODO remove setreg, simplificate setpc

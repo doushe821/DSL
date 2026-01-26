@@ -58,7 +58,6 @@ module SimInfra
             end
 
             scope.instance_eval &block
-
         end
     end
 

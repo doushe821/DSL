@@ -1,7 +1,7 @@
 #include "GeneralSim.hpp"
 namespace ExecTable {
-using XReg = uint16_t;
-void EXEC_ADD(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
+  using XReg = uint16_t;
+  void EXEC_ADD(GeneralSim::CPU& CPU, XReg rd, XReg rs1, XReg rs2)
 // Instruction ADD
 {
   uint64_t v_rd = 0;
@@ -679,4 +679,6 @@ void EXEC_ECALL(GeneralSim::CPU& CPU)
   uint64_t v__tmp75 = 0;
   CPU.syscall(v__tmp75);
 }
+ 
 } // namespace ExecTable
+")

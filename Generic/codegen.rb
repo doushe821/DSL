@@ -116,7 +116,7 @@ module SimInfra
         dst, a, b = ops
         declare_ssa(dst)
         emit Indent + "#{ssa(dst)} = #{operand(a)} #{name} #{operand(b)};"
-      when :<, :== # Remove?
+      when :<, :==, :>, :>=, :<=, :!= # Remove?
         dst, a, b = ops
         declare_ssa(dst)
         emit Indent + "#{ssa(dst)} = (#{operand(a)} #{name} #{operand(b)});"

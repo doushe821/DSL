@@ -3,7 +3,6 @@ require 'yaml'
 require 'set'
 require_relative 'map_tree'
 require_relative 'decoder_tree'
-require_relative 'helpers'
 require_relative 'gen_regstate'
 require_relative 'codegen'
 
@@ -17,7 +16,6 @@ module SimGen
         permitted_classes: [SimInfra::Field, SimInfra::Scope, SimInfra::IrStmt,
         SimInfra::Var, SimInfra::XReg, SimInfra::ImmFieldPart, SimInfra::XImm, 
         Symbol, SimInfra::Scope::Type, SimInfra::Memory, SimInfra::Constant], aliases: true)
-      # SimInfra::IRPrettyPrinter.new(@@parsed_ir).run # pretty dump for debug
 
       @@parsed_ir.each do |instr|
         binary_value = 0
@@ -47,10 +45,24 @@ module SimGen
       emitter = SimInfra::CppEmitter.new
 
       File.open('Sim/src/Exec.cpp', 'w') do |exec|
-        exec << ("#include \"GeneralSim.hpp\"\n" + "namespace ExecTable {\nusing XReg = uint16_t;\n" + emitter.emit_all_instructions(@@parsed_ir) + "} // namespace ExecTable\n")
+        exec << <<~CPP
+        #include "GeneralSim.hpp"
+        namespace ExecTable {
+          using XReg = uint16_t;
+          #{emitter.emit_all_instructions(@@parsed_ir)} 
+        } // namespace ExecTable\n")
+        CPP
       end
       File.open('Sim/src/Decoder.cpp', 'w') do |decode|
-        decode << ("#include \"GeneralSim.hpp\"\n#include \"Decoder.hpp\"\n" + "#include \"Instructions.hpp\"\nusing XReg = uint16_t;\n" + "namespace Decoder {\n" + emitter.emit_decoder_tree(root, @@parsed_ir) + "} // namespace Decoder\n")
+        decode << <<~CPP
+        #include "GeneralSim.hpp"
+        #include "Decoder.hpp"
+        #include "Instructions.hpp"
+        using XReg = uint16_t;
+        namespace Decoder {
+          #{emitter.emit_decoder_tree(root, @@parsed_ir)}
+        } // namespace Decoder"
+        CPP
       end
 
     end
