@@ -1,5 +1,5 @@
 #include "RegState.hpp"
-
+namespace GeneralSim {
 RegState::RegState() {
     Regs[0] = 0;
     Regs[1] = 0;
@@ -46,3 +46,4 @@ void RegState::write(unsigned Idx, reg_t Value) {
         Regs[Idx] = Value;
     }
 }
+} // namespace GeneralSim

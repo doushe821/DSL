@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <array>
 #include <cassert>
-
+namespace GeneralSim {
 class RegState {
 public:
     using reg_t = uint32_t; // TODO Expand
@@ -88,3 +88,4 @@ static constexpr reg_t const_value[NUM_REGS] = {
         0,
     };
 };
+} // namespace GeneralSim

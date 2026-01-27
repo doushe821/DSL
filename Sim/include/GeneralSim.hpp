@@ -20,8 +20,6 @@ private:
   uint16_t BitSize = 0;
   ImmediateType Type = ImmediateType::Unsigned;
 
-  // I don't want to declare sext outside of the classes for just
-  // 2 uses of it, so I copied it here.
   constexpr uint64_t sext(uint64_t Val, int N) const {
     if (Val & (1 << (N - 1))) {
       int Mask = ~((1 << N) - 1);
@@ -67,19 +65,6 @@ static inline uint32_t getMaskedValue(uint32_t Value, int StartBit,
   return (Value >> StartBit) & ((1 << (FinishBit - StartBit + 1)) - 1);
 }
 
-namespace {
-class RegState { // interface for generated classes make pimpl
-public:
-  virtual ~RegState();
-  virtual uint64_t getReg(XReg R) { assert("Not implemented\n"); };
-  virtual void setReg(XReg R, uint64_t V) { assert("Not implemented\n"); };
-  virtual uint64_t getRegSystem(XReg R) { assert("Not implemented\n"); };
-  virtual void setRegSystem(XReg R, uint64_t V) {
-    assert("Not implemented\n");
-  };
-};
-} // namespace
-
 class RawMemory {
 private:
   std::vector<uint8_t> RAM;
@@ -111,30 +96,22 @@ public:
 
 };
 
+class RegState;
 class CPU {
 private:
   uint64_t PC = UINT64_MAX;
   bool Finished{false};
+
   std::unique_ptr<RegState> RState;
-  RawMemory Memory;
-  constexpr uint64_t getRegSystem(XReg R) { return RState->getRegSystem(R); }
-  constexpr void setRegSystem(XReg R, uint64_t V) {
-    RState->setRegSystem(R, V);
-  };
 
 public:
-  CPU(uint64_t EntryAddress, std::vector<uint8_t> RawElf) : PC(EntryAddress) {
-    Memory.write(RawElf.data(), RawElf.size(), 0);
-  }
+  CPU();
+  ~CPU();
 
-  constexpr uint64_t getPC() { return PC; };
-  constexpr void setPC(uint64_t NewPC) { PC = NewPC; };
+  uint32_t readReg(unsigned Idx) const;
+  void writeReg(unsigned Idx, uint32_t Value);
 
-  constexpr uint64_t getReg(XReg R) { return RState->getReg(R); };
-  constexpr void setReg(XReg R, uint64_t V) { RState->setReg(R, V); };
 
-  constexpr uint64_t load(uint64_t Addr, int Bits) { return 0; };
-  constexpr void store(uint64_t Addr, uint64_t Value, int Bits);
 
   constexpr void syscall(int Code) {
     if (Code == 1) {

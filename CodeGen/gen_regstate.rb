@@ -1,3 +1,4 @@
+# TODO: connect to other codegen modules
 module SimGen
   class GenStateGenerator
     def initialize
@@ -22,7 +23,7 @@ module SimGen
       #include <cstddef>
       #include <array>
       #include <cassert>
-
+      namespace GeneralSim {
       class RegState {
       public:
           using reg_t = uint32_t; // TODO Expand
@@ -51,6 +52,7 @@ module SimGen
       header += <<~CPP
           };
       };
+      } // namespace GeneralSim
       CPP
 
       File.write("Sim/include/RegState.hpp", header)
@@ -58,7 +60,7 @@ module SimGen
 
       source = <<~CPP
       #include "RegState.hpp"
-
+      namespace GeneralSim {
       RegState::RegState() {
       CPP
 
@@ -81,6 +83,7 @@ module SimGen
               Regs[Idx] = Value;
           }
       }
+      } // namespace GeneralSim
       CPP
 
       File.write("Sim/src/RegState.cpp", source)
