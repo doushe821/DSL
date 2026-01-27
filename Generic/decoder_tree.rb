@@ -68,7 +68,7 @@ module DecoderTree
     best_score = -Float::INFINITY
 
     (0...width).each do |start_bit|
-      (start_bit...[start_bit + max_slice, width].min).each do |end_bit|wh
+      (start_bit...[start_bit + max_slice, width].min).each do |end_bit|
         slice_width = end_bit - start_bit + 1
 
         result = score_slice(words, start_bit, end_bit)

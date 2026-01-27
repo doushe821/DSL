@@ -52,4 +52,5 @@ module SimInfra
         def geu(other) = @scope.cmp_geu(self, other)
 
     end
+
 end

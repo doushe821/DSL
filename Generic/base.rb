@@ -4,17 +4,22 @@ module SimInfra
     # @@instructions -array of instruction description
     # shows result of our tests in interactive Ruby (IRB) or standalone
     def self.serialize(msg= nil)
-        return @@instructions if Object.const_defined?(:IRB)
+        return @@instructions, @@registers_specs if Object.const_defined?(:IRB)
         require 'yaml'
-        yaml_data = YAML.dump(@@instructions.map(&:to_h))
 
+        yaml_regfile_data = YAML.dump(@@registers_specs.map(&:to_h))
+        File.open("Regfile.yaml", "w") do |file|
+            file.write(yaml_regfile_data)
+        end
+
+        yaml_IR_data = YAML.dump(@@instructions.map(&:to_h))
         File.open("IR.yaml", "w") do |file|
-            file.write(yaml_data)
+            file.write(yaml_IR_data)
         end
     end
 
     # reset state
-    def siminfra_reset_module_state; @@instructions = []; end
+    def siminfra_reset_module_state; @@instructions = []; @@registers_specs = [] end
 
     # mixin for global counter, function returns 0,1,2,....
     module GlobalCounter

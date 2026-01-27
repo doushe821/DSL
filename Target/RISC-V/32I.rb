@@ -1,5 +1,5 @@
 require_relative "encoding"
-require_relative "regfile"
+require_relative "regtypes"
 require_relative "../../Generic/base"
 
 module RV32I

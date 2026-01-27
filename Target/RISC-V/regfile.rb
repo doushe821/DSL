@@ -1,32 +1,14 @@
-module SimInfra
-    class XReg
-        attr_reader :name
-        def initialize(name)
-            @name = name
-        end
+require_relative "../../Generic/base"
+module RegFile
+  extend SimInfra
+  Reg(:x0, size: 32, type: :int, hv: 0) {
+    aka :zero
+  }
 
-        # String representation for asm output
-        def to_s
-            @name.to_s
-        end
+  Regs(:x) {
+    0.upto(31) do |i|
+      Reg :"x#{i}", size: 32, type: :int
     end
+  }
 
-    def XReg(name); XReg.new(name); end
-    # TODO register description
-    # TODO Make infra in Generic folder
-    # :name, :size, :hw[value]
-    # alias zero hw[0] (example)
-    class XImm # for regs used as imm (shamt)
-        attr_reader :name
-        def initialize(name)
-            @name = name
-        end
-
-        # String representation for asm output
-        def to_s
-            @name.to_s
-        end
-    end
-
-    def XImm(name); XImm.new(name); end
 end
