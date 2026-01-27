@@ -1,4 +1,4 @@
-require_relative 'base'
+require_relative '../Generic/base'
 require 'yaml'
 require 'set'
 require_relative 'map_tree'

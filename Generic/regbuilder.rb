@@ -20,7 +20,9 @@ module SimInfra
     if block
       RegBuilder.new(spec).instance_eval(&block)
     end
-
+    raise "Register with name #{name} is duplicated. 
+    Registers names must be unique. 
+    Use aliases if needed." if (@@registers_specs.find { |r| r.name == name} != nil)
     @@registers_specs << spec
     nil
   end

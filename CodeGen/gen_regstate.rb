@@ -1,167 +1,102 @@
-module SimInfra
-  # AI generated(mostly)
-  class RegStateGenerator
-    INPUT_FILE = "ArchDesc.txt"
+module SimGen
+  class GenStateGenerator
+    def initialize
+      
+      require 'yaml'
+      
+      regs = YAML.load_file("Regfile.yaml")
+      
+      names = regs.map { |r| r[:name] }
+      raise "Duplicate register names!" if names.uniq.size != names.size
 
-    PERM_USER = 0x1
-    PERM_SYS  = 0x2
-
-    def initialize(input_file = INPUT_FILE)
-      @input_file = input_file
-      @registers = []
-      @reg_by_index = {}
-      @reg_by_name = {}
-    end
-
-    def generate
-      read_description
-      emit_header
-    end
-
-    private
-
-    def read_description
-      lines = File.readlines(@input_file, chomp: true)
-      raise "Empty #{@input_file}" if lines.empty?
-
-      @arch_name = lines.shift.strip
-      raise "Invalid architecture name" if @arch_name.empty?
-
-      lines.each_with_index do |line, i|
-        next if line.strip.empty?
-
-        name, idx_str, perm = line.split
-        raise "Invalid line format at #{i + 2}" unless name && idx_str && perm
-
-        idx = Integer(idx_str)
-        raise "Permission must be 'u' or 's' at line #{i + 2}" unless %w[u s].include?(perm)
-
-        raise "Register index #{idx} defined multiple times" if @reg_by_index.key?(idx)
-        raise "Register name #{name} defined multiple times" if @reg_by_name.key?(name)
-
-        perm_mask =
-          case perm
-          when 'u' then PERM_USER
-          when 's' then PERM_SYS
-          end
-
-        reg = {
-          name: name,
-          index: idx,
-          perm: perm_mask
-        }
-
-        @registers << reg
-        @reg_by_index[idx] = reg
-        @reg_by_name[name] = reg
+      regs.each_with_index do |reg, idx|
+        reg[:index] = idx
       end
 
-      @registers.sort_by! { |r| r[:index] }
-      @array_size = @registers.last[:index] + 1
-    end
+      const_regs = regs.map { |r| !r[:hv].nil? }
+      const_vals = regs.map { |r| r[:hv] || 0 }
 
-    def emit_header
-      hpp_name = "Sim/include/#{@arch_name}RegState.hpp"
+      header = <<~CPP
+      #pragma once
+      #include <cstdint>
+      #include <cstddef>
+      #include <array>
+      #include <cassert>
 
-      File.open(hpp_name, "w") do |f|
-        f.puts header_preamble
-        f.puts register_init_list
-        f.puts header_footer
-      end
+      class RegState {
+      public:
+          using reg_t = uint32_t; // TODO Expand
+          static constexpr size_t NUM_REGS = #{regs.size};
 
-      puts "Generated #{hpp_name}"
-    end
+          RegState();
+          
+          reg_t read(unsigned Idx) const;
+          void write(unsigned Idx, reg_t Value);
 
-    def header_preamble
-      <<~HDR
-        #pragma once
+      private:
+          alignas(32) reg_t Regs[NUM_REGS];
 
-        #include <array>
-        #include <cassert>
-        #include <cstdint>
-        #include <stdexcept>
+          // constant registers
+          static constexpr bool IsConst[NUM_REGS] = {
+      CPP
 
-        #include "GeneralSim.hpp"
+      const_regs.each { |c| header += "        #{c},\n" }
 
-        namespace #{@arch_name}RegState {
-
-        class #{@arch_name}RegState final : public GeneralSim::RegState {
-        public:
-          using XReg = uint16_t;
-
-          static constexpr uint8_t PERM_USER = 1 << 0; // Expandable
-          static constexpr uint8_t PERM_SYS  = 1 << 1;
-
-          struct Register {
-            uint64_t Value;
-            uint8_t  Perm;
+      header += <<~CPP
           };
 
-          constexpr #{@arch_name}RegState() : Regs{{
-      HDR
-    end
+          static constexpr reg_t const_value[NUM_REGS] = {
+      CPP
+      const_vals.each { |v| header += "        #{v},\n" }
+      header += <<~CPP
+          };
+      };
+      CPP
 
-    def register_init_list
-      lines = Array.new(@array_size) { "{0, 0}" }
+      File.write("Sim/include/RegState.hpp", header)
+      puts "Generated RegState.hpp"
 
-      @registers.each do |r|
-        lines[r[:index]] = "{0, #{format_perm(r[:perm])}}"
+      source = <<~CPP
+      #include "RegState.hpp"
+
+      RegState::RegState() {
+      CPP
+
+      regs.each do |r|
+        init = r[:hv] || 0
+        source += "    Regs[#{r[:index]}] = #{init};\n"
       end
 
-      lines.map { |l| "          #{l}," }.join("\n") + "\n"
-    end
+      source += <<~CPP
+      }
 
-    def format_perm(mask)
-      parts = []
-      parts << "PERM_USER" if (mask & PERM_USER) != 0
-      parts << "PERM_SYS"  if (mask & PERM_SYS)  != 0
-      parts.join(" | ")
-    end
+      RegState::reg_t RegState::read(unsigned Idx) const {
+          assert(Idx < NUM_REGS);
+          return Regs[Idx];
+      }
 
-    def header_footer
-      <<~FTR
-          }} {};
-
-          virtual uint64_t getReg(XReg r) override {
-            assert(r < #{@array_size});
-            const Register& Reg = Regs[r];
-            if (!(Reg.Perm & PERM_USER)) {
-              assert(false && "Access to system register from user");
-              // throw std::runtime_error("Register access violation");
-            }
-            return Reg.Value;
+      void RegState::write(unsigned Idx, reg_t Value) {
+          assert(Idx < NUM_REGS);
+          if (!IsConst[Idx]) {
+              Regs[Idx] = Value;
           }
+      }
+      CPP
 
-          virtual void setReg(XReg r, uint64_t v) override {
-            assert(r < #{@array_size});
-            Register& Reg = Regs[r];
-            if (!(Reg.Perm & PERM_USER)) {
-              assert(false && "Write to system register from user");
-              // throw std::runtime_error("Register access violation");
-            }
-            Reg.Value = v;
-          }
+      File.write("Sim/src/RegState.cpp", source)
+      puts "Generated RegState.cpp"
 
-          virtual uint64_t getRegSystem(XReg r) override {
-            assert(r < #{@array_size});
-            return Regs[r].Value;
-          }
+      # Aliases
+      enum_text = "enum class XReg : unsigned {\n"
+      regs.each do |r|
+        enum_text += "    #{r[:name]} = #{r[:index]},\n"
+        r[:aliases].each { |a| enum_text += "    #{a} = #{r[:index]},\n" }
+      end
+      enum_text += "};\n"
 
-          virtual void setRegSystem(XReg r, uint64_t v) override {
-            assert(r < #{@array_size});
-            Regs[r].Value = v;
-          }
+      File.write("Sim/include/RegAliases.hpp", enum_text)
+      puts "Generated RegAliases.hpp"
 
-
-        private:
-          std::array<Register, #{@array_size}> Regs;
-        };
-
-        } // namespace #{@arch_name}RegState
-      FTR
     end
   end
-
-
-
 end

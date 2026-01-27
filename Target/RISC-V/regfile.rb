@@ -6,7 +6,7 @@ module RegFile
   }
 
   Regs(:x) {
-    0.upto(31) do |i|
+    1.upto(31) do |i|
       Reg :"x#{i}", size: 32, type: :int
     end
   }
