@@ -6,6 +6,9 @@ set(EXECUTABLE sim)
 add_executable (${EXECUTABLE}
     src/main.cpp
     src/ElfLoader.cpp
+    src/RegState.cpp
+    src/Memory.cpp
+    stc/CPU.cpp
 )
 
 target_include_directories (${EXECUTABLE}

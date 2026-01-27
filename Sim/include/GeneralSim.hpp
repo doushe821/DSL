@@ -7,10 +7,9 @@
 #include <memory>
 #include <vector>
 
-namespace GeneralSim {
+#include "Memory.hpp"
 
-static const size_t kMemorySize =
-    UINT16_MAX; // TODO Make CLI-defined with defauly value
+namespace GeneralSim {
 
 enum class ImmediateType : uint8_t { Unsigned, Signed };
 
@@ -65,53 +64,24 @@ static inline uint32_t getMaskedValue(uint32_t Value, int StartBit,
   return (Value >> StartBit) & ((1 << (FinishBit - StartBit + 1)) - 1);
 }
 
-class RawMemory {
-private:
-  std::vector<uint8_t> RAM;
 
-public:
-  void write(const void *Source, unsigned N, unsigned DestinationAddress) {
-    assert(Source && "Invalid source pointer\n");
-    assert((DestinationAddress < kMemorySize &&
-            DestinationAddress + N < kMemorySize) &&
-           "Trying to write to unreachable address\n");
-    memcpy(reinterpret_cast<char *>(RAM.data()) + DestinationAddress, Source,
-           N);
-  }
-
-  void read(void *Destination, unsigned N, unsigned SourceAddress) const {
-    assert(Destination && "Invalid destination pointer\n");
-    assert((SourceAddress < kMemorySize && SourceAddress + N < kMemorySize) &&
-           "Trying to read from unreachable address\n");
-    memcpy(Destination,
-           reinterpret_cast<const char *>(RAM.data()) + SourceAddress, N);
-  }
-};
-
-class InterfaceMemory {
-private:
-  RawMemory Memory;
-public:
-
-
-};
 
 class RegState;
 class CPU {
 private:
+  size_t MemoryLimit;
   uint64_t PC = UINT64_MAX;
   bool Finished{false};
 
   std::unique_ptr<RegState> RState;
+  Memory Mem;
 
 public:
-  CPU();
+  CPU(size_t MemoryLimit);
   ~CPU();
 
   uint32_t readReg(unsigned Idx) const;
   void writeReg(unsigned Idx, uint32_t Value);
-
-
 
   constexpr void syscall(int Code) {
     if (Code == 1) {

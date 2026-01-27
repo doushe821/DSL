@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
   
   CLI11_PARSE(CLIApp, argc, argv);
 
-  std::vector<uint8_t> Memory;
+  std::vector<uint8_t> Memory; // TODO replace with actual Memory
   Memory.resize(MemorySize);
 
   try {
