@@ -14,7 +14,7 @@ private:
   uint16_t BitSize = 0;
   ImmediateType Type = ImmediateType::Unsigned;
 
-  constexpr uint64_t sext(uint64_t Val, int N) const {
+  constexpr int32_t sext(int32_t Val, int N) const {
     if (Val & (1 << (N - 1))) {
       int Mask = ~((1 << N) - 1);
       Val |= Mask;
@@ -35,13 +35,11 @@ public:
 
   constexpr bool isUnsigned() const { return Type == ImmediateType::Unsigned; }
 
-  constexpr uint64_t asSigned() const {
-    assert(isSigned());
+  constexpr int32_t asSigned() const {
     return sext(RawValue, BitSize);
   }
 
   constexpr uint32_t asUnsigned() const {
-    assert(isUnsigned());
     return RawValue;
   }
 

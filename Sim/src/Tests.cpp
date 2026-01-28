@@ -1,3 +1,5 @@
+#include "Executor.hpp"
+#include <bit>
 #include <cstdint>
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_all.hpp>
@@ -5,9 +7,15 @@
 
 // include your CPU/Decoder/Executor headers
 #include "TestInfra.hpp"
+#include "Decoder.hpp"
+#include "Instructions.hpp"
 #include "ExecutorTestOnly.hpp"
 #include "GeneralSimTypes.hpp"
 using XReg = uint16_t;
+
+// ###################
+// # Executor tests
+// ###################
 
 TEST_CASE("ADD / SUB / ADDI / SLT edge cases") {
     GeneralSim::FakeExecContext ctx;
@@ -103,4 +111,98 @@ TEST_CASE("x0 and PC behavior") {
     REQUIRE(ctx.getPC() == 0x1000);
     ctx.setPC(0x2000);
     REQUIRE(ctx.getPC() == 0x2000);
+}
+
+
+TEST_CASE("Executor: shift amount masked to 5 bits") {
+    GeneralSim::FakeExecContext ctx;
+    ctx.setReg(1, 1);
+    ctx.setReg(2, 33); // 33 & 31 == 1
+
+    TestSim::EXEC_SLL(ctx, XReg{3}, XReg{1}, XReg{2});
+
+    REQUIRE(ctx.getReg(3) == 2);
+}
+
+TEST_CASE("Executor: SLT vs SLTU differ") {
+    GeneralSim::FakeExecContext ctx;
+    ctx.setReg(1, -1);
+    ctx.setReg(2, 1);
+
+    TestSim::EXEC_SLT(ctx,  XReg{3}, XReg{1}, XReg{2});
+    TestSim::EXEC_SLTU(ctx, XReg{4}, XReg{1}, XReg{2});
+
+    REQUIRE(ctx.getReg(3) == 1); // -1 < 1
+    REQUIRE(ctx.getReg(4) == 0); // 0xffffffff > 1
+}
+
+TEST_CASE("Executor: LB sign extends, LBU zero extends") {
+    GeneralSim::FakeExecContext ctx;
+    ctx.write8(0, 0x80);
+
+    TestSim::EXEC_LB(ctx,  XReg{1}, XReg{0}, GeneralSim::Immediate(0, 32, GeneralSim::ImmediateType::Unsigned));
+    TestSim::EXEC_LBU(ctx, XReg{2}, XReg{0}, GeneralSim::Immediate(0, 32, GeneralSim::ImmediateType::Unsigned));
+
+    REQUIRE(std::bit_cast<int32_t>(ctx.getReg(1)) == static_cast<int32_t>(0xffffff80));
+    REQUIRE(ctx.getReg(2) == 0x80);
+}
+
+// ###################
+// # Decoder tests:
+// ###################
+TEST_CASE("Decoder: I-type immediate sign extension") {
+    // addi x1, x0, -1
+    uint32_t inst =
+        (0b0010011) |
+        (1 << 7) |
+        (0b000 << 12) |
+        (0 << 15) |
+        (0xfff << 20); // -1
+    Decoder::Decoder dcdr;
+    auto decoded = dcdr.decode(inst);
+    auto& i = std::get<ADDI>(decoded);
+
+    REQUIRE(std::bit_cast<int32_t>(i.imm.raw()) == -1);
+}
+
+TEST_CASE("Decoder: B-type immediate reconstruction") {
+    // beq x0, x0, -4
+    uint32_t inst =
+        (0b1100011) |
+        (0b000 << 12) |
+        (0 << 15) |
+        (0 << 20) |
+        (1 << 7) |          // imm[11]
+        (0b111111 << 25);   // imm[12|10:5]
+
+    Decoder::Decoder dcdr;
+    auto decoded = dcdr.decode(inst);
+    auto& i = std::get<BEQ>(decoded);
+
+    REQUIRE(std::bit_cast<int32_t>(i.imm.raw()) == -4);
+}
+
+
+// ###################
+// # Executor + Decoder tests:
+// ###################
+
+TEST_CASE("Decode + execute roundtrip") {
+    GeneralSim::FakeExecContext ctx;
+    ctx.setReg(1, 5);
+    ctx.setReg(2, 7);
+
+    uint32_t add =
+        (0b0110011) |
+        (3 << 7) |
+        (0b000 << 12) |
+        (1 << 15) |
+        (2 << 20);
+
+    Decoder::Decoder dcdr;
+    auto inst = dcdr.decode(add);
+    GeneralSim::Executor extr;
+    extr.execute(inst, ctx);
+
+    REQUIRE(ctx.getReg(3) == 12);
 }
