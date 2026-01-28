@@ -24,10 +24,12 @@ void CPU::step() {
   Decoder::Decoder Dcdr;
   GeneralSim::Executor Extr;
   auto RawInstr = Mem.read32(PC);
+  std::cout << RawInstr;
   auto DecodedInstr = Dcdr.decode(RawInstr);
 
   // Implicit upcast from CPU to ExecContext here.
-  //Extr.execute(DecodedInstr, *this);
+  //std::cout << DecodedInstr.
+  Extr.execute(DecodedInstr, *this);
   // If branch was taken, PC should not be changed
   // by CPU.
   PC += 4 * (OLD_PC == PC);

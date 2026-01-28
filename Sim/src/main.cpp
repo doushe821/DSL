@@ -8,7 +8,7 @@
 
 int main(int argc, char **argv) {
 
-  size_t MemorySize = 4 * UINT16_MAX; // Move to GeneralSim
+  size_t MemorySize = 4 * UINT16_MAX;
   CLI::App CLIApp;
   std::string ElfName;
   CLIApp.add_option("-e,--elf", ElfName, "Name of the ELF file")->required();
@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
 
   SPU.setEntry(EntryPoint);
 
-  SPU.run();
+  SPU.step();
 
   return 0;
 }

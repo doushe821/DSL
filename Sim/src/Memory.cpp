@@ -76,7 +76,7 @@ void Memory::write64(uintptr_t Addr, uint64_t Value) {
 }
 
 void Memory::write128(uintptr_t Addr, const uint8_t* Src) {
-    assert(Addr + 15 < RawMemory.size());
+    assert(Addr + 15 < MemImpl->Mem.size());
     std::memcpy(&MemImpl->Mem[Addr], Src, 16);
 }
 
