@@ -8,7 +8,7 @@ add_executable (${EXECUTABLE}
     src/ElfLoader.cpp
     src/RegState.cpp
     src/Memory.cpp
-    stc/CPU.cpp
+    src/CPU.cpp
 )
 
 target_include_directories (${EXECUTABLE}

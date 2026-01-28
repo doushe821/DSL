@@ -1,9 +1,9 @@
-#include "GeneralSim.hpp"
+#include "GeneralSimTypes.hpp"
 #include "Decoder.hpp"
 #include "Instructions.hpp"
 using XReg = uint16_t;
 namespace Decoder {
-  Instruction decode(uint32_t Instr) {
+Instruction decode(uint32_t Instr) {
   switch ((Instr >> 1) & ((1u << 6) - 1)) {
     case 25: {
       switch ((Instr >> 12) & ((1u << 3) - 1)) {
@@ -154,19 +154,22 @@ namespace Decoder {
         case 1: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-          return Instruction{ SLLI{ rd, rs1 } };
+          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 5) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
+          return Instruction{ SLLI{ rd, rs1, Imm } };
         }
         case 5: {
           switch ((Instr >> 30) & ((1u << 1) - 1)) {
             case 0: {
               XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
               XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-              return Instruction{ SRLI{ rd, rs1 } };
+              auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 5) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
+              return Instruction{ SRLI{ rd, rs1, Imm } };
             }
             case 1: {
               XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
               XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-              return Instruction{ SRAI{ rd, rs1 } };
+              auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 5) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
+              return Instruction{ SRAI{ rd, rs1, Imm } };
             }
             default:
               assert("No such inst in ISA");

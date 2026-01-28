@@ -88,7 +88,7 @@ module SimInfra
       field(:funct3, 14, 12, funct3),
       field(rd.name, 11, 7, :reg),
       field(rs1.name, 19, 15, :reg),
-      field(:shamt, 24, 20, imm),
+      field(imm.name, 24, 20, :imm),
       field(:funct7, 31, 25, funct7)
     ]
   end

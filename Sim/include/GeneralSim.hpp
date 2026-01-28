@@ -7,57 +7,12 @@
 #include <memory>
 #include <vector>
 
+#include "Decoder.hpp"
+#include "ExecContext.hpp"
+#include "Executor.hpp"
 #include "Memory.hpp"
 
 namespace GeneralSim {
-
-enum class ImmediateType : uint8_t { Unsigned, Signed };
-
-class Immediate {
-private:
-  uint32_t RawValue = 0;
-  uint16_t BitSize = 0;
-  ImmediateType Type = ImmediateType::Unsigned;
-
-  constexpr uint64_t sext(uint64_t Val, int N) const {
-    if (Val & (1 << (N - 1))) {
-      int Mask = ~((1 << N) - 1);
-      Val |= Mask;
-    }
-    return Val;
-  }
-
-public:
-  constexpr Immediate() = default;
-  constexpr Immediate(uint32_t Raw, uint8_t Bits, ImmediateType Type)
-      : RawValue(Raw), BitSize(Bits), Type(Type) {}
-
-  constexpr uint32_t raw() const { return RawValue; }
-
-  constexpr uint8_t bits() const { return BitSize; }
-
-  constexpr bool isSigned() const { return Type == ImmediateType::Signed; }
-
-  constexpr bool isUnsigned() const { return Type == ImmediateType::Unsigned; }
-
-  constexpr uint64_t asSigned() const {
-    assert(isSigned());
-    return sext(RawValue, BitSize);
-  }
-
-  constexpr uint32_t asUnsigned() const {
-    assert(isUnsigned());
-    return RawValue;
-  }
-
-  constexpr void set(uint32_t Raw, uint8_t Bits, ImmediateType Type_) {
-    RawValue = Raw;
-    BitSize = Bits;
-    Type = Type_;
-  }
-};
-
-using XReg = uint16_t;
 
 static inline uint32_t getMaskedValue(uint32_t Value, int StartBit,
                                       int FinishBit) {
@@ -67,10 +22,11 @@ static inline uint32_t getMaskedValue(uint32_t Value, int StartBit,
 
 
 class RegState;
-class CPU {
+class CPU : ExecContext {
 private:
   size_t MemoryLimit;
-  uint64_t PC = UINT64_MAX;
+  size_t PC = UINT64_MAX;
+  size_t OLD_PC = UINT64_MAX;
   bool Finished{false};
 
   std::unique_ptr<RegState> RState;
@@ -80,10 +36,44 @@ public:
   CPU(size_t MemoryLimit);
   ~CPU();
 
+  void run() {
+    OLD_PC = PC;
+    while (!Finished) {
+      step();
+    }
+  }
+
+  uint8_t  read8(uintptr_t Addr) override;
+  uint16_t read16(uintptr_t Addr) override;
+  uint32_t read32(uintptr_t Addr) override;
+  uint64_t read64(uintptr_t Addr) override;
+
+  void read128(uintptr_t Addr, uint8_t* Dest) override;
+  void read256(uintptr_t Addr, uint8_t* Dest) override;
+
+  void write8(uintptr_t Addr, uint8_t Value) override;
+  void write16(uintptr_t Addr, uint16_t Value) override;
+  void write32(uintptr_t Addr, uint32_t Value) override;
+  void write64(uintptr_t Addr, uint64_t Value) override;
+
+  void write128(uintptr_t Addr, const uint8_t* Src) override;
+  void write256(uintptr_t Addr, const uint8_t* Src) override;
+
+  void step();
+
+  // For loader only.
+  // Yes, it is extremely unsafe.
+  // So do not use it outside of loader.
+  // Or use wisely.
+  // But better don't.
+  unsigned char* getRawMem() { return Mem.data(); }; // FIXME
+
   uint32_t readReg(unsigned Idx) const;
   void writeReg(unsigned Idx, uint32_t Value);
 
-  constexpr void syscall(int Code) {
+  void setEntry(size_t EntryPoint) { PC = EntryPoint; }
+
+  constexpr void syscall(int Code) override {
     if (Code == 1) {
       Finished = true;
     } else {
@@ -91,7 +81,7 @@ public:
     }
   };
 
-  constexpr int bitrev(int Val, int NBits = 32) { // Does it in log(n)
+  constexpr int bitrev(int Val, int NBits = 32) override { // Does it in log(n)
     assert(NBits <= 64);
     uint64_t Mask = (NBits == 64) ? ~0ULL : ((1ULL << NBits) - 1);
     Val &= Mask;
@@ -112,7 +102,7 @@ public:
     return Val & Mask;
   }
 
-  constexpr uint64_t sext(uint64_t Val, int N) {
+  constexpr uint64_t sext(uint64_t Val, int N) override {
     if (Val & (1 << (N - 1))) {
       int Mask = ~((1 << N) - 1);
       Val |= Mask;
@@ -120,14 +110,14 @@ public:
     return Val;
   }
 
-  constexpr uint64_t zext(uint64_t V, unsigned N) {
+  constexpr uint64_t zext(uint64_t V, unsigned N) override {
     assert(N <= 64);
     if (N == 64)
       return V;
     return V & ((1ULL << N) - 1);
   }
 
-  constexpr int saturateUnsigned(unsigned Val, unsigned N) {
+  constexpr int saturateUnsigned(unsigned Val, unsigned N) override {
     unsigned Limit = (1 << N) - 1;
     if (Val > Limit) {
       Val = Limit;

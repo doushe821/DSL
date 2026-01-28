@@ -4,11 +4,17 @@
 #include <cstring> // for memcpy
 
 namespace GeneralSim {
-
+GeneralSim::Memory::Memory(size_t size) : MemImpl(std::make_unique<Impl>(size)) {}
+Memory::~Memory() = default;
 struct Memory::Impl {
     explicit Impl(size_t sz) : Mem(sz, 0) {}
     std::vector<uint8_t> Mem;
 };
+
+// For loader only.
+uint8_t* Memory::data() { return MemImpl->Mem.data(); }
+const uint8_t* Memory::data() const { return MemImpl->Mem.data(); }
+
 uint8_t Memory::read8(uintptr_t Addr) const {
     assert(Addr < MemImpl->Mem.size());
     return MemImpl->Mem[Addr];

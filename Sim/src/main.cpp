@@ -1,5 +1,6 @@
 #include "CLI11.hpp"
 #include "ElfLoader.hpp"
+#include "GeneralSim.hpp"
 #include <cstdint>
 #include <stdexcept>
 #include <string>
@@ -15,14 +16,18 @@ int main(int argc, char **argv) {
   
   CLI11_PARSE(CLIApp, argc, argv);
 
-  std::vector<uint8_t> Memory; // TODO replace with actual Memory
-  Memory.resize(MemorySize);
+  GeneralSim::CPU SPU(MemorySize);
 
+  size_t EntryPoint {0};
   try {
-    loadElf(ElfName, Memory);
+    loadElf(ElfName, SPU.getRawMem(), MemorySize, EntryPoint);
   } catch (std::runtime_error &E) {
     std::cerr << E.what() << std::endl;
   }
+
+  SPU.setEntry(EntryPoint);
+
+  SPU.run();
 
   return 0;
 }

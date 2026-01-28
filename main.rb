@@ -10,4 +10,4 @@ require_relative "CodeGen/gen_regstate"
 SimInfra.serialize
 # SimInfra::DecoderGenerator.generate("zxc")
 # UGen = SimGen::UltimateGenerator.new
-SimGen::GenStateGenerator.new
+SimGen::UltimateGenerator.new

@@ -76,7 +76,7 @@ module SimInfra
       name = instr[:name]
       args = instr[:args]
 
-      params = ["GeneralSim::CPU& CPU"]
+      params = ["ExecContext& Ctx"]
 
       args.each do |arg|
         case arg
@@ -105,7 +105,7 @@ module SimInfra
         emit Indent + "#{ssa(nconst)} = #{value};"
       when :getreg
         var_ir, xreg = ops
-        emit Indent + "v_#{var_ir} = CPU.getReg(#{xreg});\n"
+        emit Indent + "v_#{var_ir} = Ctx.getReg(#{xreg});\n"
       when :getimm
         var_ir, ximm = ops
         emit Indent + "v_#{var_ir} = #{ximm}.raw();\n"
@@ -127,7 +127,7 @@ module SimInfra
       when :bitrev
         dst, src = ops
         declare_ssa(dst)
-        emit Indent + "#{ssa(dst)} = CPU.bitrev(#{operand(src)});"
+        emit Indent + "#{ssa(dst)} = Ctx.bitrev(#{operand(src)});"
       when :as_signed
         dst, src = ops
         declare_ssa(dst)
@@ -140,28 +140,28 @@ module SimInfra
         dst, src = ops
         from = attrs[:from]
         declare_ssa(dst)
-        emit Indent + "#{ssa(dst)} = CPU.sext(#{operand(src)}, #{from});"
+        emit Indent + "#{ssa(dst)} = Ctx.sext(#{operand(src)}, #{from});"
       when :zext
         dst, src = ops
         from = attrs[:from]
         declare_ssa(dst)
-        emit Indent + "#{ssa(dst)} = CPU.zext(#{operand(src)}, #{from});"
+        emit Indent + "#{ssa(dst)} = Ctx.zext(#{operand(src)}, #{from});"
       when :load
         dst, addr = ops
         declare_ssa(dst)
         bits = dst.type[:bits]
-        emit Indent + "#{ssa(dst)} = CPU.load(#{operand(addr)}, #{bits});"
+        emit Indent + "#{ssa(dst)} = Ctx.read#{bits}(#{operand(addr)});"
       when :store
         addr, val = ops
         bits = val.type[:bits]
-        emit Indent + "CPU.store(#{operand(addr)}, #{operand(val)}, #{bits});"
+        emit Indent + "Ctx.write#{bits}(#{operand(addr)}, #{operand(val)});"
       when :setreg
         reg, var = ops
-        emit Indent + "CPU.setReg(#{reg.name}, #{ssa(var)});"
+        emit Indent + "Ctx.setReg(#{reg.name}, #{ssa(var)});"
       when :syscall
         code = ops.first
         declare_ssa(code)
-        emit Indent + "CPU.syscall(#{operand(code)});"
+        emit Indent + "Ctx.syscall(#{operand(code)});"
       when :cmp_eq
         a, b = operand(ops[1]), operand(ops[2])
         dst = ops[0]
@@ -195,10 +195,10 @@ module SimInfra
       when :getpc
         var_ir = ops[0]
         declare_ssa(var_ir)
-        emit Indent + "#{ssa(var_ir)} = CPU.getPC();"
+        emit Indent + "#{ssa(var_ir)} = Ctx.getPC();"
       when :setpc
         var = ops[1]
-        emit Indent + "CPU.setPC(#{ssa(var)});"
+        emit Indent + "Ctx.setPC(#{ssa(var)});"
       else
         raise "Unhandled IR operation: #{name}"
       end
@@ -207,6 +207,27 @@ module SimInfra
 
     def emit_all_instructions(instructions)
       instructions.map { |instr| emit_exec_function(instr) }.join("\n\n")
+    end
+
+    def emit_instructions_visit(instructions) 
+      instructions.map {|instr| emit_instruction_visit(instr) }.join(" else ")
+    end
+
+    def emit_instruction_visit(instr)
+      name = instr[:name]
+      args = instr[:args]
+
+      params = ["Ctx"]
+      
+      args.each do |arg|
+        params << "I.#{arg.name}"
+      end
+
+      code = 
+        "if constexpr (std::is_same_v<T, #{name}>) {
+      EXEC_#{name}(#{params.join(", ")});
+    }"
+      code
     end
 
     def cpp_extract_bits(expr, from, to)

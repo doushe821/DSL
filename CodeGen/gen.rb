@@ -39,32 +39,53 @@ module SimGen
       treeFile.close
       # debug
 
-      SimInfra::RegStateGenerator.new.generate
+      SimGen::GenStateGenerator.new
 
       generate_general_instruction_description
       emitter = SimInfra::CppEmitter.new
 
-      File.open('Sim/src/Exec.cpp', 'w') do |exec|
+      File.open('Sim/src/Executor.cpp', 'w') do |exec|
         exec << <<~CPP
-        #include "GeneralSim.hpp"
-        namespace ExecTable {
-          using XReg = uint16_t;
-          #{emitter.emit_all_instructions(@@parsed_ir)} 
-        } // namespace ExecTable\n")
-        CPP
+        #include "Executor.hpp"
+        namespace GeneralSim {
+        using XReg = uint16_t;
+        #{emitter.emit_all_instructions(@@parsed_ir)}
+        void Executor::execute(const Instruction &Inst, ExecContext &Ctx) {
+          std::visit([&](auto&& I) {
+            using T = std::decay_t<decltype(I)>;
+            #{emitter.emit_instructions_visit(@@parsed_ir)}
+            }, Inst);
+        }
+        } // namespace GeneralSim
+      CPP
       end
+
       File.open('Sim/src/Decoder.cpp', 'w') do |decode|
         decode << <<~CPP
-        #include "GeneralSim.hpp"
+        #include "GeneralSimTypes.hpp"
         #include "Decoder.hpp"
         #include "Instructions.hpp"
         using XReg = uint16_t;
         namespace Decoder {
-          #{emitter.emit_decoder_tree(root, @@parsed_ir)}
+        #{emitter.emit_decoder_tree(root, @@parsed_ir)}
         } // namespace Decoder"
         CPP
       end
 
+      File.open('Sim/include/Executor.hpp', 'w') do |exec_header|
+        exec_header << <<~CPP
+        #pragma once
+        #include "ExecContext.hpp"
+        #include "Instructions.hpp"
+        
+        namespace GeneralSim {
+        class Executor {
+        public:
+          void execute(const Instruction &Inst, ExecContext &Ctx);
+        };
+        } // namespace GeneralSim
+        CPP
+      end
     end
 
     def cpp_type_for(field)
@@ -96,7 +117,7 @@ module SimGen
         imm_parts = fields.select { |f| f.is_a?(SimInfra::ImmFieldPart)}
 
         if !imm.empty? || !imm_parts.empty?
-          body = body + "\n  GeneralSim::Immediate Imm;\n"
+          body = body + "\n  GeneralSim::Immediate imm;\n"
         end
         structs << <<~CPP
           struct #{name} {
@@ -109,7 +130,7 @@ module SimGen
         #pragma once
 
         #include <variant>
-        #include "GeneralSim.hpp"
+        #include "GeneralSimTypes.hpp"
         using XReg = uint16_t;
         #{structs.join("\n")}
 

@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <vector>
 
-void loadElf(const std::string &ElfName, std::vector<uint8_t> &Memory, size_t &EntryPoint) {
+void loadElf(const std::string &ElfName, unsigned char* Memory, size_t MemoryLimit, size_t &EntryPoint) {
   ELFIO::elfio Reader;
 
   if (!Reader.load(ElfName)) {
@@ -20,14 +20,14 @@ void loadElf(const std::string &ElfName, std::vector<uint8_t> &Memory, size_t &E
       auto MSize = Pseg->get_memory_size();
       auto FSize = Pseg->get_file_size();
 
-      if (Memory.size() < VAddr + MSize) {
+      if (MemoryLimit < VAddr + MSize) {
         throw std::runtime_error(
             std::format("ELF requires at least {} of memory, while only {} is "
                         "allocated.",
-            VAddr + MSize, Memory.size()));
+            VAddr + MSize, MemoryLimit));
       }
 
-      if (!memcpy(Memory.data() + VAddr, Pseg->get_data(), FSize)) {
+      if (!memcpy(Memory + VAddr, Pseg->get_data(), FSize)) {
         throw std::runtime_error("Failed to load segment.");
       }
     }

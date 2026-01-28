@@ -9,7 +9,7 @@ namespace GeneralSim {
 class Memory {
 public:
   Memory(size_t InitSize);
-  ~Memory() = default;
+  ~Memory();
 
   uint8_t  read8(uintptr_t Addr) const;
   uint16_t read16(uintptr_t Addr) const;
@@ -24,6 +24,9 @@ public:
   void write64(uintptr_t Addr, uint64_t Value);
   void write128(uintptr_t Addr, const uint8_t* Src);
   void write256(uintptr_t Addr, const uint8_t* Src);
+
+    uint8_t* data();
+    const uint8_t* data() const;
 
   size_t size() const;
 
