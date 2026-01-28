@@ -26,11 +26,15 @@
 .dat*
 .repl_history
 .cache
+sim_tests
 sim
 build/
 *.bridgesupport
 build-iPhoneOS/
 build-iPhoneSimulator/
+t
+t.cpp
+t.o
 
 ## Specific to RubyMotion (use of CocoaPods):
 #

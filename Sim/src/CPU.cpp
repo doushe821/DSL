@@ -24,7 +24,7 @@ void CPU::step() {
   Decoder::Decoder Dcdr;
   GeneralSim::Executor Extr;
   auto RawInstr = Mem.read32(PC);
-  std::cout << RawInstr;
+  std::cout << "Fetched raw instruction: " << RawInstr << std::endl;
   auto DecodedInstr = Dcdr.decode(RawInstr);
 
   // Implicit upcast from CPU to ExecContext here.

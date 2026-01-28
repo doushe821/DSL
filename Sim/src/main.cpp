@@ -24,6 +24,7 @@ int main(int argc, char **argv) {
     loadElf(ElfName, SPU.getRawMem(), MemorySize, EntryPoint);
   } catch (std::runtime_error &E) {
     std::cerr << E.what() << std::endl;
+    return 0;
   }
 
   SPU.setEntry(EntryPoint);
