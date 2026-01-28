@@ -43,13 +43,14 @@ module SimGen
 
       generate_general_instruction_description
       emitter = SimInfra::CppEmitter.new
+      all_execs = emitter.emit_all_instructions(@@parsed_ir)
 
       File.open('Sim/src/Executor.cpp', 'w') do |exec|
         exec << <<~CPP
         #include "Executor.hpp"
         namespace GeneralSim {
         using XReg = uint16_t;
-        #{emitter.emit_all_instructions(@@parsed_ir)}
+        #{all_execs}
         void Executor::execute(const Instruction &Inst, ExecContext &Ctx) {
           std::visit([&](auto&& I) {
             using T = std::decay_t<decltype(I)>;
@@ -58,6 +59,18 @@ module SimGen
         }
         } // namespace GeneralSim
       CPP
+      end
+
+      File.open('Sim/include/ExecutorTestOnly.hpp', 'w') do |execto| 
+        execto << <<~CPP
+        #pragma once
+        #include "ExecContext.hpp"
+        namespace TestSim {
+        using XReg = uint16_t;
+        using ExecContext = GeneralSim::ExecContext;
+        #{all_execs}
+        } // namespace TestSim
+        CPP
       end
 
       File.open('Sim/src/Decoder.cpp', 'w') do |decode|
