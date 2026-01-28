@@ -9,6 +9,8 @@ add_executable (${EXECUTABLE}
     src/RegState.cpp
     src/Memory.cpp
     src/CPU.cpp
+    src/Executor.cpp
+    src/Decoder.cpp
 )
 
 target_include_directories (${EXECUTABLE}

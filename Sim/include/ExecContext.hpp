@@ -26,7 +26,7 @@ public:
   virtual void setReg(XReg Idx, uint32_t Value) = 0;
 
   virtual uint32_t getPC() const = 0;
-  virtual void setPC(uint32_t value) = 0;
+  virtual void setPC(uint32_t Value) = 0;
 
   virtual void syscall(int Code) = 0;
 

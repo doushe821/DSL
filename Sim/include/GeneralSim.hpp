@@ -2,14 +2,9 @@
 #include <cassert>
 #include <cstdint>
 #include <cstring>
-
-#include <array>
 #include <memory>
-#include <vector>
 
-#include "Decoder.hpp"
 #include "ExecContext.hpp"
-#include "Executor.hpp"
 #include "Memory.hpp"
 
 namespace GeneralSim {
@@ -18,8 +13,6 @@ static inline uint32_t getMaskedValue(uint32_t Value, int StartBit,
                                       int FinishBit) {
   return (Value >> StartBit) & ((1 << (FinishBit - StartBit + 1)) - 1);
 }
-
-
 
 class RegState;
 class CPU : ExecContext {
@@ -43,6 +36,8 @@ public:
     }
   }
 
+  void dumpState();
+
   uint8_t  read8(uintptr_t Addr) override;
   uint16_t read16(uintptr_t Addr) override;
   uint32_t read32(uintptr_t Addr) override;
@@ -59,6 +54,14 @@ public:
   void write128(uintptr_t Addr, const uint8_t* Src) override;
   void write256(uintptr_t Addr, const uint8_t* Src) override;
 
+  uint32_t getPC() const override {
+    return PC;
+  }
+
+  void setPC(uint32_t Value) override {
+    PC = Value;
+  }
+  
   void step();
 
   // For loader only.
@@ -68,8 +71,8 @@ public:
   // But better don't.
   unsigned char* getRawMem() { return Mem.data(); }; // FIXME
 
-  uint32_t readReg(unsigned Idx) const;
-  void writeReg(unsigned Idx, uint32_t Value);
+  uint32_t getReg(XReg Idx) const override;
+  void setReg(XReg Idx, uint32_t Value) override;
 
   void setEntry(size_t EntryPoint) { PC = EntryPoint; }
 

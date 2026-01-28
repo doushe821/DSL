@@ -311,7 +311,7 @@ module SimInfra
 
     def emit_decoder_tree(root, instructions)
       <<~CPP
-      Instruction decode(uint32_t Instr) {
+      Instruction Decoder::decode(uint32_t Instr) {
       #{emit_node(root, instructions, Indent)}
       }
       CPP

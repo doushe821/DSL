@@ -2,7 +2,7 @@
 
 #include "Instructions.hpp"
 
-namespace GeneralSim {
+namespace Decoder {
 class Decoder {
 public:
   Instruction decode(uint32_t Instr);
