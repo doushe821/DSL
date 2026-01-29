@@ -47,6 +47,7 @@ void CPU::runPretty() {
   auto PrevRegState(std::make_unique<RegState>());
   Memory PrevMemState(MemoryLimit);
   setReg(RegAliases::sp, MemoryLimit);
+  PrevRegState->write(RegAliases::sp, MemoryLimit);
   OLD_PC = PC;
 
   while (!Finished) {
@@ -87,8 +88,8 @@ void CPU::dumpPretty(Memory &PrevMem, std::unique_ptr<RegState> &PrevRegState) {
     auto RegVal = RState->read(I);
     auto PrevRegVal = PrevRegState->read(I);
     if (RegVal != PrevRegVal) {
-      std::cout << "# Reg" << I << " changed: 0x" << std::hex << PrevRegVal << std::dec
-                << " -> 0x" << std::hex << RegVal << std::dec << std::endl;
+      std::cout << "# Reg" << std::dec << I << " changed: 0x" << std::hex << PrevRegVal << std::dec
+                << " -> 0x" << std::hex << RegVal << std::endl;
       PrevRegState->write(I, RegVal);
     }
   }
@@ -98,7 +99,7 @@ void CPU::dumpPretty(Memory &PrevMem, std::unique_ptr<RegState> &PrevRegState) {
     auto OldMemWord = PrevMem.read32(I);
     if (NewMemWord != OldMemWord) {
       std::cout << "# Memory changed on address 0x" << I << ": 0x" << std::hex
-                << OldMemWord << " -> 0x" << std::hex << NewMemWord << std::dec << std::endl;
+                << OldMemWord << " -> 0x" << std::hex << NewMemWord << std::endl;
       PrevMem.write32(I, NewMemWord);
     }
   }

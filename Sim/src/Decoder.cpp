@@ -272,31 +272,31 @@ Instruction Decoder::decode(uint32_t Instr) {
     case 17: {
       switch ((Instr >> 12) & ((1u << 2) - 1)) {
         case 0: {
-          XReg rs2 = ((Instr >> 15) & ((1u << 5) - 1));
-          XReg rs1 = ((Instr >> 20) & ((1u << 5) - 1));
+          XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
+          XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
           uint32_t ImmRaw = 0;
           ImmRaw |= (((Instr >> 7) & ((1u << 5) - 1)) << 0);
           ImmRaw |= (((Instr >> 25) & ((1u << 7) - 1)) << 5);
           auto Imm = GeneralSim::Immediate(ImmRaw, 12);
-          return Instruction{ SB{ rs2, rs1, Imm } };
+          return Instruction{ SB{ rs1, rs2, Imm } };
         }
         case 1: {
-          XReg rs2 = ((Instr >> 15) & ((1u << 5) - 1));
-          XReg rs1 = ((Instr >> 20) & ((1u << 5) - 1));
+          XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
+          XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
           uint32_t ImmRaw = 0;
           ImmRaw |= (((Instr >> 7) & ((1u << 5) - 1)) << 0);
           ImmRaw |= (((Instr >> 25) & ((1u << 7) - 1)) << 5);
           auto Imm = GeneralSim::Immediate(ImmRaw, 12);
-          return Instruction{ SH{ rs2, rs1, Imm } };
+          return Instruction{ SH{ rs1, rs2, Imm } };
         }
         case 2: {
-          XReg rs2 = ((Instr >> 15) & ((1u << 5) - 1));
-          XReg rs1 = ((Instr >> 20) & ((1u << 5) - 1));
+          XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
+          XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
           uint32_t ImmRaw = 0;
           ImmRaw |= (((Instr >> 7) & ((1u << 5) - 1)) << 0);
           ImmRaw |= (((Instr >> 25) & ((1u << 7) - 1)) << 5);
           auto Imm = GeneralSim::Immediate(ImmRaw, 12);
-          return Instruction{ SW{ rs2, rs1, Imm } };
+          return Instruction{ SW{ rs1, rs2, Imm } };
         }
         default:
           assert("No such inst in ISA");

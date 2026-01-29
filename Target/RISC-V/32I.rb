@@ -227,26 +227,26 @@ module RV32I
 
   # S-type
   Instruction(:SB, XReg(:rs2), XReg(:rs1), XImm(:imm)) {
-    encoding *format_s_store(:sb, rs2, rs1, imm)
+    encoding *format_s_store(:sb, rs1, rs2, imm)
     asm { "SB #{rs2}, #{imm}(#{rs1})" }
     code {
-      store(rs1 + imm, zext(rs2, from: 8, to: 32))
+      store(rs1 + sext(imm, from: 12, to: 32), zext(rs2, from: 8, to: 32))
     }
   }
 
   Instruction(:SH, XReg(:rs2), XReg(:rs1), XImm(:imm)) {
-    encoding *format_s_store(:sh, rs2, rs1, imm)
+    encoding *format_s_store(:sh, rs1, rs2, imm)
     asm { "SH #{rs2}, #{imm}(#{rs1})" }
     code {
-      store(rs1 + imm, zext(rs2, from: 16, to: 32))
+      store(rs1 + sext(imm, from: 12, to: 32), zext(rs2, from: 16, to: 32))
     }
   }
 
   Instruction(:SW, XReg(:rs2), XReg(:rs1), XImm(:imm)) {
-    encoding *format_s_store(:sw, rs2, rs1, imm)
+    encoding *format_s_store(:sw, rs1, rs2, imm)
     asm { "SW #{rs2}, #{imm}(#{rs1})" }
     code {
-      store(rs1 + imm, zext(rs2, from: 32, to: 32))
+      store(rs1 + sext(imm, from: 12, to: 32), rs2)
     }
   }
 

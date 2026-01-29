@@ -237,15 +237,15 @@ module SimInfra
     end
 
     def cpp_extract_bits(expr, from, to)
-      width = to - from + 1
-      "((#{expr} >> #{from}) & ((1u << #{width}) - 1))"
+      width = from - to + 1
+      "((#{expr} >> #{to}) & ((1u << #{width}) - 1))"
     end
 
     def assemble_scattered_imm(parts, instr_bits)
       imm = 0
 
       parts.each do |p|
-        part_val = extract_bits(instr_bits, p.from, p.to)
+        part_val = cpp_extract_bits(instr_bits, p.from, p.to)
 
         imm |= part_val << p.lo
       end
@@ -264,11 +264,11 @@ module SimInfra
         when SimInfra::Field
           case field.value
           when :reg
-            expr = cpp_extract_bits("Instr", field.to, field.from)
+            expr = cpp_extract_bits("Instr", field.from, field.to)
             lines << "#{indent}XReg #{field.name} = #{expr};"
             args << field.name.to_s
           when :imm
-            expr = cpp_extract_bits("Instr", field.to, field.from)
+            expr = cpp_extract_bits("Instr", field.from, field.to)
             lines << "#{indent}auto Imm = GeneralSim::Immediate(#{expr}, #{field.from - field.to + 1});"
             args << "Imm"
           end
@@ -281,7 +281,7 @@ module SimInfra
       if !imm_parts.empty?
         lines << "#{indent}uint32_t ImmRaw = 0;"
         imm_parts.each do |part|
-          extract = cpp_extract_bits("Instr", part.to, part.from)
+          extract = cpp_extract_bits("Instr", part.from, part.to)
           lines << "#{indent}ImmRaw |= (#{extract} << #{part.lo});"
         end
         imm_size = imm_parts.max_by {|part| part.hi }.hi

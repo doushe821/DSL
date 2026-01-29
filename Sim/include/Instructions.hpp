@@ -162,22 +162,22 @@ struct LHU {
 };
 
 struct SB {
-  XReg rs2;
   XReg rs1;
+  XReg rs2;
   GeneralSim::Immediate imm;
 
 };
 
 struct SH {
-  XReg rs2;
   XReg rs1;
+  XReg rs2;
   GeneralSim::Immediate imm;
 
 };
 
 struct SW {
-  XReg rs2;
   XReg rs1;
+  XReg rs2;
   GeneralSim::Immediate imm;
 
 };
