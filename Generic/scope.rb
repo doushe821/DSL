@@ -64,10 +64,10 @@ module SimInfra
         return new_tmp_const(what) if what.is_a?(Integer)
     end
 
-    def syscall(name, *args)
+    def syscall(*args)
       args = args.map { |a| resolve_const(a) }
       ret = tmpvar(Type.u(32))
-      stmt :syscall, [ret, name, *args]
+      stmt :syscall, [ret, *args]
     end
 
     def memory

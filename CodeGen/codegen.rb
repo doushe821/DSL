@@ -21,10 +21,15 @@ module SimInfra
       "v_#{var.name}"
     end
 
-    def declare_ssa(var)
+    def declare_ssa(var, signed = nil)
       name = ssa(var)
       raise "Double declaration: #{name.inspect}" if @declared[name]
-      emit Indent + "uint64_t #{name} = 0;"
+      if signed
+        emit Indent + "int32_t #{name} = 0;"
+      else
+        emit Indent + "uint32_t #{name} = 0;"
+      end
+    
       @declared[name] = true
     end
 
@@ -130,12 +135,12 @@ module SimInfra
         emit Indent + "#{ssa(dst)} = Ctx.bitrev(#{operand(src)});"
       when :as_signed
         dst, src = ops
-        declare_ssa(dst)
-        emit Indent + "#{ssa(dst)} = static_cast<int64_t>(#{operand(src)});"
+        declare_ssa(dst, 1)
+        emit Indent + "#{ssa(dst)} = static_cast<int32_t>(#{operand(src)});"
       when :as_unsigned
         dst, src = ops
         declare_ssa(dst)
-        emit Indent + "#{ssa(dst)} = static_cast<uint64_t>(#{operand(src)});"
+        emit Indent + "#{ssa(dst)} = static_cast<uint32_t>(#{operand(src)});"
       when :sext
         dst, src = ops
         from = attrs[:from]
@@ -159,9 +164,7 @@ module SimInfra
         reg, var = ops
         emit Indent + "Ctx.setReg(#{reg.name}, #{ssa(var)});"
       when :syscall
-        code = ops.first
-        declare_ssa(code)
-        emit Indent + "Ctx.syscall(#{operand(code)});"
+        emit Indent + "Ctx.syscall();"
       when :cmp_eq
         a, b = operand(ops[1]), operand(ops[2])
         dst = ops[0]
@@ -263,7 +266,7 @@ module SimInfra
             args << field.name.to_s
           when :imm
             expr = cpp_extract_bits("Instr", field.to, field.from)
-            lines << "#{indent}auto Imm = GeneralSim::Immediate(#{expr}, 32, GeneralSim::ImmediateType::Unsigned);"
+            lines << "#{indent}auto Imm = GeneralSim::Immediate(#{expr}, #{field.from - field.to + 1});"
             args << "Imm"
           end
 
@@ -278,7 +281,8 @@ module SimInfra
           extract = cpp_extract_bits("Instr", part.to, part.from)
           lines << "#{indent}ImmRaw |= (#{extract} << #{part.lo});"
         end
-        lines << "#{indent}auto Imm = GeneralSim::Immediate(ImmRaw, 32, GeneralSim::ImmediateType::Unsigned);"  # Double definition may cause error but this is intended. (also might change in future, in case there are ISAS with multiple imms per instruction)
+        imm_size = imm_parts.max_by {|part| part.hi }.hi
+        lines << "#{indent}auto Imm = GeneralSim::Immediate(ImmRaw, #{imm_size + 1});"  # Double definition may cause error but this is intended. (also might change in future, in case there are ISAS with multiple imms per instruction)
         args << "Imm"
       end
 

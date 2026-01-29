@@ -37,12 +37,8 @@ struct FakeExecContext : ExecContext {
     void write256(uintptr_t Addr, const uint8_t* Src) override { for(int i=0;i<32;i++) mem[Addr+i]=Src[i]; }
 
 
-  constexpr void syscall(int Code) override {
-    if (Code == 1) {
-      Finished = true;
-    } else {
-      assert("Not implemented\n");
-    }
+  constexpr void syscall() override {
+    Finished = true;
   };
 
   constexpr int bitrev(int Val, int NBits = 32) override { // Does it in log(n)

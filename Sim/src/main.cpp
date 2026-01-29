@@ -18,7 +18,6 @@ int main(int argc, char **argv) {
   CLI11_PARSE(CLIApp, argc, argv);
 
   GeneralSim::CPU SPU(MemorySize);
-
   size_t EntryPoint{0};
   try {
     loadElf(ElfName, SPU.getRawMem(), MemorySize, EntryPoint);

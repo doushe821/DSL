@@ -61,6 +61,7 @@ module SimGen
       CPP
       end
 
+      # TODO make it toggleable for user (maybe they don't want any tests)
       File.open('Sim/include/ExecutorTestOnly.hpp', 'w') do |execto| 
         execto << <<~CPP
         #pragma once

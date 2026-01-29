@@ -118,43 +118,43 @@ Instruction Decoder::decode(uint32_t Instr) {
         case 0: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
+          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 12);
           return Instruction{ ADDI{ rd, rs1, Imm } };
         }
         case 2: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
+          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 12);
           return Instruction{ SLTI{ rd, rs1, Imm } };
         }
         case 3: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
+          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 12);
           return Instruction{ SLTIU{ rd, rs1, Imm } };
         }
         case 4: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
+          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 12);
           return Instruction{ XORI{ rd, rs1, Imm } };
         }
         case 6: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
+          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 12);
           return Instruction{ ORI{ rd, rs1, Imm } };
         }
         case 7: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
+          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 12);
           return Instruction{ ANDI{ rd, rs1, Imm } };
         }
         case 1: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 5) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
+          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 5) - 1)), 5);
           return Instruction{ SLLI{ rd, rs1, Imm } };
         }
         case 5: {
@@ -162,13 +162,13 @@ Instruction Decoder::decode(uint32_t Instr) {
             case 0: {
               XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
               XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-              auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 5) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
+              auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 5) - 1)), 5);
               return Instruction{ SRLI{ rd, rs1, Imm } };
             }
             case 1: {
               XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
               XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-              auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 5) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
+              auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 5) - 1)), 5);
               return Instruction{ SRAI{ rd, rs1, Imm } };
             }
             default:
@@ -184,31 +184,31 @@ Instruction Decoder::decode(uint32_t Instr) {
         case 0: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
+          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 12);
           return Instruction{ LB{ rd, rs1, Imm } };
         }
         case 1: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
+          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 12);
           return Instruction{ LH{ rd, rs1, Imm } };
         }
         case 2: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
+          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 12);
           return Instruction{ LW{ rd, rs1, Imm } };
         }
         case 4: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
+          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 12);
           return Instruction{ LBU{ rd, rs1, Imm } };
         }
         case 5: {
           XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
           XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
+          auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 12);
           return Instruction{ LHU{ rd, rs1, Imm } };
         }
         default:
@@ -223,7 +223,7 @@ Instruction Decoder::decode(uint32_t Instr) {
           uint32_t ImmRaw = 0;
           ImmRaw |= (((Instr >> 7) & ((1u << 5) - 1)) << 0);
           ImmRaw |= (((Instr >> 25) & ((1u << 7) - 1)) << 5);
-          auto Imm = GeneralSim::Immediate(ImmRaw, 32, GeneralSim::ImmediateType::Unsigned);
+          auto Imm = GeneralSim::Immediate(ImmRaw, 12);
           return Instruction{ SB{ rs2, rs1, Imm } };
         }
         case 1: {
@@ -232,7 +232,7 @@ Instruction Decoder::decode(uint32_t Instr) {
           uint32_t ImmRaw = 0;
           ImmRaw |= (((Instr >> 7) & ((1u << 5) - 1)) << 0);
           ImmRaw |= (((Instr >> 25) & ((1u << 7) - 1)) << 5);
-          auto Imm = GeneralSim::Immediate(ImmRaw, 32, GeneralSim::ImmediateType::Unsigned);
+          auto Imm = GeneralSim::Immediate(ImmRaw, 12);
           return Instruction{ SH{ rs2, rs1, Imm } };
         }
         case 2: {
@@ -241,7 +241,7 @@ Instruction Decoder::decode(uint32_t Instr) {
           uint32_t ImmRaw = 0;
           ImmRaw |= (((Instr >> 7) & ((1u << 5) - 1)) << 0);
           ImmRaw |= (((Instr >> 25) & ((1u << 7) - 1)) << 5);
-          auto Imm = GeneralSim::Immediate(ImmRaw, 32, GeneralSim::ImmediateType::Unsigned);
+          auto Imm = GeneralSim::Immediate(ImmRaw, 12);
           return Instruction{ SW{ rs2, rs1, Imm } };
         }
         default:
@@ -255,23 +255,23 @@ Instruction Decoder::decode(uint32_t Instr) {
       ImmRaw |= (((Instr >> 21) & ((1u << 10) - 1)) << 1);
       ImmRaw |= (((Instr >> 20) & ((1u << 1) - 1)) << 11);
       ImmRaw |= (((Instr >> 12) & ((1u << 8) - 1)) << 12);
-      auto Imm = GeneralSim::Immediate(ImmRaw, 32, GeneralSim::ImmediateType::Unsigned);
+      auto Imm = GeneralSim::Immediate(ImmRaw, 21);
       return Instruction{ JAL{ rd, Imm } };
     }
     case 51: {
       XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
       XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-      auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
+      auto Imm = GeneralSim::Immediate(((Instr >> 20) & ((1u << 12) - 1)), 12);
       return Instruction{ JALR{ rd, rs1, Imm } };
     }
     case 27: {
       XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
-      auto Imm = GeneralSim::Immediate(((Instr >> 12) & ((1u << 20) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
+      auto Imm = GeneralSim::Immediate(((Instr >> 12) & ((1u << 20) - 1)), 20);
       return Instruction{ LUI{ rd, Imm } };
     }
     case 11: {
       XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
-      auto Imm = GeneralSim::Immediate(((Instr >> 12) & ((1u << 20) - 1)), 32, GeneralSim::ImmediateType::Unsigned);
+      auto Imm = GeneralSim::Immediate(((Instr >> 12) & ((1u << 20) - 1)), 20);
       return Instruction{ AUIPC{ rd, Imm } };
     }
     case 49: {
@@ -282,7 +282,7 @@ Instruction Decoder::decode(uint32_t Instr) {
       ImmRaw |= (((Instr >> 25) & ((1u << 6) - 1)) << 5);
       ImmRaw |= (((Instr >> 8) & ((1u << 4) - 1)) << 1);
       ImmRaw |= (((Instr >> 7) & ((1u << 1) - 1)) << 11);
-      auto Imm = GeneralSim::Immediate(ImmRaw, 32, GeneralSim::ImmediateType::Unsigned);
+      auto Imm = GeneralSim::Immediate(ImmRaw, 13);
       return Instruction{ BEQ{ rs1, rs2, Imm } };
     }
     case 0: {

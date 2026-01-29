@@ -28,7 +28,7 @@ public:
   virtual uint32_t getPC() const = 0;
   virtual void setPC(uint32_t Value) = 0;
 
-  virtual void syscall(int Code) = 0;
+  virtual void syscall() = 0;
 
   virtual int bitrev(int Val, int NBits = 32) = 0;
   virtual constexpr uint64_t sext(uint64_t Val, int N) = 0;

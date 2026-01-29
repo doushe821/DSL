@@ -76,12 +76,8 @@ public:
 
   void setEntry(size_t EntryPoint) { PC = EntryPoint; }
 
-  constexpr void syscall(int Code) override {
-    if (Code == 1) {
-      Finished = true;
-    } else {
-      assert("Not implemented\n");
-    }
+  constexpr void syscall() override {
+    Finished = true;
   };
 
   constexpr int bitrev(int Val, int NBits = 32) override { // Does it in log(n)

@@ -337,7 +337,7 @@ module RV32I
     encoding *format_sys(:ecall)
     asm { "ECALL" }
     code {
-      syscall(0)
+      syscall
     }
   }
 end
