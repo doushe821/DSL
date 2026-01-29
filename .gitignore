@@ -35,6 +35,7 @@ build-iPhoneSimulator/
 t
 t.cpp
 t.o
+rip.txt
 
 ## Specific to RubyMotion (use of CocoaPods):
 #
