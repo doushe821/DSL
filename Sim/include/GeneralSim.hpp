@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cstring>
 #include <memory>
+#include <iostream>
 
 #include "ExecContext.hpp"
 #include "Memory.hpp"
@@ -31,9 +32,11 @@ public:
 
   void run() {
     OLD_PC = PC;
+    setReg(2, 0xff);
     while (!Finished) {
       step();
     }
+    std::cout << "Finished!" << std::endl; // TODO add finish code or smth
   }
 
   void dumpState();

@@ -33,7 +33,10 @@ void CPU::step() {
   Extr.execute(DecodedInstr, *this);
   // If branch was taken, PC should not be changed
   // by CPU.
-  PC += 4 * (OLD_PC == PC);
+  if (OLD_PC == PC) {
+    PC += 4;
+    OLD_PC = PC;
+  }
   dumpState();
 }
 

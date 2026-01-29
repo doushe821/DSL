@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
 
   SPU.setEntry(EntryPoint);
 
-  SPU.step();
+  SPU.run();
 
   return 0;
 }

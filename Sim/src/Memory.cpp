@@ -1,7 +1,8 @@
 #include "Memory.hpp"
 #include <vector>
 #include <cassert>
-#include <cstring> // for memcpy
+#include <cstring>
+#include <iostream>
 
 namespace GeneralSim {
 GeneralSim::Memory::Memory(size_t size) : MemImpl(std::make_unique<Impl>(size)) {}
@@ -26,6 +27,7 @@ uint16_t Memory::read16(uintptr_t Addr) const {
 }
 
 uint32_t Memory::read32(uintptr_t Addr) const {
+    std::cout << " Addr = " << Addr << std::endl;
     assert(Addr + 3 < MemImpl->Mem.size());
     return MemImpl->Mem[Addr] |
            (MemImpl->Mem[Addr+1] << 8) |
