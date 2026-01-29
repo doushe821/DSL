@@ -21,13 +21,13 @@ module SimInfra
       "v_#{var.name}"
     end
 
-    def declare_ssa(var, signed = nil)
+    def declare_ssa(var, signed = nil, width = 32)
       name = ssa(var)
       raise "Double declaration: #{name.inspect}" if @declared[name]
       if signed
-        emit Indent + "int32_t #{name} = 0;"
+        emit Indent + "int#{width}_t #{name} = 0;"
       else
-        emit Indent + "uint32_t #{name} = 0;"
+        emit Indent + "uint#{width}_t #{name} = 0;"
       end
     
       @declared[name] = true
@@ -119,7 +119,8 @@ module SimInfra
         emit Indent + "#{ssa(dst)} = #{operand(src)};"
       when :+, :-, :*, :&, :|, :^, :<<, :>>, :/, :%
         dst, a, b = ops
-        declare_ssa(dst)
+        max_width = (a.type.bits > b.type.bits) ? a.type.bits : b.type.bits
+        declare_ssa(dst, nil, max_width)
         emit Indent + "#{ssa(dst)} = #{operand(a)} #{name} #{operand(b)};"
       when :<, :==, :>, :>=, :<=, :!= # Remove?
         dst, a, b = ops
@@ -135,21 +136,23 @@ module SimInfra
         emit Indent + "#{ssa(dst)} = Ctx.bitrev(#{operand(src)});"
       when :as_signed
         dst, src = ops
-        declare_ssa(dst, 1)
-        emit Indent + "#{ssa(dst)} = static_cast<int32_t>(#{operand(src)});"
+        declare_ssa(dst, true, src.type.bits)
+        emit Indent + "#{ssa(dst)} = static_cast<int#{src.type.bits}_t>(#{operand(src)});"
       when :as_unsigned
         dst, src = ops
-        declare_ssa(dst)
-        emit Indent + "#{ssa(dst)} = static_cast<uint32_t>(#{operand(src)});"
+        declare_ssa(dst, nil, src.type.bits)
+        emit Indent + "#{ssa(dst)} = static_cast<uint#{src.type.bits}_t>(#{operand(src)});"
       when :sext
         dst, src = ops
         from = attrs[:from]
-        declare_ssa(dst)
+        to = attrs[:to]
+        declare_ssa(dst, src.type.signed, to)
         emit Indent + "#{ssa(dst)} = Ctx.sext(#{operand(src)}, #{from});"
       when :zext
         dst, src = ops
         from = attrs[:from]
-        declare_ssa(dst)
+        to = attrs[:to]
+        declare_ssa(dst, src.type.signed, to)
         emit Indent + "#{ssa(dst)} = Ctx.zext(#{operand(src)}, #{from});"
       when :load
         dst, addr = ops

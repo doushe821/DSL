@@ -109,15 +109,19 @@ public:
     return Val & Mask;
   }
 
-  constexpr uint64_t sext(uint64_t Val, int N) override {
-    if (Val & (1 << (N - 1))) {
-      int Mask = ~((1 << N) - 1);
-      Val |= Mask;
-    }
-    return Val;
+  constexpr uint64_t sext(uint64_t Val, int64_t N) override {
+      if (N <= 0 || N > 64) return Val;
+
+      uint64_t top_bit = uint64_t(1) << (N - 1);
+      
+      if (Val & top_bit) {
+          uint64_t mask = (N == 64) ? ~uint64_t(0) : ~((uint64_t(1) << N) - 1);
+          Val |= mask;
+      }
+      return Val;
   }
 
-  constexpr uint64_t zext(uint64_t V, unsigned N) override {
+  constexpr uint64_t zext(uint64_t V, int64_t N) override {
     assert(N <= 64);
     if (N == 64)
       return V;

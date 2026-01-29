@@ -31,8 +31,8 @@ public:
   virtual void syscall() = 0;
 
   virtual int bitrev(int Val, int NBits = 32) = 0;
-  virtual constexpr uint64_t sext(uint64_t Val, int N) = 0;
-  virtual constexpr uint64_t zext(uint64_t V, unsigned N) = 0;
+  virtual constexpr uint64_t sext(uint64_t Val, int64_t N) = 0;
+  virtual constexpr uint64_t zext(uint64_t V, int64_t N) = 0;
   virtual constexpr int saturateUnsigned(unsigned Val, unsigned N) = 0;
 };
 } // namespace GeneralSim

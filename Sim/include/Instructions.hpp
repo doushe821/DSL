@@ -63,24 +63,6 @@ struct AND {
   XReg rs2;
 };
 
-struct MUL {
-  XReg rd;
-  XReg rs1;
-  XReg rs2;
-};
-
-struct DIV {
-  XReg rd;
-  XReg rs1;
-  XReg rs2;
-};
-
-struct REM {
-  XReg rd;
-  XReg rs1;
-  XReg rs2;
-};
-
 struct ADDI {
   XReg rd;
   XReg rs1;
@@ -236,6 +218,54 @@ struct ECALL {
 
 };
 
+struct MUL {
+  XReg rd;
+  XReg rs1;
+  XReg rs2;
+};
+
+struct MULH {
+  XReg rd;
+  XReg rs1;
+  XReg rs2;
+};
+
+struct MULHSU {
+  XReg rd;
+  XReg rs1;
+  XReg rs2;
+};
+
+struct MULHU {
+  XReg rd;
+  XReg rs1;
+  XReg rs2;
+};
+
+struct DIV {
+  XReg rd;
+  XReg rs1;
+  XReg rs2;
+};
+
+struct DIVU {
+  XReg rd;
+  XReg rs1;
+  XReg rs2;
+};
+
+struct REM {
+  XReg rd;
+  XReg rs1;
+  XReg rs2;
+};
+
+struct REMU {
+  XReg rd;
+  XReg rs1;
+  XReg rs2;
+};
+
 
 using Instruction = std::variant<
     ADD,
@@ -248,9 +278,6 @@ using Instruction = std::variant<
     SRA,
     OR,
     AND,
-    MUL,
-    DIV,
-    REM,
     ADDI,
     SLTI,
     SLTIU,
@@ -273,5 +300,13 @@ using Instruction = std::variant<
     LUI,
     AUIPC,
     BEQ,
-    ECALL
+    ECALL,
+    MUL,
+    MULH,
+    MULHSU,
+    MULHU,
+    DIV,
+    DIVU,
+    REM,
+    REMU
 >;

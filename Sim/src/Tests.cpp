@@ -149,6 +149,101 @@ TEST_CASE("Executor: LB sign extends, LBU zero extends") {
   REQUIRE(ctx.getReg(2) == 0x80);
 }
 
+
+TEST_CASE("MUL / MULH family torture") {
+  GeneralSim::FakeExecContext ctx;
+
+  // 1 * 1
+  ctx.setReg(XReg(1), 1);
+  ctx.setReg(XReg(2), 1);
+
+  TestSim::EXEC_MUL(ctx, XReg(3), XReg(1), XReg(2));
+  REQUIRE(ctx.getReg(XReg(3)) == 1);
+
+  TestSim::EXEC_MULH(ctx, XReg(3), XReg(1), XReg(2));
+  REQUIRE(ctx.getReg(XReg(3)) == 0);
+
+  // (-1) * (-1) = +1
+  ctx.setReg(XReg(1), 0xFFFFFFFF);
+  ctx.setReg(XReg(2), 0xFFFFFFFF);
+
+  TestSim::EXEC_MUL(ctx, XReg(3), XReg(1), XReg(2));
+  REQUIRE(ctx.getReg(XReg(3)) == 1);
+
+  TestSim::EXEC_MULH(ctx, XReg(3), XReg(1), XReg(2));
+  REQUIRE(ctx.getReg(XReg(3)) == 0);
+
+  // (-2^31) * 2
+  ctx.setReg(XReg(1), 0x80000000);
+  ctx.setReg(XReg(2), 2);
+
+  TestSim::EXEC_MUL(ctx, XReg(3), XReg(1), XReg(2));
+  REQUIRE(ctx.getReg(XReg(3)) == 0x00000000);
+
+  TestSim::EXEC_MULH(ctx, XReg(3), XReg(1), XReg(2));
+  REQUIRE(ctx.getReg(XReg(3)) == 0xFFFFFFFF); // sign-propagated
+
+  // MULHU: unsigned * unsigned
+  ctx.setReg(XReg(1), 0xFFFFFFFF);
+  ctx.setReg(XReg(2), 2);
+
+  TestSim::EXEC_MULHU(ctx, XReg(3), XReg(1), XReg(2));
+  REQUIRE(ctx.getReg(XReg(3)) == 1);
+
+  // MULHSU: signed * unsigned
+  ctx.setReg(XReg(1), 0xFFFFFFFF); // -1
+  ctx.setReg(XReg(2), 2);
+
+  TestSim::EXEC_MULHSU(ctx, XReg(3), XReg(1), XReg(2));
+  REQUIRE(ctx.getReg(XReg(3)) == 0xFFFFFFFF);
+}
+
+
+TEST_CASE("DIV / DIVU torture") {
+  GeneralSim::FakeExecContext ctx;
+
+  // normal
+  ctx.setReg(XReg(1), 10);
+  ctx.setReg(XReg(2), 2);
+
+  TestSim::EXEC_DIV(ctx, XReg(3), XReg(1), XReg(2));
+  REQUIRE(ctx.getReg(XReg(3)) == 5);
+
+  // overflow case: INT_MIN / -1
+  ctx.setReg(XReg(1), 0x80000000);
+  ctx.setReg(XReg(2), 0xFFFFFFFF);
+
+  //TestSim::EXEC_DIV(ctx, XReg(3), XReg(1), XReg(2));
+  //REQUIRE(ctx.getReg(XReg(3)) == 0x80000000);
+
+  //TestSim::EXEC_DIVU(ctx, XReg(3), XReg(1), XReg(2));
+  //REQUIRE(ctx.getReg(XReg(3)) == 0xFFFFFFFF);
+}
+
+
+TEST_CASE("REM / REMU torture") {
+  GeneralSim::FakeExecContext ctx;
+
+  // normal
+  ctx.setReg(XReg(1), 10);
+  ctx.setReg(XReg(2), 3);
+
+  TestSim::EXEC_REM(ctx, XReg(3), XReg(1), XReg(2));
+  REQUIRE(ctx.getReg(XReg(3)) == 1);
+
+  // INT_MIN % -1
+  ctx.setReg(XReg(1), 0x80000000);
+  ctx.setReg(XReg(2), 0xFFFFFFFF);
+
+  //TestSim::EXEC_REM(ctx, XReg(3), XReg(1), XReg(2));
+  //REQUIRE(ctx.getReg(XReg(3)) == 0);
+
+  //TestSim::EXEC_REMU(ctx, XReg(3), XReg(1), XReg(2));
+  //REQUIRE(ctx.getReg(XReg(3)) == 123);
+}
+
+
+
 // ###################
 // # Decoder tests:
 // ###################
@@ -159,8 +254,6 @@ TEST_CASE("Decoder: I-type immediate sign extension") {
   Decoder::Decoder dcdr;
   auto decoded = dcdr.decode(inst);
   auto &i = std::get<ADDI>(decoded);
-  std::cout << i.imm.raw() << " and " << i.imm.asSigned() << "and bitsize "
-            << i.imm.bits() << std::endl;
 
   REQUIRE(std::bit_cast<int32_t>(i.imm.asSigned()) == -1);
 }

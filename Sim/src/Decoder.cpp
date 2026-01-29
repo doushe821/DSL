@@ -32,22 +32,58 @@ Instruction Decoder::decode(uint32_t Instr) {
           }
         }
         case 1: {
-          XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
-          XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-          XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
-          return Instruction{ SLL{ rd, rs1, rs2 } };
+          switch ((Instr >> 25) & ((1u << 1) - 1)) {
+            case 0: {
+              XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
+              XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
+              XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
+              return Instruction{ SLL{ rd, rs1, rs2 } };
+            }
+            case 1: {
+              XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
+              XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
+              XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
+              return Instruction{ MULH{ rd, rs1, rs2 } };
+            }
+            default:
+              assert("No such inst in ISA");
+          }
         }
         case 2: {
-          XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
-          XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-          XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
-          return Instruction{ SLT{ rd, rs1, rs2 } };
+          switch ((Instr >> 25) & ((1u << 1) - 1)) {
+            case 0: {
+              XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
+              XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
+              XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
+              return Instruction{ SLT{ rd, rs1, rs2 } };
+            }
+            case 1: {
+              XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
+              XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
+              XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
+              return Instruction{ MULHSU{ rd, rs1, rs2 } };
+            }
+            default:
+              assert("No such inst in ISA");
+          }
         }
         case 3: {
-          XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
-          XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-          XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
-          return Instruction{ SLTU{ rd, rs1, rs2 } };
+          switch ((Instr >> 25) & ((1u << 1) - 1)) {
+            case 0: {
+              XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
+              XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
+              XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
+              return Instruction{ SLTU{ rd, rs1, rs2 } };
+            }
+            case 1: {
+              XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
+              XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
+              XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
+              return Instruction{ MULHU{ rd, rs1, rs2 } };
+            }
+            default:
+              assert("No such inst in ISA");
+          }
         }
         case 4: {
           switch ((Instr >> 25) & ((1u << 1) - 1)) {
@@ -68,18 +104,24 @@ Instruction Decoder::decode(uint32_t Instr) {
           }
         }
         case 5: {
-          switch ((Instr >> 30) & ((1u << 1) - 1)) {
+          switch ((Instr >> 25) & ((1u << 6) - 1)) {
             case 0: {
               XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
               XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
               XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
               return Instruction{ SRL{ rd, rs1, rs2 } };
             }
-            case 1: {
+            case 32: {
               XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
               XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
               XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
               return Instruction{ SRA{ rd, rs1, rs2 } };
+            }
+            case 1: {
+              XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
+              XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
+              XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
+              return Instruction{ DIVU{ rd, rs1, rs2 } };
             }
             default:
               assert("No such inst in ISA");
@@ -104,10 +146,22 @@ Instruction Decoder::decode(uint32_t Instr) {
           }
         }
         case 7: {
-          XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
-          XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-          XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
-          return Instruction{ AND{ rd, rs1, rs2 } };
+          switch ((Instr >> 25) & ((1u << 1) - 1)) {
+            case 0: {
+              XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
+              XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
+              XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
+              return Instruction{ AND{ rd, rs1, rs2 } };
+            }
+            case 1: {
+              XReg rd = ((Instr >> 7) & ((1u << 5) - 1));
+              XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
+              XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
+              return Instruction{ REMU{ rd, rs1, rs2 } };
+            }
+            default:
+              assert("No such inst in ISA");
+          }
         }
         default:
           assert("No such inst in ISA");

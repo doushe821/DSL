@@ -97,36 +97,6 @@ module RV32I
   }
   }
 
-  # TODO separate
-  # R-mul
-  Instruction(:MUL, XReg(:rd), XReg(:rs1), XReg(:rs2)) {
-    encoding *format_r_mul(:mul, rd, rs1, rs2)
-    asm { "MUL #{rd}, #{rs1}, #{rs2}" }
-    code {
-      rd[] = rs1 * rs2
-      setreg rd
-    }
-  }
-
-  Instruction(:DIV, XReg(:rd), XReg(:rs1), XReg(:rs2)) {
-    encoding *format_r_mul(:div, rd, rs1, rs2)
-    asm { "DIV #{rd}, #{rs1}, #{rs2}" }
-    code {
-      rd[] = rs1 / rs2
-      setreg rd
-    }
-  }
-
-  Instruction(:REM, XReg(:rd), XReg(:rs1), XReg(:rs2)) {
-    encoding *format_r_mul(:rem, rd, rs1, rs2)
-    asm { "REM #{rd}, #{rs1}, #{rs2}" }
-    code {
-      rd[] = rs1 % rs2
-      setreg rd
-    }
-  }
-
-
   # I-type
   # I-alu
   Instruction(:ADDI, XReg(:rd), XReg(:rs1), XImm(:imm)) {

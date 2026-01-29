@@ -123,7 +123,7 @@ module SimInfra
 
     def zext(a, from:, to:)
         a = resolve_const(a)
-        stmt :zext, [tmpvar(Type.u(from)), a], { from:, to: }
+        stmt :zext, [tmpvar(Type.u(to)), a], { from:, to: }
     end
 
     def bitrev(a)
