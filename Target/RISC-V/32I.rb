@@ -103,7 +103,7 @@ module RV32I
     encoding *format_i_alu(:addi, rd, rs1, imm)
     asm { "ADDI #{rd}, #{rs1}, #{imm}" }
     code {
-      rd[] = rs1 + sext(imm, from: 11, to: 32)
+      rd[] = rs1 + sext(imm, from: 12, to: 32)
       setreg rd
     }
   }

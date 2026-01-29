@@ -56,6 +56,8 @@ void CPU::runPretty() {
   }
 
   std::cout << "Finished!" << std::endl; // TODO add finish code or smth
+  std::cout << "Return values: " << std::dec << RState->read(RegAliases::ret0)
+            << ", " << std::dec << RState->read(RegAliases::ret1) << std::endl;
 }
 
 void CPU::stepPretty(Memory &PrevMem, std::unique_ptr<RegState> &PrevRegState) {
@@ -66,8 +68,9 @@ void CPU::stepPretty(Memory &PrevMem, std::unique_ptr<RegState> &PrevRegState) {
   Decoder::Decoder Dcdr;
   GeneralSim::Executor Extr;
   auto RawInstr = Mem.read32(PC);
-  std::cout << "\n### " << std::dec <<InstructionCounter << ".\n";
-  std::cout << "### Fetched raw instruction: 0x" << std::hex << RawInstr << std::endl;
+  std::cout << "\n### " << std::dec << InstructionCounter << ".\n";
+  std::cout << "### Fetched raw instruction: 0x" << std::hex << RawInstr
+            << std::endl;
   auto DecodedInstr = Dcdr.decode(RawInstr);
 
   // Implicit upcast from CPU to ExecContext here.
@@ -88,8 +91,9 @@ void CPU::dumpPretty(Memory &PrevMem, std::unique_ptr<RegState> &PrevRegState) {
     auto RegVal = RState->read(I);
     auto PrevRegVal = PrevRegState->read(I);
     if (RegVal != PrevRegVal) {
-      std::cout << "# Reg" << std::dec << I << " changed: 0x" << std::hex << PrevRegVal << std::dec
-                << " -> 0x" << std::hex << RegVal << std::endl;
+      std::cout << "# Reg" << std::dec << I << " changed: 0x" << std::hex
+                << PrevRegVal << std::dec << " -> 0x" << std::hex << RegVal
+                << std::endl;
       PrevRegState->write(I, RegVal);
     }
   }
@@ -99,7 +103,8 @@ void CPU::dumpPretty(Memory &PrevMem, std::unique_ptr<RegState> &PrevRegState) {
     auto OldMemWord = PrevMem.read32(I);
     if (NewMemWord != OldMemWord) {
       std::cout << "# Memory changed on address 0x" << I << ": 0x" << std::hex
-                << OldMemWord << " -> 0x" << std::hex << NewMemWord << std::endl;
+                << OldMemWord << " -> 0x" << std::hex << NewMemWord
+                << std::endl;
       PrevMem.write32(I, NewMemWord);
     }
   }

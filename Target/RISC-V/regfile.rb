@@ -12,5 +12,7 @@ module RegFile
   }
 
   alias_reg(:sp, :x2)
+  alias_reg(:ret0, :x10)
+  alias_reg(:ret1, :x11)
 
 end

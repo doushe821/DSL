@@ -198,7 +198,7 @@ void EXEC_ADDI(ExecContext& Ctx, XReg rd, XReg rs1, GeneralSim::Immediate imm)
   v_imm = imm.raw();
 
   int32_t v__tmp18 = 0;
-  v__tmp18 = Ctx.sext(v_imm, 11);
+  v__tmp18 = Ctx.sext(v_imm, 12);
   uint32_t v__tmp19 = 0;
   v__tmp19 = v_rs1 + v__tmp18;
   v_rd = v__tmp19;
