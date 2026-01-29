@@ -6,13 +6,13 @@
 #include "Decoder.hpp"
 #include "Executor.hpp"
 #include "GeneralSim.hpp"
-#include "Instructions.hpp"
+#include "Memory.hpp"
 #include "RegState.hpp"
 namespace GeneralSim {
 
-CPU::CPU(size_t MemoryLimit_)
-    : MemoryLimit(MemoryLimit_), RState(std::make_unique<RegState>()),
-      Mem(MemoryLimit) {}
+CPU::CPU(size_t MemoryLimit_, bool IsPretty)
+    : MemoryLimit(MemoryLimit_), PrettyMode(IsPretty),
+      RState(std::make_unique<RegState>()), Mem(MemoryLimit) {}
 CPU::~CPU() = default;
 
 uint32_t CPU::getReg(XReg Idx) const { return RState->read(Idx); }
@@ -26,7 +26,7 @@ void CPU::step() {
   Decoder::Decoder Dcdr;
   GeneralSim::Executor Extr;
   auto RawInstr = Mem.read32(PC);
-  std::cout << "Fetched raw instruction: " << RawInstr << std::endl;
+  std::cout << "Fetched raw instruction: " << std::hex << RawInstr << std::endl;
   auto DecodedInstr = Dcdr.decode(RawInstr);
 
   // Implicit upcast from CPU to ExecContext here.
@@ -38,10 +38,72 @@ void CPU::step() {
     PC += 4;
     OLD_PC = PC;
   }
-  std::cout << "# " << InstructionCounter << ".\n" ;
+  std::cout << "# " << InstructionCounter << ".\n";
+
   dumpState();
 }
 
+void CPU::runPretty() {
+  auto PrevRegState(std::make_unique<RegState>());
+  Memory PrevMemState(MemoryLimit);
+  setReg(RegAliases::sp, MemoryLimit);
+  OLD_PC = PC;
+
+  while (!Finished) {
+    stepPretty(PrevMemState, PrevRegState);
+    ++InstructionCounter;
+  }
+
+  std::cout << "Finished!" << std::endl; // TODO add finish code or smth
+}
+
+void CPU::stepPretty(Memory &PrevMem, std::unique_ptr<RegState> &PrevRegState) {
+  if (Finished) {
+    return;
+  }
+
+  Decoder::Decoder Dcdr;
+  GeneralSim::Executor Extr;
+  auto RawInstr = Mem.read32(PC);
+  std::cout << "\n### " << std::dec <<InstructionCounter << ".\n";
+  std::cout << "### Fetched raw instruction: 0x" << std::hex << RawInstr << std::endl;
+  auto DecodedInstr = Dcdr.decode(RawInstr);
+
+  // Implicit upcast from CPU to ExecContext here.
+  // std::cout << DecodedInstr.
+  Extr.execute(DecodedInstr, *this);
+  // If branch was taken, PC should not be changed
+  // by CPU.
+  if (OLD_PC == PC) {
+    PC += 4;
+    OLD_PC = PC;
+  }
+
+  dumpPretty(PrevMem, PrevRegState);
+}
+
+void CPU::dumpPretty(Memory &PrevMem, std::unique_ptr<RegState> &PrevRegState) {
+  for (size_t I = 0; I < RState->NUM_REGS; ++I) {
+    auto RegVal = RState->read(I);
+    auto PrevRegVal = PrevRegState->read(I);
+    if (RegVal != PrevRegVal) {
+      std::cout << "# Reg" << I << " changed: 0x" << std::hex << PrevRegVal << std::dec
+                << " -> 0x" << std::hex << RegVal << std::dec << std::endl;
+      PrevRegState->write(I, RegVal);
+    }
+  }
+
+  for (size_t I = 0; I < MemoryLimit / 4; I += 4) {
+    auto NewMemWord = Mem.read32(I);
+    auto OldMemWord = PrevMem.read32(I);
+    if (NewMemWord != OldMemWord) {
+      std::cout << "# Memory changed on address 0x" << I << ": 0x" << std::hex
+                << OldMemWord << " -> 0x" << std::hex << NewMemWord << std::dec << std::endl;
+      PrevMem.write32(I, NewMemWord);
+    }
+  }
+  std::cout << "## PC = " << PC << "\n\n";
+}
 uint8_t CPU::read8(uintptr_t Addr) { return Mem.read8(Addr); }
 
 uint16_t CPU::read16(uintptr_t Addr) { return Mem.read16(Addr); }

@@ -1,5 +1,6 @@
 #pragma once
 #include <cassert>
+#include <catch2/internal/catch_clara.hpp>
 #include <cstdint>
 #include <cstring>
 #include <memory>
@@ -22,6 +23,7 @@ private:
   size_t MemoryLimit;
   size_t PC = UINT64_MAX;
   size_t OLD_PC = UINT64_MAX;
+  bool PrettyMode{false};
   bool Finished{false};
 
   std::unique_ptr<RegState> RState;
@@ -30,21 +32,29 @@ private:
   size_t InstructionCounter = 0;
 
 public:
-  CPU(size_t MemoryLimit);
+  CPU(size_t MemoryLimit, bool IsPretty = false);
   ~CPU();
 
   void run() {
     setReg(RegAliases::sp, MemoryLimit);
-    while (!Finished) {
-      OLD_PC = PC;
-      step();
-      ++InstructionCounter;
+
+    if (PrettyMode) {
+      runPretty();
+    } else {
+      while (!Finished) {
+        OLD_PC = PC;
+        step();
+        ++InstructionCounter;
+      }
     }
-    
     std::cout << "Finished!" << std::endl; // TODO add finish code or smth
   }
 
+  void runPretty();
   void dumpState();
+  
+  void dumpPretty(Memory& PrevMem, std::unique_ptr<RegState>& PrevRegState);
+  void stepPretty(Memory& PrevMem, std::unique_ptr<RegState>& PrevRegState);
 
   uint8_t  read8(uintptr_t Addr) override;
   uint16_t read16(uintptr_t Addr) override;

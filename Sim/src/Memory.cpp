@@ -27,7 +27,6 @@ uint16_t Memory::read16(uintptr_t Addr) const {
 }
 
 uint32_t Memory::read32(uintptr_t Addr) const {
-    std::cout << " Addr = " << Addr << std::endl;
     assert(Addr + 3 < MemImpl->Mem.size());
     return MemImpl->Mem[Addr] |
            (MemImpl->Mem[Addr+1] << 8) |
