@@ -11,4 +11,6 @@ module RegFile
     end
   }
 
+  alias_reg(:sp, :x2)
+
 end

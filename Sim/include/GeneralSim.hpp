@@ -7,6 +7,7 @@
 
 #include "ExecContext.hpp"
 #include "Memory.hpp"
+#include "RegAliases.hpp"
 
 namespace GeneralSim {
 
@@ -26,16 +27,20 @@ private:
   std::unique_ptr<RegState> RState;
   Memory Mem;
 
+  size_t InstructionCounter = 0;
+
 public:
   CPU(size_t MemoryLimit);
   ~CPU();
 
   void run() {
-    OLD_PC = PC;
-    setReg(2, 0xff);
+    setReg(RegAliases::sp, MemoryLimit);
     while (!Finished) {
+      OLD_PC = PC;
       step();
+      ++InstructionCounter;
     }
+    
     std::cout << "Finished!" << std::endl; // TODO add finish code or smth
   }
 

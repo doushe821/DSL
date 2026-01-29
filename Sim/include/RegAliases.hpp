@@ -1,8 +1,11 @@
-enum class XReg : unsigned {
+  #pragma once
+  namespace RegAliases {
+  enum eRegAliases : unsigned {
     x0 = 0,
     zero = 0,
     x1 = 1,
     x2 = 2,
+    sp = 2,
     x3 = 3,
     x4 = 4,
     x5 = 5,
@@ -33,3 +36,5 @@ enum class XReg : unsigned {
     x30 = 30,
     x31 = 31,
 };
+
+} // namespace RegAliases

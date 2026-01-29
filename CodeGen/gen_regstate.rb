@@ -90,14 +90,20 @@ module SimGen
       puts "Generated RegState.cpp"
 
       # Aliases
-      enum_text = "enum class XReg : unsigned {\n"
+      enum_text = "enum eRegAliases : unsigned {\n"
       regs.each do |r|
         enum_text += "    #{r[:name]} = #{r[:index]},\n"
         r[:aliases].each { |a| enum_text += "    #{a} = #{r[:index]},\n" }
       end
       enum_text += "};\n"
 
-      File.write("Sim/include/RegAliases.hpp", enum_text)
+      reg_aliases_file = <<~CPP
+      #pragma once
+      namespace RegAliases {
+      #{enum_text}
+    } // namespace RegAliases
+      CPP
+      File.write("Sim/include/RegAliases.hpp", reg_aliases_file)
       puts "Generated RegAliases.hpp"
 
     end

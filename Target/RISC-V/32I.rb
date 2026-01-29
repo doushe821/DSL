@@ -214,7 +214,7 @@ module RV32I
     encoding *format_i_load(:lb, rd, rs1, imm)
     asm { "LB #{rd}, #{imm}(#{rs1})" }
     code {
-      rd[] = sext(load(rs1 + imm, 8), from: 8, to: 32)
+      rd[] = sext(load(rs1 + sext(imm, from: 12, to: 32), 8), from: 8, to: 32)
       setreg rd
     }
   }
@@ -223,7 +223,7 @@ module RV32I
     encoding *format_i_load(:lh, rd, rs1, imm)
     asm { "LH #{rd}, #{imm}(#{rs1})" }
     code {
-      rd[] = sext(load(rs1 + imm, 16), from: 16, to: 32)
+      rd[] = sext(load(rs1 + sext(imm, from: 12, to: 32), 16), from: 16, to: 32)
       setreg rd
     }
   }
@@ -232,7 +232,7 @@ module RV32I
     encoding *format_i_load(:lw, rd, rs1, imm)
     asm { "LW #{rd}, #{imm}(#{rs1})" }
     code {
-      rd[] = load(rs1 + imm, 32)
+      rd[] = load(rs1 + sext(imm, from: 12, to: 32), 32)
       setreg rd
     }
   }
@@ -241,7 +241,7 @@ module RV32I
     encoding *format_i_load(:lbu, rd, rs1, imm)
     asm { "LBU #{rd}, #{imm}(#{rs1})" }
     code {
-      rd[] = zext(load(rs1 + imm, 8), from: 8, to: 32)
+      rd[] = zext(load(rs1 + sext(imm, from: 12, to: 32), 8), from: 8, to: 32)
       setreg rd
     }
   }
@@ -250,7 +250,7 @@ module RV32I
     encoding *format_i_load(:lhu, rd, rs1, imm)
     asm { "LHU #{rd}, #{imm}(#{rs1})" }
     code {
-      rd[] = zext(load(rs1 + imm, 16), from: 16, to: 32)
+      rd[] = zext(load(rs1 + sext(imm, from: 12, to: 32), 16), from: 16, to: 32)
       setreg rd
     }
   }

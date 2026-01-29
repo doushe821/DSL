@@ -6,6 +6,7 @@
 #include "Decoder.hpp"
 #include "Executor.hpp"
 #include "GeneralSim.hpp"
+#include "Instructions.hpp"
 #include "RegState.hpp"
 namespace GeneralSim {
 
@@ -37,6 +38,7 @@ void CPU::step() {
     PC += 4;
     OLD_PC = PC;
   }
+  std::cout << "# " << InstructionCounter << ".\n" ;
   dumpState();
 }
 

@@ -28,7 +28,7 @@ module SimInfra
   end
 
   def alias_reg(alias_name, reg_name)
-    reg = @registers.find { |r| r.name == reg_name }
+    reg = @@registers_specs.find { |r| r.name == reg_name }
     raise "Unknown register #{reg_name}" unless reg
     reg.aliases << alias_name
   end
