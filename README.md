@@ -25,6 +25,11 @@ After compilator has been compiled:
 ./sim --elf=elf_name
 ```
 
+For greater dump (in cost of much slower performance):
+```
+./sim --elf=elf_name --pretty=true
+```
+
 ELF should be compiled and linked with ``-nostdlib`` option (for now).
 
 You can also run tests:
