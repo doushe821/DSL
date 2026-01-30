@@ -37,6 +37,21 @@ set(RELEASE_COMPILE_OPTIONS
 # -----------------------------
 # Simulator executable
 # -----------------------------
+
+# asmjit setting
+
+option(ASMJIT_STATIC "Build asmjit as static library" ON)
+option(ASMJIT_EMBED "Embed asmjit into project" ON)
+
+set(ASMJIT_STATIC ON CACHE BOOL "" FORCE)
+set(ASMJIT_NO_LOGGING OFF CACHE BOOL "" FORCE)
+set(ASMJIT_BUILD_X86 ON CACHE BOOL "" FORCE)
+set(ASMJIT_BUILD_ARM OFF CACHE BOOL "" FORCE)
+
+add_subdirectory(external/asmjit)
+
+
+
 add_executable(sim
     src/main.cpp
     src/ElfLoader.cpp
@@ -64,6 +79,12 @@ target_link_options(sim
         $<$<CONFIG:Debug>:${DEBUG_COMPILE_OPTIONS}>
         $<$<CONFIG:Release>:${RELEASE_COMPILE_OPTIONS}>
 )
+
+target_link_libraries(sim
+    PRIVATE
+        asmjit
+)
+
 
 # -----------------------------
 # Catch2 test executable
