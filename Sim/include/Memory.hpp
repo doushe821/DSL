@@ -1,19 +1,18 @@
 #pragma once
 
-#include <cinttypes>
+#include "MemoryReadOnly.hpp"
 #include <cstdint>
 #include <memory>
-#include <vector>
 
 namespace GeneralSim {
-class Memory {
+class Memory : public MemoryView{
 public:
   Memory(size_t InitSize);
   ~Memory();
 
   uint8_t  read8(uintptr_t Addr) const;
   uint16_t read16(uintptr_t Addr) const;
-  uint32_t read32(uintptr_t Addr) const;
+  uint32_t read32(uintptr_t Addr) const override;
   uint64_t read64(uintptr_t Addr) const;
   void read128(uintptr_t Addr, uint8_t* Dest) const;
   void read256(uintptr_t Addr, uint8_t* Dest) const;

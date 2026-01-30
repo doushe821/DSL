@@ -3,11 +3,11 @@
 #include <iostream>
 #include <memory>
 
-#include "Decoder.hpp"
-#include "Executor.hpp"
+#include "ExecContext.hpp"
 #include "GeneralSim.hpp"
 #include "Memory.hpp"
 #include "RegState.hpp"
+
 namespace GeneralSim {
 
 CPU::CPU(size_t MemoryLimit_, bool IsPretty)
@@ -24,8 +24,6 @@ void CPU::step() {
     return;
   }
 
-  Decoder::Decoder Dcdr;
-  GeneralSim::Executor Extr;
   auto RawInstr = Mem.read32(PC);
   std::cout << "Fetched raw instruction: " << std::hex << RawInstr << std::endl;
   auto DecodedInstr = Dcdr.decode(RawInstr);
@@ -42,6 +40,24 @@ void CPU::step() {
   std::cout << std::dec << "# " << InstructionCounter << ".\n";
 
   dumpState();
+}
+
+void CPU::stepJIT() {
+  auto &BB = BBCache[PC];
+  ++BB.ExecCount;
+
+  if (JIT.hasBlock(PC)) {
+    PC = JIT.getBlock(PC).Fn(this);
+    return;
+  }
+
+  if (BB.ExecCount >= kHOT_THRESHOLD) {
+    auto Block = JIT.transalte(PC);
+    PC = Block.Fn(this);
+    return;
+  }
+
+  step();
 }
 
 void CPU::runPretty() {
@@ -85,7 +101,6 @@ void CPU::stepPretty(Memory &PrevMem, std::unique_ptr<RegState> &PrevRegState) {
     PC += 4;
     OLD_PC = PC;
   }
-
 }
 
 void CPU::dumpPretty(Memory &PrevMem, std::unique_ptr<RegState> &PrevRegState) {
@@ -114,9 +129,9 @@ void CPU::dumpPretty(Memory &PrevMem, std::unique_ptr<RegState> &PrevRegState) {
   if (OLD_PC == PC) {
     std::cout << "## PC = " << PC + 4 << "\n\n";
   } else {
-    std::cout << "## BRANCH TAKEN!!! : " << std::hex << OLD_PC << " -> " << std::hex << PC << std::endl;
+    std::cout << "## BRANCH TAKEN!!! : " << std::hex << OLD_PC << " -> "
+              << std::hex << PC << std::endl;
   }
-
 }
 uint8_t CPU::read8(uintptr_t Addr) { return Mem.read8(Addr); }
 

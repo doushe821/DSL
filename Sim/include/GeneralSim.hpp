@@ -5,10 +5,14 @@
 #include <cstring>
 #include <memory>
 #include <iostream>
+#include <unordered_map>
 
 #include "ExecContext.hpp"
 #include "Memory.hpp"
 #include "RegAliases.hpp"
+#include "Executor.hpp"
+#include "Decoder.hpp"
+#include "JIT.hpp"
 
 namespace GeneralSim {
 
@@ -26,11 +30,21 @@ private:
   bool PrettyMode{false};
   bool Finished{false};
 
+  size_t kHOT_THRESHOLD = 1;
+
+  Decoder::Decoder Dcdr;
+  GeneralSim::Executor Extr;
+  SimJIT::JIT JIT{Dcdr, Mem};
+
   std::unique_ptr<RegState> RState;
   Memory Mem;
 
   size_t InstructionCounter = 0;
+  struct BasicBlockProfile {
+    uint32_t ExecCount;
+  };
 
+  std::unordered_map<size_t, BasicBlockProfile> BBCache;
 public:
   CPU(size_t MemoryLimit, bool IsPretty = false);
   ~CPU();
@@ -81,6 +95,7 @@ public:
   }
   
   void step();
+  void stepJIT();
 
   // For loader only.
   // Yes, it is extremely unsafe.

@@ -5,7 +5,7 @@ module SimInfra
     def assert(condition, msg = nil); raise msg if !condition; end
 
     @@instructions = []
-    InstructionInfo= Struct.new(:name, :fields, :format, :code, :args, :asm)
+    InstructionInfo= Struct.new(:name, :fields, :format, :code, :args, :asm, :control_flow)
     class InstructionInfoBuilder
         def initialize(name, *args);
             @info = InstructionInfo.new(name)
@@ -20,6 +20,10 @@ module SimInfra
 
         def asm(&block)
             @info.asm = instance_eval(&block)
+        end
+
+        def control_flow(type)
+            @info.control_flow = type
         end
 
         attr_reader :info

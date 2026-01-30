@@ -117,10 +117,12 @@ module SimGen
       structs = []
       variant_types = []
 
+      opcode_infos = "inline constexpr OpcodeInfo OpcodeTable[] = {\n"
+
       @@parsed_ir.each do |instr|
         name   = instr[:name]
         fields = instr[:fields]
-
+        opcode_infos = opcode_infos + "    {#{ instr[:control_flow] ? true : false }, 4 },\n"
         regs = fields.select { |f| f[:value] == :reg }
 
         variant_types << name
@@ -135,6 +137,7 @@ module SimGen
         if !imm.empty? || !imm_parts.empty?
           body = body + "\n  GeneralSim::Immediate imm;\n"
         end
+        body = body + "\n  static constexpr Opcode OP = Opcode::#{name};\n"
         structs << <<~CPP
           struct #{name} {
           #{body}
@@ -142,18 +145,42 @@ module SimGen
         CPP
       end
 
+      opcode_infos = opcode_infos + "};\n"
       output = <<~CPP
         #pragma once
 
         #include <variant>
         #include "GeneralSimTypes.hpp"
         using XReg = uint16_t;
+        enum class Opcode : uint16_t {
+          #{variant_types.join(",\n    ")}
+        };
+
         #{structs.join("\n")}
 
         using Instruction = std::variant<
             #{variant_types.join(",\n    ")}
         >;
+        struct OpcodeInfo {
+          bool IsTerminator;
+          uint8_t Size;
+        };
+        #{opcode_infos}
+        static inline bool isTerminator(Opcode Op) {
+            return OpcodeTable[static_cast<std::size_t>(Op)].IsTerminator;
+        }
+
+        static inline uint8_t instSize(Opcode Op) {
+            return OpcodeTable[static_cast<std::size_t>(Op)].Size;
+        }
+
+        static inline Opcode getOpcode(const Instruction& Inst) {
+            return std::visit([](auto&& I) {
+                return std::decay_t<decltype(I)>::OP;
+            }, Inst);
+        }
       CPP
+      
 
       File.write("Sim/include/Instructions.hpp", output)
     end

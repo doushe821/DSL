@@ -260,6 +260,7 @@ module RV32I
       setpc pc + imm
 
     }
+    control_flow :jump
   }
 
   Instruction(:JALR, XReg(:rd), XReg(:rs1), XImm(:imm)) {
@@ -271,6 +272,7 @@ module RV32I
       newPC = (rs1 + imm) & ~1
       setpc newPC
     }
+    control_flow :jump
   }
 
   # U-type
@@ -281,6 +283,7 @@ module RV32I
       rd[] = imm << 12
       setreg rd
     }
+    control_flow :jump
   }
 
   Instruction(:AUIPC, XReg(:rd), XImm(:imm)) {
@@ -290,6 +293,7 @@ module RV32I
       rd[] = pc + (imm << 12)
       setreg rd
     }
+    control_flow :jump
   }
 
   # B-type
@@ -300,6 +304,7 @@ module RV32I
       newPC = pc + (cmp_eq(rs1, rs2) * sext(imm, from: 13, to: 32))
       setpc newPC
     }
+    control_flow :branch
   }
 
   Instruction(:BNE, XReg(:rs1), XReg(:rs2), XImm(:imm)) {
@@ -309,6 +314,7 @@ module RV32I
       newPC = pc + (cmp_ne(rs1, rs2) * sext(imm, from: 13, to: 32))
       setpc newPC
     }
+    control_flow :branch
   }
 
   Instruction(:BLT, XReg(:rs1), XReg(:rs2), XImm(:imm)) {
@@ -318,6 +324,7 @@ module RV32I
       newPC = pc + (cmp_lt(rs1, rs2) * sext(imm, from: 13, to: 32))
       setpc newPC
     }
+    control_flow :branch
   }
 
   Instruction(:BGE, XReg(:rs1), XReg(:rs2), XImm(:imm)) {
@@ -327,6 +334,7 @@ module RV32I
       newPC = pc + (cmp_ge(rs1, rs2) * sext(imm, from: 13, to: 32))
       setpc newPC
     }
+    control_flow :branch
   }
 
   Instruction(:BGEU, XReg(:rs1), XReg(:rs2), XImm(:imm)) {
@@ -336,6 +344,7 @@ module RV32I
       newPC = pc + (cmp_geu(rs1, rs2) * sext(imm, from: 13, to: 32))
       setpc newPC
     }
+    control_flow :branch
   }
 
   Instruction(:BLTU, XReg(:rs1), XReg(:rs2), XImm(:imm)) {
@@ -345,6 +354,7 @@ module RV32I
       newPC = pc + (cmp_ltu(rs1, rs2) * sext(imm, from: 13, to: 32))
       setpc newPC
     }
+    control_flow :branch
   }
 
   # System
@@ -354,6 +364,7 @@ module RV32I
     code {
       syscall
     }
+    control_flow :call
   }
 end
 # TODO remove setreg, simplificate setpc
