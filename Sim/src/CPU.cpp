@@ -23,6 +23,7 @@ void CPU::step() {
   if (Finished) {
     return;
   }
+
   Decoder::Decoder Dcdr;
   GeneralSim::Executor Extr;
   auto RawInstr = Mem.read32(PC);
@@ -38,7 +39,7 @@ void CPU::step() {
     PC += 4;
     OLD_PC = PC;
   }
-  std::cout << "# " << InstructionCounter << ".\n";
+  std::cout << std::dec << "# " << InstructionCounter << ".\n";
 
   dumpState();
 }
@@ -46,11 +47,12 @@ void CPU::step() {
 void CPU::runPretty() {
   auto PrevRegState(std::make_unique<RegState>());
   Memory PrevMemState(MemoryLimit);
-  setReg(RegAliases::sp, MemoryLimit);
   PrevRegState->write(RegAliases::sp, MemoryLimit);
-  OLD_PC = PC;
+
+  setReg(RegAliases::sp, MemoryLimit);
 
   while (!Finished) {
+    OLD_PC = PC;
     stepPretty(PrevMemState, PrevRegState);
     ++InstructionCounter;
   }
@@ -78,12 +80,12 @@ void CPU::stepPretty(Memory &PrevMem, std::unique_ptr<RegState> &PrevRegState) {
   Extr.execute(DecodedInstr, *this);
   // If branch was taken, PC should not be changed
   // by CPU.
+  dumpPretty(PrevMem, PrevRegState);
   if (OLD_PC == PC) {
     PC += 4;
     OLD_PC = PC;
   }
 
-  dumpPretty(PrevMem, PrevRegState);
 }
 
 void CPU::dumpPretty(Memory &PrevMem, std::unique_ptr<RegState> &PrevRegState) {
@@ -108,7 +110,13 @@ void CPU::dumpPretty(Memory &PrevMem, std::unique_ptr<RegState> &PrevRegState) {
       PrevMem.write32(I, NewMemWord);
     }
   }
-  std::cout << "## PC = " << PC << "\n\n";
+
+  if (OLD_PC == PC) {
+    std::cout << "## PC = " << PC + 4 << "\n\n";
+  } else {
+    std::cout << "## BRANCH TAKEN!!! : " << std::hex << OLD_PC << " -> " << std::hex << PC << std::endl;
+  }
+
 }
 uint8_t CPU::read8(uintptr_t Addr) { return Mem.read8(Addr); }
 

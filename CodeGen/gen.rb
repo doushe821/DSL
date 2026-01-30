@@ -76,6 +76,8 @@ module SimGen
 
       File.open('Sim/src/Decoder.cpp', 'w') do |decode|
         decode << <<~CPP
+        #include <stdexcept>
+
         #include "GeneralSimTypes.hpp"
         #include "Decoder.hpp"
         #include "Instructions.hpp"

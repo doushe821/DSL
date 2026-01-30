@@ -257,7 +257,7 @@ module RV32I
     code {
       rd[] = pc + 4
       setreg rd
-      setpc  = pc + imm
+      setpc pc + imm
 
     }
   }
@@ -297,7 +297,52 @@ module RV32I
     encoding *format_b_branch(:beq, rs1, rs2, imm)
     asm { "BEQ #{rs1}, #{rs2}, #{imm}" }
     code {
-      newPC = pc + (cmp_eq(rs1, rs2) * imm)
+      newPC = pc + (cmp_eq(rs1, rs2) * sext(imm, from: 13, to: 32))
+      setpc newPC
+    }
+  }
+
+  Instruction(:BNE, XReg(:rs1), XReg(:rs2), XImm(:imm)) {
+    encoding *format_b_branch(:bne, rs1, rs2, imm)
+    asm { "BNE #{rs1}, #{rs2}, #{imm}" }
+    code {
+      newPC = pc + (cmp_ne(rs1, rs2) * sext(imm, from: 13, to: 32))
+      setpc newPC
+    }
+  }
+
+  Instruction(:BLT, XReg(:rs1), XReg(:rs2), XImm(:imm)) {
+    encoding *format_b_branch(:blt, rs1, rs2, imm)
+    asm { "BLT #{rs1}, #{rs2}, #{imm}" }
+    code {
+      newPC = pc + (cmp_lt(rs1, rs2) * sext(imm, from: 13, to: 32))
+      setpc newPC
+    }
+  }
+
+  Instruction(:BGE, XReg(:rs1), XReg(:rs2), XImm(:imm)) {
+    encoding *format_b_branch(:bge, rs1, rs2, imm)
+    asm { "BGE #{rs1}, #{rs2}, #{imm}" }
+    code {
+      newPC = pc + (cmp_ge(rs1, rs2) * sext(imm, from: 13, to: 32))
+      setpc newPC
+    }
+  }
+
+  Instruction(:BGEU, XReg(:rs1), XReg(:rs2), XImm(:imm)) {
+    encoding *format_b_branch(:bgeu, rs1, rs2, imm)
+    asm { "BGEU #{rs1}, #{rs2}, #{imm}" }
+    code {
+      newPC = pc + (cmp_geu(rs1, rs2) * sext(imm, from: 13, to: 32))
+      setpc newPC
+    }
+  }
+
+  Instruction(:BLTU, XReg(:rs1), XReg(:rs2), XImm(:imm)) {
+    encoding *format_b_branch(:bltu, rs1, rs2, imm)
+    asm { "BLTU #{rs1}, #{rs2}, #{imm}" }
+    code {
+      newPC = pc + (cmp_ltu(rs1, rs2) * sext(imm, from: 13, to: 32))
       setpc newPC
     }
   }

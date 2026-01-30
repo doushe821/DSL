@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "GeneralSimTypes.hpp"
 #include "Decoder.hpp"
 #include "Instructions.hpp"
@@ -29,6 +31,7 @@ Instruction Decoder::decode(uint32_t Instr) {
             }
             default:
               assert("No such inst in ISA");
+              throw(std::runtime_error("Unsupported instruction"));
           }
         }
         case 1: {
@@ -47,6 +50,7 @@ Instruction Decoder::decode(uint32_t Instr) {
             }
             default:
               assert("No such inst in ISA");
+              throw(std::runtime_error("Unsupported instruction"));
           }
         }
         case 2: {
@@ -65,6 +69,7 @@ Instruction Decoder::decode(uint32_t Instr) {
             }
             default:
               assert("No such inst in ISA");
+              throw(std::runtime_error("Unsupported instruction"));
           }
         }
         case 3: {
@@ -83,6 +88,7 @@ Instruction Decoder::decode(uint32_t Instr) {
             }
             default:
               assert("No such inst in ISA");
+              throw(std::runtime_error("Unsupported instruction"));
           }
         }
         case 4: {
@@ -101,6 +107,7 @@ Instruction Decoder::decode(uint32_t Instr) {
             }
             default:
               assert("No such inst in ISA");
+              throw(std::runtime_error("Unsupported instruction"));
           }
         }
         case 5: {
@@ -125,6 +132,7 @@ Instruction Decoder::decode(uint32_t Instr) {
             }
             default:
               assert("No such inst in ISA");
+              throw(std::runtime_error("Unsupported instruction"));
           }
         }
         case 6: {
@@ -143,6 +151,7 @@ Instruction Decoder::decode(uint32_t Instr) {
             }
             default:
               assert("No such inst in ISA");
+              throw(std::runtime_error("Unsupported instruction"));
           }
         }
         case 7: {
@@ -161,10 +170,12 @@ Instruction Decoder::decode(uint32_t Instr) {
             }
             default:
               assert("No such inst in ISA");
+              throw(std::runtime_error("Unsupported instruction"));
           }
         }
         default:
           assert("No such inst in ISA");
+          throw(std::runtime_error("Unsupported instruction"));
       }
     }
     case 9: {
@@ -227,10 +238,12 @@ Instruction Decoder::decode(uint32_t Instr) {
             }
             default:
               assert("No such inst in ISA");
+              throw(std::runtime_error("Unsupported instruction"));
           }
         }
         default:
           assert("No such inst in ISA");
+          throw(std::runtime_error("Unsupported instruction"));
       }
     }
     case 1: {
@@ -267,6 +280,7 @@ Instruction Decoder::decode(uint32_t Instr) {
         }
         default:
           assert("No such inst in ISA");
+          throw(std::runtime_error("Unsupported instruction"));
       }
     }
     case 17: {
@@ -300,6 +314,7 @@ Instruction Decoder::decode(uint32_t Instr) {
         }
         default:
           assert("No such inst in ISA");
+          throw(std::runtime_error("Unsupported instruction"));
       }
     }
     case 55: {
@@ -329,21 +344,84 @@ Instruction Decoder::decode(uint32_t Instr) {
       return Instruction{ AUIPC{ rd, Imm } };
     }
     case 49: {
-      XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
-      XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
-      uint32_t ImmRaw = 0;
-      ImmRaw |= (((Instr >> 31) & ((1u << 1) - 1)) << 12);
-      ImmRaw |= (((Instr >> 25) & ((1u << 6) - 1)) << 5);
-      ImmRaw |= (((Instr >> 8) & ((1u << 4) - 1)) << 1);
-      ImmRaw |= (((Instr >> 7) & ((1u << 1) - 1)) << 11);
-      auto Imm = GeneralSim::Immediate(ImmRaw, 13);
-      return Instruction{ BEQ{ rs1, rs2, Imm } };
+      switch ((Instr >> 12) & ((1u << 3) - 1)) {
+        case 0: {
+          XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
+          XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
+          uint32_t ImmRaw = 0;
+          ImmRaw |= (((Instr >> 31) & ((1u << 1) - 1)) << 12);
+          ImmRaw |= (((Instr >> 25) & ((1u << 6) - 1)) << 5);
+          ImmRaw |= (((Instr >> 8) & ((1u << 4) - 1)) << 1);
+          ImmRaw |= (((Instr >> 7) & ((1u << 1) - 1)) << 11);
+          auto Imm = GeneralSim::Immediate(ImmRaw, 13);
+          return Instruction{ BEQ{ rs1, rs2, Imm } };
+        }
+        case 1: {
+          XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
+          XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
+          uint32_t ImmRaw = 0;
+          ImmRaw |= (((Instr >> 31) & ((1u << 1) - 1)) << 12);
+          ImmRaw |= (((Instr >> 25) & ((1u << 6) - 1)) << 5);
+          ImmRaw |= (((Instr >> 8) & ((1u << 4) - 1)) << 1);
+          ImmRaw |= (((Instr >> 7) & ((1u << 1) - 1)) << 11);
+          auto Imm = GeneralSim::Immediate(ImmRaw, 13);
+          return Instruction{ BNE{ rs1, rs2, Imm } };
+        }
+        case 4: {
+          XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
+          XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
+          uint32_t ImmRaw = 0;
+          ImmRaw |= (((Instr >> 31) & ((1u << 1) - 1)) << 12);
+          ImmRaw |= (((Instr >> 25) & ((1u << 6) - 1)) << 5);
+          ImmRaw |= (((Instr >> 8) & ((1u << 4) - 1)) << 1);
+          ImmRaw |= (((Instr >> 7) & ((1u << 1) - 1)) << 11);
+          auto Imm = GeneralSim::Immediate(ImmRaw, 13);
+          return Instruction{ BLT{ rs1, rs2, Imm } };
+        }
+        case 5: {
+          XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
+          XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
+          uint32_t ImmRaw = 0;
+          ImmRaw |= (((Instr >> 31) & ((1u << 1) - 1)) << 12);
+          ImmRaw |= (((Instr >> 25) & ((1u << 6) - 1)) << 5);
+          ImmRaw |= (((Instr >> 8) & ((1u << 4) - 1)) << 1);
+          ImmRaw |= (((Instr >> 7) & ((1u << 1) - 1)) << 11);
+          auto Imm = GeneralSim::Immediate(ImmRaw, 13);
+          return Instruction{ BGE{ rs1, rs2, Imm } };
+        }
+        case 7: {
+          XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
+          XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
+          uint32_t ImmRaw = 0;
+          ImmRaw |= (((Instr >> 31) & ((1u << 1) - 1)) << 12);
+          ImmRaw |= (((Instr >> 25) & ((1u << 6) - 1)) << 5);
+          ImmRaw |= (((Instr >> 8) & ((1u << 4) - 1)) << 1);
+          ImmRaw |= (((Instr >> 7) & ((1u << 1) - 1)) << 11);
+          auto Imm = GeneralSim::Immediate(ImmRaw, 13);
+          return Instruction{ BGEU{ rs1, rs2, Imm } };
+        }
+        case 6: {
+          XReg rs1 = ((Instr >> 15) & ((1u << 5) - 1));
+          XReg rs2 = ((Instr >> 20) & ((1u << 5) - 1));
+          uint32_t ImmRaw = 0;
+          ImmRaw |= (((Instr >> 31) & ((1u << 1) - 1)) << 12);
+          ImmRaw |= (((Instr >> 25) & ((1u << 6) - 1)) << 5);
+          ImmRaw |= (((Instr >> 8) & ((1u << 4) - 1)) << 1);
+          ImmRaw |= (((Instr >> 7) & ((1u << 1) - 1)) << 11);
+          auto Imm = GeneralSim::Immediate(ImmRaw, 13);
+          return Instruction{ BLTU{ rs1, rs2, Imm } };
+        }
+        default:
+          assert("No such inst in ISA");
+          throw(std::runtime_error("Unsupported instruction"));
+      }
     }
     case 0: {
       return Instruction{ ECALL{  } };
     }
     default:
       assert("No such inst in ISA");
+      throw(std::runtime_error("Unsupported instruction"));
   }
 }
 

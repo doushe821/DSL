@@ -311,6 +311,7 @@ module SimInfra
 
       lines << "#{indent}#{Indent}default:"
       lines << "#{indent}#{Indent * 2}assert(\"No such inst in ISA\");"
+      lines << "#{indent}#{Indent * 2}throw(std::runtime_error(\"Unsupported instruction\"));"
       lines << "#{indent}}"
 
       lines.join("\n")

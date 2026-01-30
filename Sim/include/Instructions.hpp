@@ -214,6 +214,41 @@ struct BEQ {
 
 };
 
+struct BNE {
+  XReg rs1;
+  XReg rs2;
+  GeneralSim::Immediate imm;
+
+};
+
+struct BLT {
+  XReg rs1;
+  XReg rs2;
+  GeneralSim::Immediate imm;
+
+};
+
+struct BGE {
+  XReg rs1;
+  XReg rs2;
+  GeneralSim::Immediate imm;
+
+};
+
+struct BGEU {
+  XReg rs1;
+  XReg rs2;
+  GeneralSim::Immediate imm;
+
+};
+
+struct BLTU {
+  XReg rs1;
+  XReg rs2;
+  GeneralSim::Immediate imm;
+
+};
+
 struct ECALL {
 
 };
@@ -300,6 +335,11 @@ using Instruction = std::variant<
     LUI,
     AUIPC,
     BEQ,
+    BNE,
+    BLT,
+    BGE,
+    BGEU,
+    BLTU,
     ECALL,
     MUL,
     MULH,

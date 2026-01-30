@@ -21,7 +21,7 @@
 
 # Ignore Byebug command history file.
 .byebug_history
-
+*.sh
 ## Specific to RubyMotion:
 .dat*
 .repl_history
