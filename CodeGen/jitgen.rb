@@ -90,6 +90,17 @@ module SimInfra
 
     GetRegWrapperSign = "FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl)"
     SetRegWrapperSign = "FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl)"
+    GetPCWrapperSign = "FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl)"
+    SetPCWrapperSign = "FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl)"
+
+    def get_read_sign (n)
+      return "FuncSignatureT<uint#{n}_t, GeneralSim::ExecContext*, uintptr_t>(CallConvId::kCDecl)"
+    end
+
+    def get_write_sign (n)
+      return "FuncSignatureT<void, GeneralSim::ExecContext*, uintptr_t, uint32_t>(CallConvId::kCDecl)"      
+    end
+
     def emit_stmt(stmt)
       name = stmt.name
       ops  = stmt.oprnds
@@ -97,7 +108,8 @@ module SimInfra
 
       case name
       when :new_var, :new_const
-        declare_ssa(ops[0])
+        declare_ssa(ops[0], ops[0].type.bits)
+
       when :getreg
         var, reg = ops
         emit Indent + 
@@ -111,6 +123,7 @@ module SimInfra
               Node->setRet(0, #{ssa(var)});
             }
         CPP
+
       when :setreg
         reg, var = ops
         emit Indent +
@@ -124,6 +137,35 @@ module SimInfra
               Node->setArg(2, #{ssa(var)});
             }
         CPP
+
+      when :getpc
+        var = ops[0]
+        declare_ssa(var, var.type.bits)
+        emit Indent + 
+        <<~CPP    
+          // Get pc
+            {
+              InvokeNode* Node;
+              CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), #{GetPCWrapperSign});
+              Node->setArg(0, CtxPtrReg);
+              Node->setRet(0, #{ssa(var)});
+            }
+        CPP
+
+      when :setpc
+        var = ops[1]
+        emit Indent +
+        <<~CPP
+          // Set pc
+            {
+              InvokeNode* Node;
+              CC.invoke(&Node, imm(&GeneralSim::setPCWrapper), #{SetPCWrapperSign});
+              Node->setArg(0, CtxPtrReg);
+              Node->setArg(1, #{ssa(var)});
+            }
+        CPP
+
+
       when :getimm
         var_ir, ximm = ops
         emit Indent + <<~CPP
@@ -238,16 +280,38 @@ module SimInfra
         emit Indent + "// Type clarification"
         declare_ssa(dst, a.type.bits)
         emit Indent + "CC.mov(#{ssa(dst)}, #{ssa(a)});"
-      ## Below is what hasn't been done TODO
       when :load
         dst, addr = ops
         declare_ssa(dst)
         bits = dst.type[:bits]
-        # TODO
+        emit Indent + 
+        <<~CPP
+          // Load #{bits}
+            {
+              InvokeNode* Node;
+              CC.invoke(&Node, imm(&GeneralSim::read#{bits}), #{get_read_sign(bits)});
+              Node->setArg(0, CtxPtrReg);
+              Node->setArg(1, #{operand(addr)});
+              Node->setRet(0, #{ssa(dst)});
+            }
+        CPP
+
       when :store
         addr, val = ops
         bits = val.type[:bits]
-        # TODO
+        emit Indent + 
+        <<~CPP
+          // Load #{bits}
+            {
+              InvokeNode* Node;
+              CC.invoke(&Node, imm(&GeneralSim::write#{bits}), #{get_write_sign(bits)});
+              Node->setArg(0, CtxPtrReg);
+              Node->setArg(1, #{operand(addr)});
+              Node->setArg(2, #{operand(val)});
+            }
+        CPP
+        
+      ## Under construction line
       when :cmp_eq
         dst, a, b = ops
         declare_ssa(dst)
@@ -279,13 +343,6 @@ module SimInfra
         declare_ssa(dst)
         emit Indent + "CC.cmp_geu(#{ssa(a)}, #{ssa(b)});"
         emit Indent + "CC.mov(#{ssa(dst)}, #{ssa(a)});"
-      when :getpc
-        var_ir = ops[0]
-        declare_ssa(var_ir)
-        emit Indent + "#{ssa(var_ir)} = CC.call(asmjit::imm(&GeneralSim::getPCWrapper));"
-      when :setpc
-        var = ops[1]
-        emit Indent + "CC.call(asmjit::imm(&GeneralSim::setPCWrapper), #{ssa(var)});"
       when :syscall
         emit Indent +
         <<~CPP
