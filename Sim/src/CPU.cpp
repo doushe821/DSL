@@ -9,8 +9,10 @@
 
 namespace GeneralSim {
 
-CPU::CPU(size_t MemoryLimit_, bool IsPretty)
-    : MemoryLimit(MemoryLimit_), PrettyMode(IsPretty),
+CPU::CPU(size_t MemoryLimit_, bool IsPretty, bool EnableJIT_,
+         size_t JIThreshold_, bool LogInterpeter)
+    : MemoryLimit(MemoryLimit_), PrettyMode(IsPretty), EnableJIT(EnableJIT_),
+      InterpreterLogging(LogInterpeter), JITHreshold(JIThreshold_),
       RState(std::make_unique<RegState>()), Mem(MemoryLimit) {}
 CPU::~CPU() = default;
 
@@ -47,7 +49,7 @@ void CPU::stepJIT() {
     return;
   }
 
-  if (BB.ExecCount >= kHOT_THRESHOLD) {
+  if (BB.ExecCount >= JITHreshold) {
     std::cout << "PC = " << std::dec << PC
               << ", threshold passed, translating and running JIT\n";
     auto Block = JIT.translate(PC);
@@ -61,6 +63,15 @@ void CPU::stepJIT() {
 }
 
 void CPU::run() {
+  if (EnableJIT) {
+    runJIT();
+  } else {
+    runInterpreter();
+  }
+}
+
+void CPU::runInterpreter() {
+
   setReg(RegAliases::sp, MemoryLimit);
 
   if (PrettyMode) {
@@ -69,7 +80,9 @@ void CPU::run() {
     while (!Finished) {
       OLD_PC = PC;
       step();
-      dumpState();
+      if (InterpreterLogging) {
+        dumpState();
+      }
       ++InstructionCounter;
     }
   }

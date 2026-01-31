@@ -24,14 +24,15 @@ static inline uint32_t getMaskedValue(uint32_t Value, int StartBit,
 class RegState;
 class CPU : ExecContext {
 private:
-  size_t MemoryLimit;
+  const size_t MemoryLimit;
+  const bool PrettyMode{false};
+  const bool EnableJIT;
+  const bool InterpreterLogging;
+  const size_t JITHreshold;
+
+  bool Finished{false};
   size_t PC = UINT64_MAX;
   size_t OLD_PC = UINT64_MAX;
-  bool PrettyMode{false};
-  bool Finished{false};
-
-  size_t kHOT_THRESHOLD = 1;
-
   bool PCDirty {false};
 
   Decoder::Decoder Dcdr;
@@ -48,11 +49,12 @@ private:
 
   std::unordered_map<size_t, BasicBlockProfile> BBCache;
 public:
-  CPU(size_t MemoryLimit, bool IsPretty = false);
+  CPU(size_t MemoryLimit, bool IsPretty = false, bool EnableJIT = false, size_t JITHreshold = UINT64_MAX, bool InterpreterLogging = false);
   ~CPU();
 
   void run();
 
+  void runInterpreter();
   void runJIT();
 
   void runPretty();
