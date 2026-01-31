@@ -94,6 +94,7 @@ TranslatedBlock JIT::translate(size_t PC) {
 
   TB.EndPC = PC;
   TB.Fn = Fn;
+  Cache[TB.StartPC] = TB;
   return TB;
 }
 
