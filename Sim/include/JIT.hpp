@@ -6,8 +6,6 @@
 
 #include "Decoder.hpp"
 #include "ExecContext.hpp"
-#include "GeneralSimTypes.hpp"
-#include "MemoryReadOnly.hpp"
 
 namespace SimJIT {
 
@@ -22,19 +20,17 @@ public:
   explicit JIT(const Decoder::Decoder &Decoder_, GeneralSim::ExecContext &Ctx_) : Ctx(Ctx_), Decoder(Decoder_) {};
   ~JIT() = default;
 
-  bool hasBlock(size_t PC) const;
-  const TranslatedBlock &getBlock(size_t PC) const;
-  TranslatedBlock transalte(size_t PC);
+  bool hasBlock(size_t PC) const { return Cache.contains(PC); };
+  const TranslatedBlock &getBlock(size_t PC) const { return Cache.at(PC); };
+  TranslatedBlock translate(size_t PC);
 
-  BlockFn compileBlock(uint32_t Pc);
-  uint32_t executeBlock(uint32_t Pc, GeneralSim::ExecContext &Ctx);
 
 private:
-  void emitInstruction();
+  void emitInstruction() {};
 
   GeneralSim::ExecContext &Ctx;
   const Decoder::Decoder& Decoder;
-  std::unordered_map<uint32_t, BlockFn> Cache;
+  std::unordered_map<uint32_t, TranslatedBlock> Cache;
   asmjit::JitRuntime Rt;
 };
 

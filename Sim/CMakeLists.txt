@@ -59,6 +59,7 @@ add_executable(sim
     src/Memory.cpp
     src/CPU.cpp
     src/Executor.cpp
+    src/JIT.cpp
     src/Decoder.cpp
 )
 
@@ -99,6 +100,7 @@ add_executable(sim_tests
     src/Decoder.cpp
     src/RegState.cpp
     src/ElfLoader.cpp
+    src/JIT.cpp
 )
 
 target_include_directories(sim_tests
@@ -107,6 +109,7 @@ target_include_directories(sim_tests
 
 target_link_libraries(sim_tests
     PRIVATE Catch2::Catch2WithMain
+    asmjit
 )
 
 target_compile_options(sim_tests

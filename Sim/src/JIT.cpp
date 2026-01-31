@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <vector>
 namespace SimJIT {
-  TranslatedBlock JIT::transalte(size_t PC)  {
+  TranslatedBlock JIT::translate(size_t PC)  {
     TranslatedBlock TB;
     TB.StartPC = PC;
     std::vector<Instruction> Block; // FIXME fix namespaces pleaaasse

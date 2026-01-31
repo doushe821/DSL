@@ -52,7 +52,7 @@ void CPU::stepJIT() {
   }
 
   if (BB.ExecCount >= kHOT_THRESHOLD) {
-    auto Block = JIT.transalte(PC);
+    auto Block = JIT.translate(PC);
     PC = Block.Fn(this);
     return;
   }
