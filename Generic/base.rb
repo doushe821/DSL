@@ -27,11 +27,11 @@ module SimInfra
         def next_counter; @@counter += 1; end
     end
 
-    Field = Struct.new(:name, :from, :to, :value)
+    Field = Struct.new(:name, :from, :to, :value, :fixed)
     ImmFieldPart = Struct.new(:name, :from, :to, :hi, :lo, :value)
 
-    def field(name, from, to, value = nil)
-        Field.new(name, from, to, value).freeze
+    def field(name, from, to, value = nil, fixed = nil)
+        Field.new(name, from, to, value, fixed).freeze
     end
     def immpart(name, from, to, hi, lo)
         ImmFieldPart.new(name, from, to, hi, lo).freeze

@@ -59,46 +59,86 @@ module DecoderTree
 
   def self.best_bit_slice(words, # TODO make determined
                           width: 32,
-                          max_slice: 7,
+                          max_slice: 32,
                           alpha: 0.15,
                           beta: -1,
                           gamma: -1)
 
     best = nil
     best_score = -Float::INFINITY
+    
+    allowed_slices = get_allowed_slices(words, max_slice: max_slice)
+    puts allowed_slices
 
-    (0...width).each do |start_bit|
-      (start_bit...[start_bit + max_slice, width].min).each do |end_bit|
-        slice_width = end_bit - start_bit + 1
+    allowed_slices.each do |slice|
+      result = score_slice(words, slice[0], slice[1])
+      next unless result
 
-        result = score_slice(words, start_bit, end_bit)
-        next unless result
+      # black magic
+      info_gain = result[:info_gain]
+      fanout = result[:fanout]
+      imbalance = result[:imbalance]
 
-        info_gain = result[:info_gain]
-        fanout = result[:fanout]
-        imbalance = result[:imbalance]
+      slice_width = slice[1] - slice[0] + 1
+      width_penalty = alpha * slice_width
+      fanout_penalty = beta * fanout
 
-        width_penalty = alpha * slice_width
-        fanout_penalty = beta * fanout
+      imbalance_penalty = gamma * imbalance
 
-        imbalance_penalty = gamma * imbalance
-
-        score =
-          info_gain -
-          width_penalty -
-          fanout_penalty -
-          imbalance_penalty
+      score =
+        info_gain -
+        width_penalty -
+        fanout_penalty -
+        imbalance_penalty
 
         if score > best_score
           best_score = score
-          best = [start_bit, end_bit]
+          best = [slice[0], slice[1]]
         end
-      end
     end
 
     best
   end
 
+  def self.get_allowed_slices(words, max_slice: nil)
+    allowed_slices_mask = words.map(&:fixed_mask).reduce { |a, b| a & b }
+    puts allowed_slices_mask
+    slices_from_mask(allowed_slices_mask, max_slice: max_slice)
+  end
+
+  def self.slices_from_mask(mask, width: 32, max_slice: nil)
+    slices = []
+    bit = 0
+    while bit < width
+      # zero skipper
+      if ((mask >> bit) & 1) == 0
+        bit += 1
+        next
+      end
+      # find next zero
+      slice_start = bit
+      bit += 1
+      while bit < width && ((mask >> bit) & 1) == 1
+        bit += 1
+      end
+      slice_end = bit - 1
+
+      (slice_start..slice_end).each do |slice|
+        max_e =
+          if max_slice
+            [slice + max_slice - 1, slice_end].min
+          else
+            slice_end
+          end
+
+        (slice..max_e).each do |e|
+          slices << [slice, e]
+        end
+      end
+    end
+    
+    slices
+  end
 
   def self.build_tree(words, width = 32)
     return Node.new(name: words.first.name) if words.size == 1

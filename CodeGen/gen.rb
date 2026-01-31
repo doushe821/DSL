@@ -9,7 +9,7 @@ require_relative 'codegen'
 
 module SimGen
   class UltimateGenerator    
-    BinInstr = Struct.new(:name, :bits)
+    BinInstr = Struct.new(:name, :bits, :fixed_mask)
     @@bin_instrs = []
     def initialize
       yaml = File.read('IR.yaml')
@@ -20,15 +20,22 @@ module SimGen
 
       @@parsed_ir.each do |instr|
         binary_value = 0
+        fixed_mask = 0
         instr[:fields].each do |field|
+          num_bits = field.from - field.to + 1
+          mask = (1 << num_bits) - 1
           if field.value.is_a?(Integer)
-            num_bits = field.from - field.to + 1
-            mask = (1 << num_bits) - 1
             masked_value = field.value & mask
             binary_value |= (masked_value << field.to)
           end
+          if field.is_a?(SimInfra::Field)
+            if field.fixed
+              fixed_mask |= (mask << field.to)
+            end
+          end
         end
-        @@bin_instrs.push(BinInstr.new(instr[:name], binary_value))
+        puts fixed_mask
+        @@bin_instrs.push(BinInstr.new(instr[:name], binary_value, fixed_mask))
       end
 
 

@@ -5,9 +5,9 @@ module SimInfra
   # R-type
   def format_r(opcode, funct3, funct7, rd, rs1, rs2)
     return :R, [
-      field(:opcode, 6, 0, opcode),
-      field(:funct3, 14, 12, funct3),
-      field(:funct7, 31, 25, funct7),
+      field(:opcode, 6, 0, opcode, true),
+      field(:funct3, 14, 12, funct3, true),
+      field(:funct7, 31, 25, funct7, true),
       field(rd.name, 11, 7, :reg),
       field(rs1.name, 19, 15, :reg),
       field(rs2.name, 24, 20, :reg),
@@ -51,8 +51,8 @@ module SimInfra
   # I-type
   def format_i(opcode, funct3, rd, rs1, imm)
     return :I, [
-      field(:opcode, 6, 0, opcode),
-      field(:funct3, 14, 12, funct3),
+      field(:opcode, 6, 0, opcode, true),
+      field(:funct3, 14, 12, funct3, true),
       field(rd.name, 11, 7, :reg),
       field(rs1.name, 19, 15, :reg),
       field(imm.name, 31, 20, :imm)
@@ -76,12 +76,12 @@ module SimInfra
   # I- shift
   def format_i_shift(opcode, funct3, funct7, rd, rs1, imm)
     return :I_SHIFT, [
-      field(:opcode, 6, 0, opcode),
-      field(:funct3, 14, 12, funct3),
+      field(:opcode, 6, 0, opcode, true),
+      field(:funct3, 14, 12, funct3, true),
       field(rd.name, 11, 7, :reg),
       field(rs1.name, 19, 15, :reg),
       field(imm.name, 24, 20, :imm),
-      field(:funct7, 31, 25, funct7)
+      field(:funct7, 31, 25, funct7, true)
     ]
   end
 
@@ -122,8 +122,8 @@ module SimInfra
   # S-type
   def format_s(opcode, funct3, rs1, rs2, imm)
     return :S, [
-      field(:opcode, 6, 0, opcode),
-      field(:funct3, 14, 12, funct3),
+      field(:opcode, 6, 0, opcode, true),
+      field(:funct3, 14, 12, funct3, true),
       field(rs1.name, 19, 15, :reg),
       field(rs2.name, 24, 20, :reg),
 
@@ -145,10 +145,10 @@ module SimInfra
   # B-type
   def format_b(opcode, funct3, rs1, rs2, imm)
     return :B, [
-      field(:opcode, 6, 0, opcode),
-      field(:funct3, 14, 12, funct3),
-      field(rs1.name, 19, 15, :reg),
-      field(rs2.name, 24, 20, :reg),
+    field(:opcode, 6, 0, opcode, true),
+    field(:funct3, 14, 12, funct3, true),
+    field(rs1.name, 19, 15, :reg),
+    field(rs2.name, 24, 20, :reg),
 
     immpart(:imm1,  31, 31, 12, 12),
     immpart(:imm6,  30, 25, 10, 5),
@@ -173,7 +173,7 @@ module SimInfra
   # U-type
   def format_u(opcode, rd, imm)
     return :U, [
-      field(:opcode, 6, 0, opcode),
+      field(:opcode, 6, 0, opcode, true),
       field(rd.name, 11, 7, :reg),
       field(:imm_31_12, 31, 12, :imm)
     ]
@@ -190,7 +190,7 @@ module SimInfra
 # J-type
 def format_j(name, rd, imm)
   return :J, [
-    field(:opcode, 6, 0, 0b1101111),
+    field(:opcode, 6, 0, 0b1101111, true),
     field(rd.name, 11, 7, :reg),
 
     immpart(:imm1,  31, 31, 20, 20),
@@ -210,7 +210,7 @@ end
   # Sys
   def format_sys(opcode)
     return :SYS, [
-      field(:opcode, 6, 0, opcode)
+      field(:opcode, 6, 0, opcode, true)
     ]
   end
 
@@ -220,7 +220,7 @@ end
         ecall:  0b1110011,
       }[name]
 
-    format_sys(opcode)
+    format_sys(opcode, true)
   end
 
 
