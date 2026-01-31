@@ -74,11 +74,11 @@ module SimGen
         using namespace asmjit::x86;
         using XReg = uint16_t;
         #{all_jit_execs}
-        void JIT::emitInstruction(const Instruction &Inst, ExecContext &Ctx) {
+        void JIT::emitInstruction(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, Instruction Instr) {
           std::visit([&](auto&& I) {
             using T = std::decay_t<decltype(I)>;
-            #{jimitter.emit_instructions_visit(@@parsed_ir)}
-            }, Inst);
+            #{jimitter.emit_instructions_visit_JIT(@@parsed_ir)}
+            }, Instr);
         }
         } // namespace GeneralSim
       CPP

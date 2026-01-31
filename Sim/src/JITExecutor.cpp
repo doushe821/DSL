@@ -162,8 +162,10 @@ void EXEC_SLT(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v__tmp5 = CC.newUInt32();
-  CC.cmp_lt(v_rs1, v_rs2);
-  CC.mov(v__tmp5, v_rs1);
+  // Cmp lt
+  CC.cmp(v_rs1, v_rs2);
+  CC.setl(al);;
+  CC.movzx(v__tmp5, al);
   // Let
   CC.mov(v_rd, v__tmp5);
 
@@ -204,8 +206,10 @@ void EXEC_SLTU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   }
 
   Gp v__tmp6 = CC.newUInt32();
-  CC.cmp_ltu(v_rs1, v_rs2);
-  CC.mov(v__tmp6, v_rs1);
+  // Cmp ltu
+  CC.cmp(v_rs1, v_rs2);
+  CC.setb(al);;
+  CC.movzx(v__tmp6, al);
   // Let
   CC.mov(v_rd, v__tmp6);
 
@@ -513,8 +517,10 @@ void EXEC_SLTI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 CC.mov(v_imm, Imm.raw()); 
 
   Gp v__tmp20 = CC.newUInt32();
-  CC.cmp_lt(v_rs1, v_imm);
-  CC.mov(v__tmp20, v_rs1);
+  // Cmp lt
+  CC.cmp(v_rs1, v_imm);
+  CC.setl(al);;
+  CC.movzx(v__tmp20, al);
   // Let
   CC.mov(v_rd, v__tmp20);
 
@@ -555,8 +561,10 @@ CC.mov(v_imm, Imm.raw());
   Gp v__tmp22 = CC.newUInt32();
   CC.mov(v__tmp22, v_imm);
   Gp v__tmp23 = CC.newUInt32();
-  CC.cmp_lt(v__tmp21, v__tmp22);
-  CC.mov(v__tmp23, v__tmp21);
+  // Cmp lt
+  CC.cmp(v__tmp21, v__tmp22);
+  CC.setl(al);;
+  CC.movzx(v__tmp23, al);
   // Let
   CC.mov(v_rd, v__tmp23);
 
@@ -1437,15 +1445,16 @@ CC.mov(v_imm, Imm.raw());
 
   Gp v__tmp77 = CC.newUInt32();
   // Cmp eq
-  CC.cmp_eq(v_rs1, v_rs2);
-  CC.mov(v__tmp77, v_rs1);
+  CC.cmp(v_rs1, v_rs2);
+  CC.sete(al);;
+  CC.movzx(v__tmp77, al);
   // Type clarification
   Gp v__tmp78 = CC.newUInt32();
   CC.mov(v__tmp78, v_imm);
   Gp v__tmp79 = CC.newUInt32();
-  // iimul
+  // imul
   CC.imul(v__tmp77, v__tmp78);
-  CC.mov(v__tmp79, v__tmp77});
+  CC.mov(v__tmp79, v__tmp77);
   Gp v__tmp80 = CC.newUInt64();
   // add
   CC.add(v__tmp76, v__tmp79);
@@ -1498,15 +1507,17 @@ CC.mov(v_imm, Imm.raw());
   }
 
   Gp v__tmp82 = CC.newUInt32();
-  CC.cmp_ne(v_rs1, v_rs2);
-  CC.mov(v__tmp82, v_rs1);
+  // Cmp ne
+  CC.cmp(v_rs1, v_rs2);
+  CC.setne(al);;
+  CC.movzx(v__tmp82, al);
   // Type clarification
   Gp v__tmp83 = CC.newUInt32();
   CC.mov(v__tmp83, v_imm);
   Gp v__tmp84 = CC.newUInt32();
-  // iimul
-  CC.iimul(v__tmp82, v__tmp83);
-  CC.mov(v__tmp84, v__tmp82});
+  // imul
+  CC.imul(v__tmp82, v__tmp83);
+  CC.mov(v__tmp84, v__tmp82);
   Gp v__tmp85 = CC.newUInt64();
   // add
   CC.add(v__tmp81, v__tmp84);
@@ -1559,15 +1570,17 @@ CC.mov(v_imm, Imm.raw());
   }
 
   Gp v__tmp87 = CC.newUInt32();
-  CC.cmp_lt(v_rs1, v_rs2);
-  CC.mov(v__tmp87, v_rs1);
+  // Cmp lt
+  CC.cmp(v_rs1, v_rs2);
+  CC.setl(al);;
+  CC.movzx(v__tmp87, al);
   // Type clarification
   Gp v__tmp88 = CC.newUInt32();
   CC.mov(v__tmp88, v_imm);
   Gp v__tmp89 = CC.newUInt32();
-  // iimul
-  CC.iimul(v__tmp87, v__tmp88);
-  CC.mov(v__tmp89, v__tmp87});
+  // imul
+  CC.imul(v__tmp87, v__tmp88);
+  CC.mov(v__tmp89, v__tmp87);
   Gp v__tmp90 = CC.newUInt64();
   // add
   CC.add(v__tmp86, v__tmp89);
@@ -1620,15 +1633,17 @@ CC.mov(v_imm, Imm.raw());
   }
 
   Gp v__tmp92 = CC.newUInt32();
-  CC.cmp_ge(v_rs1, v_rs2);
-  CC.mov(v__tmp92, v_rs1);
+  // Cmp ge
+  CC.cmp(v_rs1, v_rs2);
+  CC.setge(al);;
+  CC.movzx(v__tmp92, al);
   // Type clarification
   Gp v__tmp93 = CC.newUInt32();
   CC.mov(v__tmp93, v_imm);
   Gp v__tmp94 = CC.newUInt32();
-  // iimul
-  CC.iimul(v__tmp92, v__tmp93);
-  CC.mov(v__tmp94, v__tmp92});
+  // imul
+  CC.imul(v__tmp92, v__tmp93);
+  CC.mov(v__tmp94, v__tmp92);
   Gp v__tmp95 = CC.newUInt64();
   // add
   CC.add(v__tmp91, v__tmp94);
@@ -1681,15 +1696,17 @@ CC.mov(v_imm, Imm.raw());
   }
 
   Gp v__tmp97 = CC.newUInt32();
-  CC.cmp_geu(v_rs1, v_rs2);
-  CC.mov(v__tmp97, v_rs1);
+  // Cmp geu
+  CC.cmp(v_rs1, v_rs2);
+  CC.setae(al);;
+  CC.movzx(v__tmp97, al);
   // Type clarification
   Gp v__tmp98 = CC.newUInt32();
   CC.mov(v__tmp98, v_imm);
   Gp v__tmp99 = CC.newUInt32();
-  // iimul
-  CC.iimul(v__tmp97, v__tmp98);
-  CC.mov(v__tmp99, v__tmp97});
+  // imul
+  CC.imul(v__tmp97, v__tmp98);
+  CC.mov(v__tmp99, v__tmp97);
   Gp v__tmp100 = CC.newUInt64();
   // add
   CC.add(v__tmp96, v__tmp99);
@@ -1742,15 +1759,17 @@ CC.mov(v_imm, Imm.raw());
   }
 
   Gp v__tmp102 = CC.newUInt32();
-  CC.cmp_ltu(v_rs1, v_rs2);
-  CC.mov(v__tmp102, v_rs1);
+  // Cmp ltu
+  CC.cmp(v_rs1, v_rs2);
+  CC.setb(al);;
+  CC.movzx(v__tmp102, al);
   // Type clarification
   Gp v__tmp103 = CC.newUInt32();
   CC.mov(v__tmp103, v_imm);
   Gp v__tmp104 = CC.newUInt32();
-  // iimul
-  CC.iimul(v__tmp102, v__tmp103);
-  CC.mov(v__tmp104, v__tmp102});
+  // imul
+  CC.imul(v__tmp102, v__tmp103);
+  CC.mov(v__tmp104, v__tmp102);
   Gp v__tmp105 = CC.newUInt64();
   // add
   CC.add(v__tmp101, v__tmp104);
@@ -1770,10 +1789,9 @@ void EXEC_ECALL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg)
 // JIT Instruction ECALL
 {
   // Syscall
-  InvokeNode* call;
-  cc.invoke(&call, CallConvId::kCDecl);
-  call->setTarget(imm(&GeneralSim::syscall));
-  call->setArg(0, ctx);
+  InvokeNode* Call;
+  CC.invoke(&Call, imm(&GeneralSim::syscall), FuncSignatureT<void, GeneralSim::ExecContext*>(CallConvId::kCDecl));
+  Call->setArg(0, CtxPtrReg);
 
 }
 
@@ -1803,9 +1821,9 @@ void EXEC_MUL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v__tmp107 = CC.newUInt32();
-  // iimul
-  CC.iimul(v_rs1, v_rs2);
-  CC.mov(v__tmp107, v_rs1});
+  // imul
+  CC.imul(v_rs1, v_rs2);
+  CC.mov(v__tmp107, v_rs1);
   // Let
   CC.mov(v_rd, v__tmp107);
 
@@ -1852,9 +1870,9 @@ void EXEC_MULH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   Gp v__tmp109 = CC.newUInt32();
   CC.mov(v__tmp109, v_rs2);
   Gp v__tmp110 = CC.newUInt64();
-  // iimul
-  CC.iimul(v__tmp108, v__tmp109);
-  CC.mov(v__tmp110, v__tmp108});
+  // imul
+  CC.imul(v__tmp108, v__tmp109);
+  CC.mov(v__tmp110, v__tmp108);
   // Type clarification
   Gp v__tmp111 = CC.newUInt64();
   CC.mov(v__tmp111, v__tmp110);
@@ -1910,9 +1928,9 @@ void EXEC_MULHSU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, 
   Gp v__tmp115 = CC.newUInt32();
   CC.mov(v__tmp115, v_rs2);
   Gp v__tmp116 = CC.newUInt64();
-  // iimul
-  CC.iimul(v__tmp114, v__tmp115);
-  CC.mov(v__tmp116, v__tmp114});
+  // imul
+  CC.imul(v__tmp114, v__tmp115);
+  CC.mov(v__tmp116, v__tmp114);
   // Type clarification
   Gp v__tmp117 = CC.newUInt64();
   CC.mov(v__tmp117, v__tmp116);
@@ -1968,9 +1986,9 @@ void EXEC_MULHU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, X
   Gp v__tmp121 = CC.newUInt32();
   CC.mov(v__tmp121, v_rs2);
   Gp v__tmp122 = CC.newUInt64();
-  // imul
-  CC.imul(v__tmp120, v__tmp121);
-  CC.mov(v__tmp122, v__tmp120});
+  // mul
+  CC.mul(v__tmp120, v__tmp121);
+  CC.mov(v__tmp122, v__tmp120);
   Gp v__c123 = CC.newUInt32();
   Gp v__tmp124 = CC.newUInt64();
   // Right shift
@@ -2025,9 +2043,9 @@ void EXEC_DIV(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   Gp v__tmp127 = CC.newUInt32();
   // Div prelude
   CC.mov(eax, v__tmp125);
-  CC.cdq();
-  // idiv, 32-bit
-  CC.idiv(v__tmp126);
+  CC.emit(x86::Inst::kIdCdq);
+  // idiv
+  CC.emit(x86::Inst::kIdIdiv, v__tmp126);
   CC.mov(v__tmp127, eax);
   // Let
   CC.mov(v_rd, v__tmp127);
@@ -2077,9 +2095,9 @@ void EXEC_DIVU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   Gp v__tmp130 = CC.newUInt32();
   // Div prelude
   CC.mov(eax, v__tmp128);
-  CC.cdq();
-  // idiv, 32-bit
-  CC.idiv(v__tmp129);
+  CC.emit(x86::Inst::kIdCdq);
+  // idiv
+  CC.emit(x86::Inst::kIdIdiv, v__tmp129);
   CC.mov(v__tmp130, eax);
   // Let
   CC.mov(v_rd, v__tmp130);
@@ -2127,11 +2145,11 @@ void EXEC_REM(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   Gp v__tmp132 = CC.newUInt32();
   CC.mov(v__tmp132, v_rs2);
   Gp v__tmp133 = CC.newUInt32();
-  // Div prelude
+  // Mod prelude
   CC.mov(eax, v__tmp131);
-  CC.cdq();
-  // idiv, 32-bit
-  CC.idiv(v__tmp132);
+  CC.emit(x86::Inst::kIdCdq);
+  // idiv
+  CC.emit(x86::Inst::kIdIdiv, v__tmp132);
   CC.mov(v__tmp133, edx);
   // Let
   CC.mov(v_rd, v__tmp133);
@@ -2179,11 +2197,11 @@ void EXEC_REMU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   Gp v__tmp135 = CC.newUInt32();
   CC.mov(v__tmp135, v_rs2);
   Gp v__tmp136 = CC.newUInt32();
-  // Div prelude
+  // Mod prelude
   CC.mov(eax, v__tmp134);
-  CC.cdq();
-  // idiv, 32-bit
-  CC.idiv(v__tmp135);
+  CC.emit(x86::Inst::kIdCdq);
+  // idiv
+  CC.emit(x86::Inst::kIdIdiv, v__tmp135);
   CC.mov(v__tmp136, edx);
   // Let
   CC.mov(v_rd, v__tmp136);
@@ -2199,148 +2217,56 @@ void EXEC_REMU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 
 }
 
-void JIT::emitInstruction(const Instruction &Inst, ExecContext &Ctx) {
+void JIT::emitInstruction(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, Instruction Instr) {
   std::visit([&](auto&& I) {
     using T = std::decay_t<decltype(I)>;
     if constexpr (std::is_same_v<T, ADD>) {
-  EXEC_ADD(Ctx, CC, I.rd, I.rs1, I.rs2);
-}
- else if constexpr (std::is_same_v<T, SUB>) {
-  EXEC_SUB(Ctx, CC, I.rd, I.rs1, I.rs2);
-}
- else if constexpr (std::is_same_v<T, SLL>) {
-  EXEC_SLL(Ctx, CC, I.rd, I.rs1, I.rs2);
-}
- else if constexpr (std::is_same_v<T, SLT>) {
-  EXEC_SLT(Ctx, CC, I.rd, I.rs1, I.rs2);
-}
- else if constexpr (std::is_same_v<T, SLTU>) {
-  EXEC_SLTU(Ctx, CC, I.rd, I.rs1, I.rs2);
-}
- else if constexpr (std::is_same_v<T, XOR>) {
-  EXEC_XOR(Ctx, CC, I.rd, I.rs1, I.rs2);
-}
- else if constexpr (std::is_same_v<T, SRL>) {
-  EXEC_SRL(Ctx, CC, I.rd, I.rs1, I.rs2);
-}
- else if constexpr (std::is_same_v<T, SRA>) {
-  EXEC_SRA(Ctx, CC, I.rd, I.rs1, I.rs2);
-}
- else if constexpr (std::is_same_v<T, OR>) {
-  EXEC_OR(Ctx, CC, I.rd, I.rs1, I.rs2);
-}
- else if constexpr (std::is_same_v<T, AND>) {
-  EXEC_AND(Ctx, CC, I.rd, I.rs1, I.rs2);
-}
- else if constexpr (std::is_same_v<T, ADDI>) {
-  EXEC_ADDI(Ctx, CC, I.rd, I.rs1, I.imm);
-}
- else if constexpr (std::is_same_v<T, SLTI>) {
-  EXEC_SLTI(Ctx, CC, I.rd, I.rs1, I.imm);
-}
- else if constexpr (std::is_same_v<T, SLTIU>) {
-  EXEC_SLTIU(Ctx, CC, I.rd, I.rs1, I.imm);
-}
- else if constexpr (std::is_same_v<T, XORI>) {
-  EXEC_XORI(Ctx, CC, I.rd, I.rs1, I.imm);
-}
- else if constexpr (std::is_same_v<T, ORI>) {
-  EXEC_ORI(Ctx, CC, I.rd, I.rs1, I.imm);
-}
- else if constexpr (std::is_same_v<T, ANDI>) {
-  EXEC_ANDI(Ctx, CC, I.rd, I.rs1, I.imm);
-}
- else if constexpr (std::is_same_v<T, SLLI>) {
-  EXEC_SLLI(Ctx, CC, I.rd, I.rs1, I.imm);
-}
- else if constexpr (std::is_same_v<T, SRLI>) {
-  EXEC_SRLI(Ctx, CC, I.rd, I.rs1, I.imm);
-}
- else if constexpr (std::is_same_v<T, SRAI>) {
-  EXEC_SRAI(Ctx, CC, I.rd, I.rs1, I.imm);
-}
- else if constexpr (std::is_same_v<T, LB>) {
-  EXEC_LB(Ctx, CC, I.rd, I.rs1, I.imm);
-}
- else if constexpr (std::is_same_v<T, LH>) {
-  EXEC_LH(Ctx, CC, I.rd, I.rs1, I.imm);
-}
- else if constexpr (std::is_same_v<T, LW>) {
-  EXEC_LW(Ctx, CC, I.rd, I.rs1, I.imm);
-}
- else if constexpr (std::is_same_v<T, LBU>) {
-  EXEC_LBU(Ctx, CC, I.rd, I.rs1, I.imm);
-}
- else if constexpr (std::is_same_v<T, LHU>) {
-  EXEC_LHU(Ctx, CC, I.rd, I.rs1, I.imm);
-}
- else if constexpr (std::is_same_v<T, SB>) {
-  EXEC_SB(Ctx, CC, I.rs2, I.rs1, I.imm);
-}
- else if constexpr (std::is_same_v<T, SH>) {
-  EXEC_SH(Ctx, CC, I.rs2, I.rs1, I.imm);
-}
- else if constexpr (std::is_same_v<T, SW>) {
-  EXEC_SW(Ctx, CC, I.rs2, I.rs1, I.imm);
-}
- else if constexpr (std::is_same_v<T, JAL>) {
-  EXEC_JAL(Ctx, CC, I.rd, I.imm);
-}
- else if constexpr (std::is_same_v<T, JALR>) {
-  EXEC_JALR(Ctx, CC, I.rd, I.rs1, I.imm);
-}
- else if constexpr (std::is_same_v<T, LUI>) {
-  EXEC_LUI(Ctx, CC, I.rd, I.imm);
-}
- else if constexpr (std::is_same_v<T, AUIPC>) {
-  EXEC_AUIPC(Ctx, CC, I.rd, I.imm);
-}
- else if constexpr (std::is_same_v<T, BEQ>) {
-  EXEC_BEQ(Ctx, CC, I.rs1, I.rs2, I.imm);
-}
- else if constexpr (std::is_same_v<T, BNE>) {
-  EXEC_BNE(Ctx, CC, I.rs1, I.rs2, I.imm);
-}
- else if constexpr (std::is_same_v<T, BLT>) {
-  EXEC_BLT(Ctx, CC, I.rs1, I.rs2, I.imm);
-}
- else if constexpr (std::is_same_v<T, BGE>) {
-  EXEC_BGE(Ctx, CC, I.rs1, I.rs2, I.imm);
-}
- else if constexpr (std::is_same_v<T, BGEU>) {
-  EXEC_BGEU(Ctx, CC, I.rs1, I.rs2, I.imm);
-}
- else if constexpr (std::is_same_v<T, BLTU>) {
-  EXEC_BLTU(Ctx, CC, I.rs1, I.rs2, I.imm);
-}
- else if constexpr (std::is_same_v<T, ECALL>) {
-  EXEC_ECALL(Ctx, CC);
-}
- else if constexpr (std::is_same_v<T, MUL>) {
-  EXEC_MUL(Ctx, CC, I.rd, I.rs1, I.rs2);
-}
- else if constexpr (std::is_same_v<T, MULH>) {
-  EXEC_MULH(Ctx, CC, I.rd, I.rs1, I.rs2);
-}
- else if constexpr (std::is_same_v<T, MULHSU>) {
-  EXEC_MULHSU(Ctx, CC, I.rd, I.rs1, I.rs2);
-}
- else if constexpr (std::is_same_v<T, MULHU>) {
-  EXEC_MULHU(Ctx, CC, I.rd, I.rs1, I.rs2);
-}
- else if constexpr (std::is_same_v<T, DIV>) {
-  EXEC_DIV(Ctx, CC, I.rd, I.rs1, I.rs2);
-}
- else if constexpr (std::is_same_v<T, DIVU>) {
-  EXEC_DIVU(Ctx, CC, I.rd, I.rs1, I.rs2);
-}
- else if constexpr (std::is_same_v<T, REM>) {
-  EXEC_REM(Ctx, CC, I.rd, I.rs1, I.rs2);
-}
- else if constexpr (std::is_same_v<T, REMU>) {
-  EXEC_REMU(Ctx, CC, I.rd, I.rs1, I.rs2);
-}
-
-    }, Inst);
+    EXEC_ADD(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, SUB>) {
+    EXEC_SUB(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, SLL>) {
+    EXEC_SLL(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, SLT>) {
+    EXEC_SLT(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, SLTU>) {
+    EXEC_SLTU(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, XOR>) {
+    EXEC_XOR(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, SRL>) {
+    EXEC_SRL(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, SRA>) {
+    EXEC_SRA(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, OR>) {
+    EXEC_OR(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, AND>) {
+    EXEC_AND(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, ADDI>) {
+    EXEC_ADDI(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SLTI>) {
+    EXEC_SLTI(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SLTIU>) {
+    EXEC_SLTIU(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, XORI>) {
+    EXEC_XORI(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, ORI>) {
+    EXEC_ORI(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, ANDI>) {
+    EXEC_ANDI(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SLLI>) {
+    EXEC_SLLI(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SRLI>) {
+    EXEC_SRLI(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SRAI>) {
+    EXEC_SRAI(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, LB>) {
+    EXEC_LB(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, LH>) {
+    EXEC_LH(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, LW>) {
+    EXEC_LW(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, LBU>) {
+    EXEC_LBU(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, LHU>) {
+    EXEC_LHU(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SB>) {
+    EXEC_SB(CC, CtxPtrReg, I.rs2, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SH>) {
+    EXEC_SH(CC, CtxPtrReg, I.rs2, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SW>) {
+    EXEC_SW(CC, CtxPtrReg, I.rs2, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, JAL>) {
+    EXEC_JAL(CC, CtxPtrReg, I.rd, I.imm); } else if constexpr (std::is_same_v<T, JALR>) {
+    EXEC_JALR(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, LUI>) {
+    EXEC_LUI(CC, CtxPtrReg, I.rd, I.imm); } else if constexpr (std::is_same_v<T, AUIPC>) {
+    EXEC_AUIPC(CC, CtxPtrReg, I.rd, I.imm); } else if constexpr (std::is_same_v<T, BEQ>) {
+    EXEC_BEQ(CC, CtxPtrReg, I.rs1, I.rs2, I.imm); } else if constexpr (std::is_same_v<T, BNE>) {
+    EXEC_BNE(CC, CtxPtrReg, I.rs1, I.rs2, I.imm); } else if constexpr (std::is_same_v<T, BLT>) {
+    EXEC_BLT(CC, CtxPtrReg, I.rs1, I.rs2, I.imm); } else if constexpr (std::is_same_v<T, BGE>) {
+    EXEC_BGE(CC, CtxPtrReg, I.rs1, I.rs2, I.imm); } else if constexpr (std::is_same_v<T, BGEU>) {
+    EXEC_BGEU(CC, CtxPtrReg, I.rs1, I.rs2, I.imm); } else if constexpr (std::is_same_v<T, BLTU>) {
+    EXEC_BLTU(CC, CtxPtrReg, I.rs1, I.rs2, I.imm); } else if constexpr (std::is_same_v<T, ECALL>) {
+    EXEC_ECALL(CC, CtxPtrReg); } else if constexpr (std::is_same_v<T, MUL>) {
+    EXEC_MUL(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, MULH>) {
+    EXEC_MULH(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, MULHSU>) {
+    EXEC_MULHSU(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, MULHU>) {
+    EXEC_MULHU(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, DIV>) {
+    EXEC_DIV(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, DIVU>) {
+    EXEC_DIVU(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, REM>) {
+    EXEC_REM(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, REMU>) {
+    EXEC_REMU(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); }
+    }, Instr);
 }
 } // namespace GeneralSim

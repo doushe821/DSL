@@ -26,7 +26,7 @@ public:
   TranslatedBlock translate(size_t PC);
 
 private:
-  void emitInstruction() {};
+  void emitInstruction(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, Instruction Instr);
   void emitGetPC(asmjit::x86::Compiler &CC, asmjit::x86::Gp CtxReg,
                  asmjit::x86::Gp DestReg);
   GeneralSim::ExecContext &Ctx;

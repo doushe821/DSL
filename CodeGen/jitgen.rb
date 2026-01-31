@@ -225,7 +225,7 @@ module SimInfra
         op_name = "i" + op_name if a.type.signed or b.type.signed
         emit Indent + "// #{op_name}"
         emit Indent + "CC.#{op_name}(#{ssa(a)}, #{ssa(b)});"
-        emit Indent + "CC.mov(#{ssa(dst)}, #{ssa(a)}});"
+        emit Indent + "CC.mov(#{ssa(dst)}, #{ssa(a)});"
 
       when :/
         dst, a, b = ops
@@ -234,40 +234,56 @@ module SimInfra
 
         emit Indent + "// Div prelude"
         emit Indent + "CC.mov(eax, #{ssa(a)});"
-        if ((a.type.signed == nil) & (b.type.signed == nil))
-          emit Indent + "CC.xor_(eax, eax);"
-        elsif max_width == 32
-          emit Indent + "CC.cdq();" 
-        elsif  max_width == 64
-          emit Indent + "CC.cqo();"
+
+        if (a.type.signed || b.type.signed)
+          if max_width == 32
+            emit Indent + "CC.emit(x86::Inst::kIdCdq);"
+          elsif max_width == 64
+            emit Indent + "CC.emit(x86::Inst::kIdCqo);"
+          end
+        else
+          emit Indent + "CC.xor_(edx, edx);"
         end
-        
-        op_name = op_to_jit_name(name)
-        op_name = "i" + op_name if a.type.signed or b.type.signed
-        emit Indent + "// #{op_name}, #{max_width}-bit"
-        emit Indent + "CC.#{op_name}(#{ssa(b)});"
+
+        if (a.type.signed || b.type.signed)
+          emit Indent + "// idiv"
+          emit Indent + "CC.emit(x86::Inst::kIdIdiv, #{ssa(b)});"
+        else
+          emit Indent + "// div"
+          emit Indent + "CC.emit(x86::Inst::kIdDiv, #{ssa(b)});"
+        end
+
         emit Indent + "CC.mov(#{ssa(dst)}, eax);"
+
 
       when :%
         dst, a, b = ops
         max_width = (a.type.bits > b.type.bits) ? a.type.bits : b.type.bits
         declare_ssa(dst, max_width)
 
-        emit Indent + "// Div prelude"
+        emit Indent + "// Mod prelude"
         emit Indent + "CC.mov(eax, #{ssa(a)});"
-        if ((a.type.signed == nil) & (b.type.signed == nil))
+
+        if (a.type.signed || b.type.signed)
+          if max_width == 32
+            emit Indent + "CC.emit(x86::Inst::kIdCdq);"
+          elsif max_width == 64
+            emit Indent + "CC.emit(x86::Inst::kIdCqo);"
+          end
+        else
           emit Indent + "CC.xor_(edx, edx);"
-        elsif max_width == 32
-          emit Indent + "CC.cdq();" 
-        elsif  max_width == 64
-          emit Indent + "CC.cqo();"
         end
-        
-        op_name = op_to_jit_name(name)
-        op_name = "i" + op_name if a.type.signed or b.type.signed
-        emit Indent + "// #{op_name}, #{max_width}-bit"
-        emit Indent + "CC.#{op_name}(#{ssa(b)});"
+
+        if (a.type.signed || b.type.signed)
+          emit Indent + "// idiv"
+          emit Indent + "CC.emit(x86::Inst::kIdIdiv, #{ssa(b)});"
+        else
+          emit Indent + "// div"
+          emit Indent + "CC.emit(x86::Inst::kIdDiv, #{ssa(b)});"
+        end
+
         emit Indent + "CC.mov(#{ssa(dst)}, edx);"
+
 
       when :~
         dst, a = ops
@@ -316,42 +332,59 @@ module SimInfra
         dst, a, b = ops
         declare_ssa(dst)
         emit Indent + "// Cmp eq"
-        emit Indent + "CC.cmp_eq(#{ssa(a)}, #{ssa(b)});"
-        emit Indent + "CC.mov(#{ssa(dst)}, #{ssa(a)});"
+        emit Indent + "CC.cmp(#{ssa(a)}, #{ssa(b)});"
+        emit Indent + "CC.sete(al);;"
+        emit Indent + "CC.movzx(#{ssa(dst)}, al);"
+
       when :cmp_ne
         dst, a, b = ops
         declare_ssa(dst)
-        emit Indent + "CC.cmp_ne(#{ssa(a)}, #{ssa(b)});"
-        emit Indent + "CC.mov(#{ssa(dst)}, #{ssa(a)});"
+        emit Indent + "// Cmp ne"
+        emit Indent + "CC.cmp(#{ssa(a)}, #{ssa(b)});"
+        emit Indent + "CC.setne(al);;"
+        emit Indent + "CC.movzx(#{ssa(dst)}, al);"
+
       when :cmp_lt
         dst, a, b = ops
         declare_ssa(dst)
-        emit Indent + "CC.cmp_lt(#{ssa(a)}, #{ssa(b)});"
-        emit Indent + "CC.mov(#{ssa(dst)}, #{ssa(a)});"
+        emit Indent + "// Cmp lt"
+        emit Indent + "CC.cmp(#{ssa(a)}, #{ssa(b)});"
+        emit Indent + "CC.setl(al);;"
+        emit Indent + "CC.movzx(#{ssa(dst)}, al);"
+
       when :cmp_ge
         dst, a, b = ops
         declare_ssa(dst)
-        emit Indent + "CC.cmp_ge(#{ssa(a)}, #{ssa(b)});"
-        emit Indent + "CC.mov(#{ssa(dst)}, #{ssa(a)});"
+        emit Indent + "// Cmp ge"
+        emit Indent + "CC.cmp(#{ssa(a)}, #{ssa(b)});"
+        emit Indent + "CC.setge(al);;"
+        emit Indent + "CC.movzx(#{ssa(dst)}, al);"
+
       when :cmp_ltu
         dst, a, b = ops
         declare_ssa(dst)
-        emit Indent + "CC.cmp_ltu(#{ssa(a)}, #{ssa(b)});"
-        emit Indent + "CC.mov(#{ssa(dst)}, #{ssa(a)});"
+        emit Indent + "// Cmp ltu"
+        emit Indent + "CC.cmp(#{ssa(a)}, #{ssa(b)});"
+        emit Indent + "CC.setb(al);;"
+        emit Indent + "CC.movzx(#{ssa(dst)}, al);"
+
       when :cmp_geu
         dst, a, b = ops
         declare_ssa(dst)
-        emit Indent + "CC.cmp_geu(#{ssa(a)}, #{ssa(b)});"
-        emit Indent + "CC.mov(#{ssa(dst)}, #{ssa(a)});"
+        emit Indent + "// Cmp geu"
+        emit Indent + "CC.cmp(#{ssa(a)}, #{ssa(b)});"
+        emit Indent + "CC.setae(al);;"
+        emit Indent + "CC.movzx(#{ssa(dst)}, al);"
+
       when :syscall
         emit Indent +
         <<~CPP
         // Syscall
-          InvokeNode* call;
-          cc.invoke(&call, CallConvId::kCDecl);
-          call->setTarget(imm(&GeneralSim::syscall));
-          call->setArg(0, ctx);
+          InvokeNode* Call;
+          CC.invoke(&Call, imm(&GeneralSim::syscall), FuncSignatureT<void, GeneralSim::ExecContext*>(CallConvId::kCDecl));
+          Call->setArg(0, CtxPtrReg);
         CPP
+
       else
         raise "Uhandled IR operation: #{name}"
         emit Indent + "// Unhandled IR operation: #{name}"
@@ -367,7 +400,7 @@ module SimInfra
       when :/, :%
         "div"
       when :*
-        "imul"
+        "mul"
       when :>>
       when :<<
         "shl"
@@ -385,7 +418,7 @@ module SimInfra
       instructions.map { |instr| emit_exec_function(instr) }.join("\n\n")
     end
 
-    def emit_instructions_visit(instructions)
+    def emit_instructions_visit_JIT(instructions)
       instructions.map { |instr| emit_instruction_visit(instr) }.join(" else ")
     end
 
@@ -393,14 +426,10 @@ module SimInfra
       name = instr[:name]
       args = instr[:args]
 
-      params = ["Ctx", "CC"]
+      params = ["CC", "CtxPtrReg"]
       args.each { |arg| params << "I.#{arg.name}" }
-
-      <<~CPP
-      if constexpr (std::is_same_v<T, #{name}>) {
-        EXEC_#{name}(#{params.join(', ')});
-      }
-      CPP
+        "if constexpr (std::is_same_v<T, #{name}>) {
+    EXEC_#{name}(#{params.join(', ')}); }"
     end
   end
 end
