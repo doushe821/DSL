@@ -42,20 +42,20 @@ void CPU::stepJIT() {
   ++BB.ExecCount;
 
   if (JIT.hasBlock(PC)) {
-    std::cout << "PC = " << std::hex << PC << ", running JIT from cache\n";
+    //std::cout << "PC = " << std::hex << PC << ", running JIT from cache\n";
     JIT.getBlock(PC).Fn(this);
     return;
   }
 
   if (BB.ExecCount >= JITHreshold) {
-    std::cout << "PC = " << std::hex << PC
-              << ", threshold passed, translating and running JIT\n";
+    //std::cout << "PC = " << std::hex << PC
+    //          << ", threshold passed, translating and running JIT\n";
     auto Block = JIT.translate(PC);
     Block.Fn(this);
     return;
   }
 
-  std::cout << "PC = " << std::hex << PC << ", interpreting\n";
+ // std::cout << "PC = " << std::hex << PC << ", interpreting\n";
   step();
 }
 
