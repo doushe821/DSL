@@ -474,7 +474,7 @@ void EXEC_ADDI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
   // Type clarification
   Gp v__tmp18 = CC.newUInt32();
@@ -514,7 +514,7 @@ void EXEC_SLTI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
   Gp v__tmp20 = CC.newUInt32();
   // Cmp lt
@@ -552,7 +552,7 @@ void EXEC_SLTIU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, X
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
   // Type clarification
   Gp v__tmp21 = CC.newUInt32();
@@ -596,7 +596,7 @@ void EXEC_XORI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
   Gp v__tmp24 = CC.newUInt32();
   // xor_
@@ -633,7 +633,7 @@ void EXEC_ORI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
   Gp v__tmp25 = CC.newUInt32();
   // or_
@@ -670,7 +670,7 @@ void EXEC_ANDI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
   Gp v__tmp26 = CC.newUInt32();
   // and_
@@ -707,7 +707,7 @@ void EXEC_SLLI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
   Gp v__tmp27 = CC.newUInt32();
   // Left shift
@@ -744,7 +744,7 @@ void EXEC_SRLI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
   // Type clarification
   Gp v__tmp28 = CC.newUInt32();
@@ -785,7 +785,7 @@ void EXEC_SRAI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
   // Type clarification
   Gp v__tmp30 = CC.newUInt32();
@@ -826,7 +826,7 @@ void EXEC_LB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
   // Type clarification
   Gp v__tmp32 = CC.newUInt32();
@@ -879,7 +879,7 @@ void EXEC_LH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
   // Type clarification
   Gp v__tmp36 = CC.newUInt32();
@@ -932,7 +932,7 @@ void EXEC_LW(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
   // Type clarification
   Gp v__tmp40 = CC.newUInt32();
@@ -982,7 +982,7 @@ void EXEC_LBU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
   // Type clarification
   Gp v__tmp43 = CC.newUInt32();
@@ -1035,7 +1035,7 @@ void EXEC_LHU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
   // Type clarification
   Gp v__tmp47 = CC.newUInt32();
@@ -1097,7 +1097,7 @@ void EXEC_SB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XRe
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
   // Type clarification
   Gp v__tmp51 = CC.newUInt32();
@@ -1146,7 +1146,7 @@ void EXEC_SH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XRe
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
   // Type clarification
   Gp v__tmp54 = CC.newUInt32();
@@ -1195,7 +1195,7 @@ void EXEC_SW(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XRe
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
   // Type clarification
   Gp v__tmp57 = CC.newUInt32();
@@ -1222,9 +1222,9 @@ void EXEC_JAL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, Gen
   Gp v_rd = CC.newUInt32();
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
-  Gp v__tmp59 = CC.newUInt64();
+  Gp v__tmp59 = CC.newUInt32();
   // Get pc
   {
     InvokeNode* Node;
@@ -1234,7 +1234,7 @@ CC.mov(v_imm, Imm.raw());
   }
 
   Gp v__c60 = CC.newUInt32();
-  Gp v__tmp61 = CC.newUInt64();
+  Gp v__tmp61 = CC.newUInt32();
   // add
   CC.add(v__tmp59, v__c60);
   CC.mov(v__tmp61, v__tmp59);
@@ -1250,7 +1250,7 @@ CC.mov(v_imm, Imm.raw());
     Node->setArg(2, v_rd);
   }
 
-  Gp v__tmp62 = CC.newUInt64();
+  Gp v__tmp62 = CC.newUInt32();
   // Get pc
   {
     InvokeNode* Node;
@@ -1259,7 +1259,7 @@ CC.mov(v_imm, Imm.raw());
     Node->setRet(0, v__tmp62);
   }
 
-  Gp v__tmp63 = CC.newUInt64();
+  Gp v__tmp63 = CC.newUInt32();
   // add
   CC.add(v__tmp62, v_imm);
   CC.mov(v__tmp63, v__tmp62);
@@ -1290,9 +1290,9 @@ void EXEC_JALR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
-  Gp v__tmp64 = CC.newUInt64();
+  Gp v__tmp64 = CC.newUInt32();
   // Get pc
   {
     InvokeNode* Node;
@@ -1302,7 +1302,7 @@ CC.mov(v_imm, Imm.raw());
   }
 
   Gp v__c65 = CC.newUInt32();
-  Gp v__tmp66 = CC.newUInt64();
+  Gp v__tmp66 = CC.newUInt32();
   // add
   CC.add(v__tmp64, v__c65);
   CC.mov(v__tmp66, v__tmp64);
@@ -1344,7 +1344,7 @@ void EXEC_LUI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, Gen
   Gp v_rd = CC.newUInt32();
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
   Gp v__c70 = CC.newUInt32();
   Gp v__tmp71 = CC.newUInt32();
@@ -1372,9 +1372,9 @@ void EXEC_AUIPC(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, G
   Gp v_rd = CC.newUInt32();
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
-  Gp v__tmp72 = CC.newUInt64();
+  Gp v__tmp72 = CC.newUInt32();
   // Get pc
   {
     InvokeNode* Node;
@@ -1388,7 +1388,7 @@ CC.mov(v_imm, Imm.raw());
   // Left shift
   CC.shl(v_imm, v__c73);
   CC.mov(v__tmp74, v_imm);
-  Gp v__tmp75 = CC.newUInt64();
+  Gp v__tmp75 = CC.newUInt32();
   // add
   CC.add(v__tmp72, v__tmp74);
   CC.mov(v__tmp75, v__tmp72);
@@ -1432,9 +1432,9 @@ void EXEC_BEQ(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
-  Gp v__tmp76 = CC.newUInt64();
+  Gp v__tmp76 = CC.newUInt32();
   // Get pc
   {
     InvokeNode* Node;
@@ -1455,7 +1455,7 @@ CC.mov(v_imm, Imm.raw());
   // imul
   CC.imul(v__tmp77, v__tmp78);
   CC.mov(v__tmp79, v__tmp77);
-  Gp v__tmp80 = CC.newUInt64();
+  Gp v__tmp80 = CC.newUInt32();
   // add
   CC.add(v__tmp76, v__tmp79);
   CC.mov(v__tmp80, v__tmp76);
@@ -1495,9 +1495,9 @@ void EXEC_BNE(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
-  Gp v__tmp81 = CC.newUInt64();
+  Gp v__tmp81 = CC.newUInt32();
   // Get pc
   {
     InvokeNode* Node;
@@ -1518,7 +1518,7 @@ CC.mov(v_imm, Imm.raw());
   // imul
   CC.imul(v__tmp82, v__tmp83);
   CC.mov(v__tmp84, v__tmp82);
-  Gp v__tmp85 = CC.newUInt64();
+  Gp v__tmp85 = CC.newUInt32();
   // add
   CC.add(v__tmp81, v__tmp84);
   CC.mov(v__tmp85, v__tmp81);
@@ -1558,9 +1558,9 @@ void EXEC_BLT(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
-  Gp v__tmp86 = CC.newUInt64();
+  Gp v__tmp86 = CC.newUInt32();
   // Get pc
   {
     InvokeNode* Node;
@@ -1581,7 +1581,7 @@ CC.mov(v_imm, Imm.raw());
   // imul
   CC.imul(v__tmp87, v__tmp88);
   CC.mov(v__tmp89, v__tmp87);
-  Gp v__tmp90 = CC.newUInt64();
+  Gp v__tmp90 = CC.newUInt32();
   // add
   CC.add(v__tmp86, v__tmp89);
   CC.mov(v__tmp90, v__tmp86);
@@ -1621,9 +1621,9 @@ void EXEC_BGE(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
-  Gp v__tmp91 = CC.newUInt64();
+  Gp v__tmp91 = CC.newUInt32();
   // Get pc
   {
     InvokeNode* Node;
@@ -1644,7 +1644,7 @@ CC.mov(v_imm, Imm.raw());
   // imul
   CC.imul(v__tmp92, v__tmp93);
   CC.mov(v__tmp94, v__tmp92);
-  Gp v__tmp95 = CC.newUInt64();
+  Gp v__tmp95 = CC.newUInt32();
   // add
   CC.add(v__tmp91, v__tmp94);
   CC.mov(v__tmp95, v__tmp91);
@@ -1684,9 +1684,9 @@ void EXEC_BGEU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, X
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
-  Gp v__tmp96 = CC.newUInt64();
+  Gp v__tmp96 = CC.newUInt32();
   // Get pc
   {
     InvokeNode* Node;
@@ -1707,7 +1707,7 @@ CC.mov(v_imm, Imm.raw());
   // imul
   CC.imul(v__tmp97, v__tmp98);
   CC.mov(v__tmp99, v__tmp97);
-  Gp v__tmp100 = CC.newUInt64();
+  Gp v__tmp100 = CC.newUInt32();
   // add
   CC.add(v__tmp96, v__tmp99);
   CC.mov(v__tmp100, v__tmp96);
@@ -1747,9 +1747,9 @@ void EXEC_BLTU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, X
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
-CC.mov(v_imm, Imm.raw()); 
+  CC.mov(v_imm, Imm.raw()); 
 
-  Gp v__tmp101 = CC.newUInt64();
+  Gp v__tmp101 = CC.newUInt32();
   // Get pc
   {
     InvokeNode* Node;
@@ -1770,7 +1770,7 @@ CC.mov(v_imm, Imm.raw());
   // imul
   CC.imul(v__tmp102, v__tmp103);
   CC.mov(v__tmp104, v__tmp102);
-  Gp v__tmp105 = CC.newUInt64();
+  Gp v__tmp105 = CC.newUInt32();
   // add
   CC.add(v__tmp101, v__tmp104);
   CC.mov(v__tmp105, v__tmp101);

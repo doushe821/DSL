@@ -9,7 +9,7 @@
 
 namespace SimJIT {
 
-using BlockFn = uint32_t (*)(GeneralSim::ExecContext *);
+using BlockFn = void (*)(GeneralSim::ExecContext *);
 struct TranslatedBlock {
   BlockFn Fn;
   size_t StartPC;

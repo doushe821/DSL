@@ -24,6 +24,8 @@ public:
   
   virtual uint32_t getReg(XReg Idx) const = 0;
   virtual void setReg(XReg Idx, uint32_t Value) = 0;
+  virtual bool isPCDirty() = 0;
+  virtual void cleansePC() = 0;
 
   virtual uint32_t getPC() const = 0;
   virtual void setPC(uint32_t Value) = 0;
@@ -45,6 +47,12 @@ static inline uint32_t getPCWrapper(ExecContext* ctx) {
 }
 static inline void setPCWrapper(ExecContext* ctx, uint32_t Val) {
     return ctx->setPC(Val);
+}
+static inline bool isPCDirtyWrapper(ExecContext *ctx) {
+    return ctx->isPCDirty();
+}
+static inline void cleansePCWrapper(ExecContext *ctx) {
+    return ctx->cleansePC();
 }
 static inline uint32_t getRegWrapper(ExecContext* ctx, XReg Idx) {
     return ctx->getReg(Idx);

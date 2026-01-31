@@ -46,17 +46,18 @@ void CPU::stepJIT() {
   ++BB.ExecCount;
 
   if (JIT.hasBlock(PC)) {
-    PC = JIT.getBlock(PC).Fn(this);
+    JIT.getBlock(PC).Fn(this);
     return;
   }
 
   if (BB.ExecCount >= kHOT_THRESHOLD) {
     auto Block = JIT.translate(PC);
-    PC = Block.Fn(this);
+    Block.Fn(this);
     return;
   }
 
   step();
+  assert(PC == Ctx.getPC());
 }
 
 void CPU::runPretty() {

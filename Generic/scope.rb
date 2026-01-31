@@ -44,7 +44,7 @@ module SimInfra
     end
 
     def pc
-        stmt :getpc, [tmpvar(Type.u(64))]
+        stmt :getpc, [tmpvar(Type.u(32))]
     end
 
     def setpc(var)

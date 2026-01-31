@@ -61,6 +61,7 @@ add_executable(sim
     src/Executor.cpp
     src/JIT.cpp
     src/Decoder.cpp
+    src/JITExecutor.cpp
 )
 
 target_include_directories(sim
@@ -101,6 +102,7 @@ add_executable(sim_tests
     src/RegState.cpp
     src/ElfLoader.cpp
     src/JIT.cpp
+    src/JITExecutor.cpp
 )
 
 target_include_directories(sim_tests

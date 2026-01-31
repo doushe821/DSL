@@ -9,6 +9,7 @@ struct FakeExecContext : ExecContext {
     uint32_t regs[32]{};
     std::unordered_map<uint64_t,uint8_t> mem;
     uint64_t PC = 0;
+    bool PCDirty {false};
 
     uint32_t getReg(XReg r) const override {
         if (r == 0) return 0; // x0 hardwired
@@ -22,6 +23,9 @@ struct FakeExecContext : ExecContext {
 
     uint32_t getPC() const override { return PC; }
     void setPC(uint32_t v) override { PC = v; }
+    bool isPCDirty() override { return PCDirty; }
+    void cleansePC() override { PCDirty = false; }
+    
 
     uint8_t  read8(uintptr_t addr) override { return mem[addr]; }
     uint16_t read16(uintptr_t addr) override { return mem[addr] | (mem[addr+1]<<8); }

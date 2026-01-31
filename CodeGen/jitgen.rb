@@ -170,7 +170,7 @@ module SimInfra
         var_ir, ximm = ops
         emit Indent + <<~CPP
         // Get Immediate 
-        CC.mov(v_#{var_ir}, #{ximm.name.capitalize}.raw()); 
+          CC.mov(v_#{var_ir}, #{ximm.name.capitalize}.raw()); 
         CPP
       when :let
         dst, src = ops

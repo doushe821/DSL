@@ -32,6 +32,8 @@ private:
 
   size_t kHOT_THRESHOLD = 1;
 
+  bool PCDirty {false};
+
   Decoder::Decoder Dcdr;
   GeneralSim::Executor Extr;
   SimJIT::JIT JIT{Dcdr, *this};
@@ -91,9 +93,18 @@ public:
   }
 
   void setPC(uint32_t Value) override {
+    PCDirty = PC - Value;
     PC = Value;
   }
+
+  bool isPCDirty() override {
+    return PCDirty;
+  }
   
+  void cleansePC() override {
+    PCDirty = false;
+  }
+
   void step();
   void stepJIT();
 

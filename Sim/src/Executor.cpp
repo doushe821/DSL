@@ -538,13 +538,13 @@ void EXEC_JAL(ExecContext& Ctx, XReg rd, GeneralSim::Immediate imm)
   v__tmp59 = Ctx.getPC();
   uint32_t v__c60 = 0;
   v__c60 = 4;
-  uint64_t v__tmp61 = 0;
+  uint32_t v__tmp61 = 0;
   v__tmp61 = v__tmp59 + v__c60;
   v_rd = v__tmp61;
   Ctx.setReg(rd, v_rd);
   uint32_t v__tmp62 = 0;
   v__tmp62 = Ctx.getPC();
-  uint64_t v__tmp63 = 0;
+  uint32_t v__tmp63 = 0;
   v__tmp63 = v__tmp62 + v_imm;
   Ctx.setPC(v__tmp63);
 }
@@ -564,7 +564,7 @@ void EXEC_JALR(ExecContext& Ctx, XReg rd, XReg rs1, GeneralSim::Immediate imm)
   v__tmp64 = Ctx.getPC();
   uint32_t v__c65 = 0;
   v__c65 = 4;
-  uint64_t v__tmp66 = 0;
+  uint32_t v__tmp66 = 0;
   v__tmp66 = v__tmp64 + v__c65;
   v_rd = v__tmp66;
   Ctx.setReg(rd, v_rd);
@@ -607,7 +607,7 @@ void EXEC_AUIPC(ExecContext& Ctx, XReg rd, GeneralSim::Immediate imm)
   v__c73 = 12;
   uint32_t v__tmp74 = 0;
   v__tmp74 = v_imm << v__c73;
-  uint64_t v__tmp75 = 0;
+  uint32_t v__tmp75 = 0;
   v__tmp75 = v__tmp72 + v__tmp74;
   v_rd = v__tmp75;
   Ctx.setReg(rd, v_rd);
@@ -634,7 +634,7 @@ void EXEC_BEQ(ExecContext& Ctx, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
   v__tmp78 = Ctx.sext(v_imm, 13);
   uint32_t v__tmp79 = 0;
   v__tmp79 = v__tmp77 * v__tmp78;
-  uint64_t v__tmp80 = 0;
+  uint32_t v__tmp80 = 0;
   v__tmp80 = v__tmp76 + v__tmp79;
   Ctx.setPC(v__tmp80);
 }
@@ -660,7 +660,7 @@ void EXEC_BNE(ExecContext& Ctx, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
   v__tmp83 = Ctx.sext(v_imm, 13);
   uint32_t v__tmp84 = 0;
   v__tmp84 = v__tmp82 * v__tmp83;
-  uint64_t v__tmp85 = 0;
+  uint32_t v__tmp85 = 0;
   v__tmp85 = v__tmp81 + v__tmp84;
   Ctx.setPC(v__tmp85);
 }
@@ -686,7 +686,7 @@ void EXEC_BLT(ExecContext& Ctx, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
   v__tmp88 = Ctx.sext(v_imm, 13);
   uint32_t v__tmp89 = 0;
   v__tmp89 = v__tmp87 * v__tmp88;
-  uint64_t v__tmp90 = 0;
+  uint32_t v__tmp90 = 0;
   v__tmp90 = v__tmp86 + v__tmp89;
   Ctx.setPC(v__tmp90);
 }
@@ -712,7 +712,7 @@ void EXEC_BGE(ExecContext& Ctx, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
   v__tmp93 = Ctx.sext(v_imm, 13);
   uint32_t v__tmp94 = 0;
   v__tmp94 = v__tmp92 * v__tmp93;
-  uint64_t v__tmp95 = 0;
+  uint32_t v__tmp95 = 0;
   v__tmp95 = v__tmp91 + v__tmp94;
   Ctx.setPC(v__tmp95);
 }
@@ -738,7 +738,7 @@ void EXEC_BGEU(ExecContext& Ctx, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
   v__tmp98 = Ctx.sext(v_imm, 13);
   uint32_t v__tmp99 = 0;
   v__tmp99 = v__tmp97 * v__tmp98;
-  uint64_t v__tmp100 = 0;
+  uint32_t v__tmp100 = 0;
   v__tmp100 = v__tmp96 + v__tmp99;
   Ctx.setPC(v__tmp100);
 }
@@ -764,7 +764,7 @@ void EXEC_BLTU(ExecContext& Ctx, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
   v__tmp103 = Ctx.sext(v_imm, 13);
   uint32_t v__tmp104 = 0;
   v__tmp104 = v__tmp102 * v__tmp103;
-  uint64_t v__tmp105 = 0;
+  uint32_t v__tmp105 = 0;
   v__tmp105 = v__tmp101 + v__tmp104;
   Ctx.setPC(v__tmp105);
 }
