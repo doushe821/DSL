@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
 
   SPU.setEntry(EntryPoint);
 
-  SPU.run();
+  SPU.runJIT();
 
   return 0;
 }

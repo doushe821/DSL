@@ -51,20 +51,9 @@ public:
   CPU(size_t MemoryLimit, bool IsPretty = false);
   ~CPU();
 
-  void run() {
-    setReg(RegAliases::sp, MemoryLimit);
+  void run();
 
-    if (PrettyMode) {
-      runPretty();
-    } else {
-      while (!Finished) {
-        OLD_PC = PC;
-        step();
-        ++InstructionCounter;
-      }
-    }
-    std::cout << "Finished!" << std::endl; // TODO add finish code or smth
-  }
+  void runJIT();
 
   void runPretty();
   void dumpState();

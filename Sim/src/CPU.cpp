@@ -24,7 +24,6 @@ void CPU::step() {
   }
 
   auto RawInstr = Mem.read32(PC);
-  std::cout << "Fetched raw instruction: " << std::hex << RawInstr << std::endl;
   auto DecodedInstr = Dcdr.decode(RawInstr);
 
   // Implicit upcast from CPU to ExecContext here.
@@ -36,9 +35,6 @@ void CPU::step() {
     PC += 4;
     OLD_PC = PC;
   }
-  std::cout << std::dec << "# " << InstructionCounter << ".\n";
-
-  dumpState();
 }
 
 void CPU::stepJIT() {
@@ -46,18 +42,54 @@ void CPU::stepJIT() {
   ++BB.ExecCount;
 
   if (JIT.hasBlock(PC)) {
+    std::cout << "PC = " << std::dec << PC << ", running JIT from cache\n";
     JIT.getBlock(PC).Fn(this);
     return;
   }
 
   if (BB.ExecCount >= kHOT_THRESHOLD) {
+    std::cout << "PC = " << std::dec << PC
+              << ", threshold passed, translating and running JIT\n";
     auto Block = JIT.translate(PC);
     Block.Fn(this);
     return;
   }
 
+  std::cout << "PC = " << std::dec << PC << ", interpreting\n";
   step();
   assert(PC == Ctx.getPC());
+}
+
+void CPU::run() {
+  setReg(RegAliases::sp, MemoryLimit);
+
+  if (PrettyMode) {
+    runPretty();
+  } else {
+    while (!Finished) {
+      OLD_PC = PC;
+      step();
+      dumpState();
+      ++InstructionCounter;
+    }
+  }
+  std::cout << "Finished!" << std::endl;
+  std::cout << "Return values: " << std::dec << RState->read(RegAliases::ret0)
+            << ", " << std::dec << RState->read(RegAliases::ret1) << std::endl;
+}
+
+void CPU::runJIT() {
+  setReg(RegAliases::sp, MemoryLimit);
+
+  while (!Finished) {
+    OLD_PC = PC;
+    stepJIT();
+    ++InstructionCounter;
+  }
+
+  std::cout << "Finished!" << std::endl;
+  std::cout << "Return values: " << std::dec << RState->read(RegAliases::ret0)
+            << ", " << std::dec << RState->read(RegAliases::ret1) << std::endl;
 }
 
 void CPU::runPretty() {

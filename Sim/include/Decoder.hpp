@@ -6,10 +6,6 @@ namespace Decoder {
 class Decoder {
 public:
   Instruction decode(uint32_t Instr) const;
-
-  uint8_t getInstSize(const Instruction& DecodedInstr) const {
-    return 4; // For future.
-  }
 };
 
 } // namespace Decoder
