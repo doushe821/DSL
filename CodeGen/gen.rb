@@ -3,6 +3,7 @@ require 'yaml'
 require 'set'
 require_relative 'map_tree'
 require_relative 'decoder_tree'
+require_relative 'jitgen'
 require_relative 'gen_regstate'
 require_relative 'codegen'
 
@@ -40,7 +41,7 @@ module SimGen
       # debug
 
       SimGen::GenStateGenerator.new
-
+      # INterpreter
       generate_general_instruction_description
       emitter = SimInfra::CppEmitter.new
       all_execs = emitter.emit_all_instructions(@@parsed_ir)
@@ -61,6 +62,27 @@ module SimGen
       CPP
       end
 
+      # JIT 
+      jimitter = SimInfra::CppJitEmitter.new
+      all_jit_execs = jimitter.emit_all_instructions(@@parsed_ir)
+
+      File.open('Sim/src/JITExecutor.cpp', 'w') do |exec|
+        exec << <<~CPP
+        #include "JIT.hpp"
+        namespace SimJIT {
+        using XReg = uint16_t;
+        #{all_jit_execs}
+        void JIT::emitInstruction(const Instruction &Inst, ExecContext &Ctx) {
+          std::visit([&](auto&& I) {
+            using T = std::decay_t<decltype(I)>;
+            #{jimitter.emit_instructions_visit(@@parsed_ir)}
+            }, Inst);
+        }
+        } // namespace GeneralSim
+      CPP
+      end
+
+      # Tests
       # TODO make it toggleable for user (maybe they don't want any tests)
       File.open('Sim/include/ExecutorTestOnly.hpp', 'w') do |execto| 
         execto << <<~CPP
@@ -74,6 +96,8 @@ module SimGen
         CPP
       end
 
+
+      # Decoder
       File.open('Sim/src/Decoder.cpp', 'w') do |decode|
         decode << <<~CPP
         #include <stdexcept>

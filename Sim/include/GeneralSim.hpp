@@ -34,7 +34,7 @@ private:
 
   Decoder::Decoder Dcdr;
   GeneralSim::Executor Extr;
-  SimJIT::JIT JIT{Dcdr, Mem};
+  SimJIT::JIT JIT{Dcdr, *this};
 
   std::unique_ptr<RegState> RState;
   Memory Mem;

@@ -19,29 +19,21 @@ struct TranslatedBlock {
 };
 class JIT {
 public:
-  explicit JIT(const Decoder::Decoder &Decoder_,
-               const GeneralSim::MemoryView &MV);
+  explicit JIT(const Decoder::Decoder &Decoder_, GeneralSim::ExecContext &Ctx_) : Ctx(Ctx_), Decoder(Decoder_) {};
   ~JIT() = default;
 
   bool hasBlock(size_t PC) const;
   const TranslatedBlock &getBlock(size_t PC) const;
-  TranslatedBlock transalte(size_t PC, asmjit::x86::Gp  СtxReg);
+  TranslatedBlock transalte(size_t PC);
 
   BlockFn compileBlock(uint32_t Pc);
   uint32_t executeBlock(uint32_t Pc, GeneralSim::ExecContext &Ctx);
 
 private:
-  void emitInstruction(asmjit::x86::Compiler &CC, asmjit::x86::Gp  СtxReg,
-                       const Instruction &Inst);
-  void emitGetPC(asmjit::x86::Compiler &CC, asmjit::x86::Gp  СtxReg,
-                 asmjit::x86::Gp Dest) {
-    CC.mov(asmjit::x86::rcx,  СtxReg);
-    CC.call(asmjit::imm(&GeneralSim::getPCWrapper));
-    CC.mov(Dest, asmjit::x86::eax);
-  }
+  void emitInstruction();
 
-  const Decoder::Decoder &Decoder;
-  const GeneralSim::MemoryView &MV;
+  GeneralSim::ExecContext &Ctx;
+  const Decoder::Decoder& Decoder;
   std::unordered_map<uint32_t, BlockFn> Cache;
   asmjit::JitRuntime Rt;
 };

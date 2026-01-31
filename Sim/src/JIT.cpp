@@ -3,13 +3,13 @@
 #include <cstdint>
 #include <vector>
 namespace SimJIT {
-  TranslatedBlock JIT::transalte(size_t PC, asmjit::x86::Gp  СtxReg)  {
+  TranslatedBlock JIT::transalte(size_t PC)  {
     TranslatedBlock TB;
     TB.StartPC = PC;
     std::vector<Instruction> Block; // FIXME fix namespaces pleaaasse
     // Translate block:
     while (true) {
-      uint32_t Raw = MV.read32(PC);
+      uint32_t Raw = Ctx.read32(PC);
       auto Inst = Decoder.decode(Raw);
       Block.push_back(Inst);
       
@@ -29,14 +29,14 @@ namespace SimJIT {
 
     // emition
     for (auto& Inst : Block) {
-        emitInstruction(CC,  СtxReg, Inst);
+        emitInstruction(); // TODO
     }
 
-    // Pass PC as return value
-    asmjit::x86::Gp PCReg = CC.newUInt32();
-    emitGetPC(CC,  СtxReg, PCReg);
-    CC.ret(PCReg);
+    // return PCC
 
+    
+    
+    // return PC
     CC.endFunc();
     CC.finalize();
 

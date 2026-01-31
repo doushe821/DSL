@@ -5,7 +5,7 @@
 #include "Instructions.hpp"
 using XReg = uint16_t;
 namespace Decoder {
-Instruction Decoder::decode(uint32_t Instr) {
+Instruction Decoder::decode(uint32_t Instr) const {
   switch ((Instr >> 1) & ((1u << 6) - 1)) {
     case 25: {
       switch ((Instr >> 12) & ((1u << 3) - 1)) {
