@@ -791,6 +791,7 @@ void EXEC_MUL(ExecContext& Ctx, XReg rd, XReg rs1, XReg rs2)
   v__tmp107 = v_rs1 * v_rs2;
   v_rd = v__tmp107;
   Ctx.setReg(rd, v_rd);
+  Ctx.setReg(rd, v_rd);
 }
 
 
@@ -817,6 +818,7 @@ void EXEC_MULH(ExecContext& Ctx, XReg rd, XReg rs1, XReg rs2)
   uint64_t v__tmp113 = 0;
   v__tmp113 = v__tmp111 >> v__c112;
   v_rd = v__tmp113;
+  Ctx.setReg(rd, v_rd);
   Ctx.setReg(rd, v_rd);
 }
 
@@ -845,6 +847,7 @@ void EXEC_MULHSU(ExecContext& Ctx, XReg rd, XReg rs1, XReg rs2)
   v__tmp119 = v__tmp117 >> v__c118;
   v_rd = v__tmp119;
   Ctx.setReg(rd, v_rd);
+  Ctx.setReg(rd, v_rd);
 }
 
 
@@ -870,6 +873,7 @@ void EXEC_MULHU(ExecContext& Ctx, XReg rd, XReg rs1, XReg rs2)
   v__tmp124 = v__tmp122 >> v__c123;
   v_rd = v__tmp124;
   Ctx.setReg(rd, v_rd);
+  Ctx.setReg(rd, v_rd);
 }
 
 
@@ -890,6 +894,7 @@ void EXEC_DIV(ExecContext& Ctx, XReg rd, XReg rs1, XReg rs2)
   uint32_t v__tmp127 = 0;
   v__tmp127 = v__tmp125 / v__tmp126;
   v_rd = v__tmp127;
+  Ctx.setReg(rd, v_rd);
   Ctx.setReg(rd, v_rd);
 }
 
@@ -912,6 +917,7 @@ void EXEC_DIVU(ExecContext& Ctx, XReg rd, XReg rs1, XReg rs2)
   v__tmp130 = v__tmp128 / v__tmp129;
   v_rd = v__tmp130;
   Ctx.setReg(rd, v_rd);
+  Ctx.setReg(rd, v_rd);
 }
 
 
@@ -933,6 +939,7 @@ void EXEC_REM(ExecContext& Ctx, XReg rd, XReg rs1, XReg rs2)
   v__tmp133 = v__tmp131 % v__tmp132;
   v_rd = v__tmp133;
   Ctx.setReg(rd, v_rd);
+  Ctx.setReg(rd, v_rd);
 }
 
 
@@ -953,6 +960,7 @@ void EXEC_REMU(ExecContext& Ctx, XReg rd, XReg rs1, XReg rs2)
   uint32_t v__tmp136 = 0;
   v__tmp136 = v__tmp134 % v__tmp135;
   v_rd = v__tmp136;
+  Ctx.setReg(rd, v_rd);
   Ctx.setReg(rd, v_rd);
 }
 

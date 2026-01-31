@@ -1990,6 +1990,15 @@ void EXEC_MUL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
     Node->setArg(2, v_rd);
   }
 
+  // Set Register
+  {
+    InvokeNode* Node;
+    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+    Node->setArg(0, CtxPtrReg);
+    Node->setArg(1, imm(rd));
+    Node->setArg(2, v_rd);
+  }
+
 }
 
 
@@ -2055,6 +2064,15 @@ void EXEC_MULH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   CC.mov(v__tmp113, v__tmp111);
   // Let
   CC.mov(v_rd, v__tmp113);
+
+  // Set Register
+  {
+    InvokeNode* Node;
+    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+    Node->setArg(0, CtxPtrReg);
+    Node->setArg(1, imm(rd));
+    Node->setArg(2, v_rd);
+  }
 
   // Set Register
   {
@@ -2132,6 +2150,15 @@ void EXEC_MULHSU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, 
     Node->setArg(2, v_rd);
   }
 
+  // Set Register
+  {
+    InvokeNode* Node;
+    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+    Node->setArg(0, CtxPtrReg);
+    Node->setArg(1, imm(rd));
+    Node->setArg(2, v_rd);
+  }
+
 }
 
 
@@ -2178,6 +2205,15 @@ void EXEC_MULHU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, X
   CC.mov(v__tmp124, v__tmp122);
   // Let
   CC.mov(v_rd, v__tmp124);
+
+  // Set Register
+  {
+    InvokeNode* Node;
+    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+    Node->setArg(0, CtxPtrReg);
+    Node->setArg(1, imm(rd));
+    Node->setArg(2, v_rd);
+  }
 
   // Set Register
   {
@@ -2240,6 +2276,15 @@ void EXEC_DIV(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
     Node->setArg(2, v_rd);
   }
 
+  // Set Register
+  {
+    InvokeNode* Node;
+    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+    Node->setArg(0, CtxPtrReg);
+    Node->setArg(1, imm(rd));
+    Node->setArg(2, v_rd);
+  }
+
 }
 
 
@@ -2282,6 +2327,15 @@ void EXEC_DIVU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   CC.mov(v__tmp130, eax);
   // Let
   CC.mov(v_rd, v__tmp130);
+
+  // Set Register
+  {
+    InvokeNode* Node;
+    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+    Node->setArg(0, CtxPtrReg);
+    Node->setArg(1, imm(rd));
+    Node->setArg(2, v_rd);
+  }
 
   // Set Register
   {
@@ -2344,6 +2398,15 @@ void EXEC_REM(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
     Node->setArg(2, v_rd);
   }
 
+  // Set Register
+  {
+    InvokeNode* Node;
+    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+    Node->setArg(0, CtxPtrReg);
+    Node->setArg(1, imm(rd));
+    Node->setArg(2, v_rd);
+  }
+
 }
 
 
@@ -2386,6 +2449,15 @@ void EXEC_REMU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   CC.mov(v__tmp136, edx);
   // Let
   CC.mov(v_rd, v__tmp136);
+
+  // Set Register
+  {
+    InvokeNode* Node;
+    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+    Node->setArg(0, CtxPtrReg);
+    Node->setArg(1, imm(rd));
+    Node->setArg(2, v_rd);
+  }
 
   // Set Register
   {

@@ -11,7 +11,7 @@ module RV32I
   asm { "ADD #{rd}, #{rs1}, #{rs2}" }
   code {
       rd[] = rs1 + rs2
-      setreg rd
+      
   }
   }
 
@@ -20,7 +20,7 @@ module RV32I
   asm { "SUB #{rd}, #{rs1}, #{rs2}" }
   code {
       rd[]= rs1 - rs2
-      setreg rd
+      
   }
   }
 
@@ -29,7 +29,7 @@ module RV32I
   asm { "SLL #{rd}, #{rs1}, #{rs2}" }
   code {
       rd[] = rs1 << (rs2 & 31)
-      setreg rd
+      
   }
   }
 
@@ -38,7 +38,7 @@ module RV32I
     asm { "SLT #{rd}, #{rs1}, #{rs2}" }
     code {
       rd[] = cmp_lt(rs1, rs2)
-      setreg rd
+      
     }
   }
 
@@ -47,7 +47,7 @@ module RV32I
     asm { "SLTU #{rd}, #{rs1}, #{rs2}" }
     code {
       rd[] = cmp_ltu(rs1, rs2)
-      setreg rd
+      
     }
   }
 
@@ -57,7 +57,7 @@ module RV32I
   asm { "XOR #{rd}, #{rs1}, #{rs2}" }
   code {
       rd[] = rs1 ^ rs2
-      setreg rd
+      
   }
   }
 
@@ -66,7 +66,7 @@ module RV32I
   asm { "SRL #{rd}, #{rs1}, #{rs2}" }
   code {
       rd[] = as_unsigned(rs1) >> (rs2 & 31)
-      setreg rd
+      
   }
   }
 
@@ -75,7 +75,7 @@ module RV32I
   asm { "SRA #{rd}, #{rs1}, #{rs2}" }
   code {
       rd[] = as_signed(rs1) >> (rs2 & 31)
-      setreg rd
+      
   }
   }
 
@@ -84,7 +84,7 @@ module RV32I
   asm { "OR #{rd}, #{rs1}, #{rs2}" }
   code {
       rd[] = rs1 | rs2
-      setreg rd
+      
   }
   }
 
@@ -93,7 +93,7 @@ module RV32I
   asm { "AND #{rd}, #{rs1}, #{rs2}" }
   code {
       rd[] = rs1 & rs2
-      setreg rd
+      
   }
   }
 
@@ -104,7 +104,7 @@ module RV32I
     asm { "ADDI #{rd}, #{rs1}, #{imm}" }
     code {
       rd[] = rs1 + sext(imm, from: 12, to: 32)
-      setreg rd
+      
     }
   }
 
@@ -113,7 +113,7 @@ module RV32I
     asm { "SLTI #{rd}, #{rs1}, #{imm}" }
     code {
       rd[] = cmp_lt(rs1, imm)
-      setreg rd
+      
     }
   }
 
@@ -122,7 +122,7 @@ module RV32I
     asm { "SLTIU #{rd}, #{rs1}, #{imm}" }
     code {
       rd[] = cmp_lt(as_unsigned(rs1), as_unsigned(imm))
-      setreg rd
+      
     }
   }
 
@@ -131,7 +131,7 @@ module RV32I
     asm { "XORI #{rd}, #{rs1}, #{imm}" }
     code {
       rd[] = rs1 ^ imm
-      setreg rd
+      
     }
   }
 
@@ -140,7 +140,7 @@ module RV32I
     asm { "ORI #{rd}, #{rs1}, #{imm}" }
     code {
       rd[] = rs1 | imm
-      setreg rd
+      
     }
   }
 
@@ -149,7 +149,7 @@ module RV32I
     asm { "ANDI #{rd}, #{rs1}, #{imm}" }
     code {
       rd[] = rs1 & imm
-      setreg rd
+      
     }
   }
   # I-shift
@@ -158,7 +158,7 @@ module RV32I
     asm { "SLLI #{rd}, #{rs1}, #{imm}" }
     code {
       rd[] = rs1 << imm
-      setreg rd
+      
     }
   }
 
@@ -167,7 +167,7 @@ module RV32I
     asm { "SRLI #{rd}, #{rs1}, #{imm}" }
     code {
       rd[] = as_unsigned(rs1) >> imm
-      setreg rd
+      
     }
   }
 
@@ -176,7 +176,7 @@ module RV32I
     asm { "SRAI #{rd}, #{rs1}, #{imm}" }
     code {
       rd[] = as_signed(rs1) >> imm
-      setreg rd
+      
     }
   }
   # I-load
@@ -185,7 +185,7 @@ module RV32I
     asm { "LB #{rd}, #{imm}(#{rs1})" }
     code {
       rd[] = sext(load(rs1 + sext(imm, from: 12, to: 32), 8), from: 8, to: 32)
-      setreg rd
+      
     }
   }
 
@@ -194,7 +194,7 @@ module RV32I
     asm { "LH #{rd}, #{imm}(#{rs1})" }
     code {
       rd[] = sext(load(rs1 + sext(imm, from: 12, to: 32), 16), from: 16, to: 32)
-      setreg rd
+      
     }
   }
 
@@ -203,7 +203,7 @@ module RV32I
     asm { "LW #{rd}, #{imm}(#{rs1})" }
     code {
       rd[] = load(rs1 + sext(imm, from: 12, to: 32), 32)
-      setreg rd
+      
     }
   }
 
@@ -212,7 +212,7 @@ module RV32I
     asm { "LBU #{rd}, #{imm}(#{rs1})" }
     code {
       rd[] = zext(load(rs1 + sext(imm, from: 12, to: 32), 8), from: 8, to: 32)
-      setreg rd
+      
     }
   }
 
@@ -221,7 +221,7 @@ module RV32I
     asm { "LHU #{rd}, #{imm}(#{rs1})" }
     code {
       rd[] = zext(load(rs1 + sext(imm, from: 12, to: 32), 16), from: 16, to: 32)
-      setreg rd
+      
     }
   }
 
@@ -256,7 +256,6 @@ module RV32I
     asm { "JAL #{rd}, #{imm}" }
     code {
       rd[] = pc + 4
-      setreg rd
       setpc pc + imm
 
     }
@@ -268,9 +267,7 @@ module RV32I
     asm { "JALR #{rd}, #{imm}(#{rs1})" }
     code {
       rd[] = pc + 4
-      setreg rd
-      newPC = (rs1 + imm) & ~1
-      setpc newPC
+      setpc (rs1 + imm) & ~1
     }
     control_flow :jump
   }
@@ -281,7 +278,7 @@ module RV32I
     asm { "LUI #{rd}, #{imm}" }
     code {
       rd[] = imm << 12
-      setreg rd
+      
     }
     control_flow :jump
   }
@@ -291,7 +288,7 @@ module RV32I
     asm { "AUIPC #{rd}, #{imm}" }
     code {
       rd[] = pc + (imm << 12)
-      setreg rd
+      
     }
     control_flow :jump
   }
@@ -301,8 +298,7 @@ module RV32I
     encoding *format_b_branch(:beq, rs1, rs2, imm)
     asm { "BEQ #{rs1}, #{rs2}, #{imm}" }
     code {
-      newPC = pc + (cmp_eq(rs1, rs2) * sext(imm, from: 13, to: 32))
-      setpc newPC
+      setpc pc + (cmp_eq(rs1, rs2) * sext(imm, from: 13, to: 32))
     }
     control_flow :branch
   }
@@ -311,8 +307,7 @@ module RV32I
     encoding *format_b_branch(:bne, rs1, rs2, imm)
     asm { "BNE #{rs1}, #{rs2}, #{imm}" }
     code {
-      newPC = pc + (cmp_ne(rs1, rs2) * sext(imm, from: 13, to: 32))
-      setpc newPC
+      setpc pc + (cmp_ne(rs1, rs2) * sext(imm, from: 13, to: 32))
     }
     control_flow :branch
   }
@@ -321,8 +316,7 @@ module RV32I
     encoding *format_b_branch(:blt, rs1, rs2, imm)
     asm { "BLT #{rs1}, #{rs2}, #{imm}" }
     code {
-      newPC = pc + (cmp_lt(rs1, rs2) * sext(imm, from: 13, to: 32))
-      setpc newPC
+      setpc pc + (cmp_lt(rs1, rs2) * sext(imm, from: 13, to: 32))
     }
     control_flow :branch
   }
@@ -331,8 +325,7 @@ module RV32I
     encoding *format_b_branch(:bge, rs1, rs2, imm)
     asm { "BGE #{rs1}, #{rs2}, #{imm}" }
     code {
-      newPC = pc + (cmp_ge(rs1, rs2) * sext(imm, from: 13, to: 32))
-      setpc newPC
+      setpc pc + (cmp_ge(rs1, rs2) * sext(imm, from: 13, to: 32))
     }
     control_flow :branch
   }
@@ -341,8 +334,7 @@ module RV32I
     encoding *format_b_branch(:bgeu, rs1, rs2, imm)
     asm { "BGEU #{rs1}, #{rs2}, #{imm}" }
     code {
-      newPC = pc + (cmp_geu(rs1, rs2) * sext(imm, from: 13, to: 32))
-      setpc newPC
+      setpc pc + (cmp_geu(rs1, rs2) * sext(imm, from: 13, to: 32))
     }
     control_flow :branch
   }
@@ -351,8 +343,7 @@ module RV32I
     encoding *format_b_branch(:bltu, rs1, rs2, imm)
     asm { "BLTU #{rs1}, #{rs2}, #{imm}" }
     code {
-      newPC = pc + (cmp_ltu(rs1, rs2) * sext(imm, from: 13, to: 32))
-      setpc newPC
+      setpc pc + (cmp_ltu(rs1, rs2) * sext(imm, from: 13, to: 32))
     }
     control_flow :branch
   }
