@@ -90,6 +90,9 @@ static inline void read128(ExecContext* ctx, uintptr_t Addr,  uint8_t* Dest) {
 static inline void read256(ExecContext* ctx, uintptr_t Addr,  uint8_t* Dest) {
     return ctx->read256(Addr, Dest);
 }
+static inline void syscall(ExecContext* Ctx) {
+    return Ctx->syscall();
+}
 
   
 

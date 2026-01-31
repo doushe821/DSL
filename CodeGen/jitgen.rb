@@ -19,10 +19,10 @@ module SimInfra
       "v_#{var.name}"
     end
 
-    def declare_ssa(var, signed = nil, width = 32)
+    def declare_ssa(var, width = 32)
       name = ssa(var)
       return if @declared[name]
-      emit Indent + "Gp #{name} = CC.newUInt32();"
+      emit Indent + "Gp #{name} = CC.newUInt#{width}();"
       @declared[name] = true
     end
 
@@ -79,7 +79,7 @@ module SimInfra
         when SimInfra::XReg
           params << "XReg #{arg.name}"
         when SimInfra::XImm
-          params << "GeneralSim::Immediate #{arg.name}"
+          params << "GeneralSim::Immediate #{arg.name.capitalize}"
         else
           raise "Unknown instruction argument: #{arg.inspect}"
         end
@@ -102,7 +102,8 @@ module SimInfra
         var, reg = ops
         emit Indent + 
         <<~CPP    
-          {
+          // Get Register
+            {
               InvokeNode* Node;
               CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), #{GetRegWrapperSign});
               Node->setArg(0, CtxPtrReg);
@@ -114,7 +115,8 @@ module SimInfra
         reg, var = ops
         emit Indent +
         <<~CPP
-          {
+          // Set Register
+            {
               InvokeNode* Node;
               CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), #{SetRegWrapperSign});
               Node->setArg(0, CtxPtrReg);
@@ -124,44 +126,132 @@ module SimInfra
         CPP
       when :getimm
         var_ir, ximm = ops
-        emit Indent + "v_#{var_ir} = #{ximm}.raw();"
+        emit Indent + <<~CPP
+        // Get Immediate 
+        CC.mov(v_#{var_ir}, #{ximm.name.capitalize}.raw()); 
+        CPP
       when :let
         dst, src = ops
-        emit Indent + "CC.mov(#{ssa(dst)}, #{operand(src)});"
-      when :+, :-, :*, :&, :|, :^, :<<, :>>
+        emit Indent + <<~CPP     
+        // Let
+          CC.mov(#{ssa(dst)}, #{operand(src)});
+        CPP
+
+      when :&, :|, :^
         dst, a, b = ops
-        declare_ssa(dst)
-        emit Indent + "CC.#{name}(#{ssa(a)}, #{ssa(b)});"
+        max_width = (a.type.bits > b.type.bits) ? a.type.bits : b.type.bits
+        declare_ssa(dst, max_width)
+        emit Indent + "// #{op_to_jit_name(name)}"
+        emit Indent + "CC.#{op_to_jit_name(name)}(#{ssa(a)}, #{ssa(b)});"
         emit Indent + "CC.mov(#{ssa(dst)}, #{ssa(a)});"
+
+      when :<<
+        dst, a, b = ops
+        max_width = (a.type.bits > b.type.bits) ? a.type.bits : b.type.bits
+        declare_ssa(dst, max_width)
+        emit Indent + "// Left shift"
+        emit Indent + "CC.shl(#{ssa(a)}, #{ssa(b)});"
+        emit Indent + "CC.mov(#{ssa(dst)}, #{ssa(a)});"
+
+      when :>>
+        dst, a, b = ops
+        max_width = (a.type.bits > b.type.bits) ? a.type.bits : b.type.bits
+        declare_ssa(dst, max_width)
+        emit Indent + "// Right shift"
+        if a.type.signed or b.type.signed
+          emit Indent + "// Signed"
+          emit Indent + "CC.sar(#{ssa(a)}, #{ssa(b)});" 
+        else
+          emit Indent + "// Unsigned"
+          emit Indent + "CC.shr(#{ssa(a)}, #{ssa(b)});"    
+        end
+        emit Indent + "CC.mov(#{ssa(dst)}, #{ssa(a)});"
+
+      when :+, :-
+        dst, a, b = ops
+        max_width = (a.type.bits > b.type.bits) ? a.type.bits : b.type.bits
+        declare_ssa(dst, max_width)
+        emit Indent + "// #{op_to_jit_name(name)}"
+        emit Indent + "CC.#{op_to_jit_name(name)}(#{ssa(a)}, #{ssa(b)});"
+        emit Indent + "CC.mov(#{ssa(dst)}, #{ssa(a)});"
+
+      when :*
+        dst, a, b = ops
+        max_width = (a.type.bits > b.type.bits) ? a.type.bits : b.type.bits
+        declare_ssa(dst, max_width)
+        op_name = op_to_jit_name(name)
+        op_name = "i" + op_name if a.type.signed or b.type.signed
+        emit Indent + "// #{op_name}"
+        emit Indent + "CC.#{op_name}(#{ssa(a)}, #{ssa(b)});"
+        emit Indent + "CC.mov(#{ssa(dst)}, #{ssa(a)}});"
+
       when :/
         dst, a, b = ops
-        declare_ssa(dst)
-        emit Indent + "// Division not implemented in JIT, fallback or skip"
+        max_width = (a.type.bits > b.type.bits) ? a.type.bits : b.type.bits
+        declare_ssa(dst, max_width)
+
+        emit Indent + "// Div prelude"
+        emit Indent + "CC.mov(eax, #{ssa(a)});"
+        if ((a.type.signed == nil) & (b.type.signed == nil))
+          emit Indent + "CC.xor_(eax, eax);"
+        elsif max_width == 32
+          emit Indent + "CC.cdq();" 
+        elsif  max_width == 64
+          emit Indent + "CC.cqo();"
+        end
+        
+        op_name = op_to_jit_name(name)
+        op_name = "i" + op_name if a.type.signed or b.type.signed
+        emit Indent + "// #{op_name}, #{max_width}-bit"
+        emit Indent + "CC.#{op_name}(#{ssa(b)});"
+        emit Indent + "CC.mov(#{ssa(dst)}, eax);"
+
       when :%
         dst, a, b = ops
-        declare_ssa(dst)
-        emit Indent + "// Modulo not implemented in JIT, fallback or skip"
+        max_width = (a.type.bits > b.type.bits) ? a.type.bits : b.type.bits
+        declare_ssa(dst, max_width)
+
+        emit Indent + "// Div prelude"
+        emit Indent + "CC.mov(eax, #{ssa(a)});"
+        if ((a.type.signed == nil) & (b.type.signed == nil))
+          emit Indent + "CC.xor_(edx, edx);"
+        elsif max_width == 32
+          emit Indent + "CC.cdq();" 
+        elsif  max_width == 64
+          emit Indent + "CC.cqo();"
+        end
+        
+        op_name = op_to_jit_name(name)
+        op_name = "i" + op_name if a.type.signed or b.type.signed
+        emit Indent + "// #{op_name}, #{max_width}-bit"
+        emit Indent + "CC.#{op_name}(#{ssa(b)});"
+        emit Indent + "CC.mov(#{ssa(dst)}, edx);"
+
       when :~
         dst, a = ops
         declare_ssa(dst)
-        emit Indent + "CC.not(#{ssa(a)});"
-        emit Indent + "CC.mov(#{ssa(dst)}, #{ssa(a)});"
+        emit Indent + "// Bitwise not"
+        emit Indent + "CC.not_(#{ssa(dst)});"
+
       when :bitrev, :sext, :zext, :as_signed, :as_unsigned
-        dst, src = ops
-        declare_ssa(dst)
-        emit Indent + "// #{name} not implemented in JIT, skip"
+        dst, a = ops
+        emit Indent + "// Type clarification"
+        declare_ssa(dst, a.type.bits)
+        emit Indent + "CC.mov(#{ssa(dst)}, #{ssa(a)});"
+      ## Below is what hasn't been done TODO
       when :load
         dst, addr = ops
         declare_ssa(dst)
         bits = dst.type[:bits]
-        emit Indent + "#{ssa(dst)} = CC.call(asmjit::imm(&GeneralSim::read#{bits}), #{operand(addr)});"
+        # TODO
       when :store
         addr, val = ops
         bits = val.type[:bits]
-        emit Indent + "CC.call(asmjit::imm(&GeneralSim::write#{bits}), #{operand(addr)}, #{operand(val)});"
+        # TODO
       when :cmp_eq
         dst, a, b = ops
         declare_ssa(dst)
+        emit Indent + "// Cmp eq"
         emit Indent + "CC.cmp_eq(#{ssa(a)}, #{ssa(b)});"
         emit Indent + "CC.mov(#{ssa(dst)}, #{ssa(a)});"
       when :cmp_ne
@@ -197,9 +287,40 @@ module SimInfra
         var = ops[1]
         emit Indent + "CC.call(asmjit::imm(&GeneralSim::setPCWrapper), #{ssa(var)});"
       when :syscall
-        emit Indent + "// Syscall skipped in JIT"
+        emit Indent +
+        <<~CPP
+        // Syscall
+          InvokeNode* call;
+          cc.invoke(&call, CallConvId::kCDecl);
+          call->setTarget(imm(&GeneralSim::syscall));
+          call->setArg(0, ctx);
+        CPP
       else
+        raise "Uhandled IR operation: #{name}"
         emit Indent + "// Unhandled IR operation: #{name}"
+      end
+    end
+
+    def op_to_jit_name(name)
+      case name
+      when :+
+        "add"
+      when :-
+        "sub"
+      when :/, :%
+        "div"
+      when :*
+        "imul"
+      when :>>
+      when :<<
+        "shl"
+      when :&
+        "and_"
+      when :|
+        "or_"
+      when :^
+        "xor_"
+
       end
     end
 

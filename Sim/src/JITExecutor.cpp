@@ -8,6 +8,7 @@ void EXEC_ADD(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -17,6 +18,7 @@ void EXEC_ADD(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -26,9 +28,13 @@ void EXEC_ADD(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v__tmp0 = CC.newUInt32();
-  CC.+(v_rs1, v_rs2);
+  // add
+  CC.add(v_rs1, v_rs2);
   CC.mov(v__tmp0, v_rs1);
+  // Let
   CC.mov(v_rd, v__tmp0);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -45,6 +51,7 @@ void EXEC_SUB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -54,6 +61,7 @@ void EXEC_SUB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -63,9 +71,13 @@ void EXEC_SUB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v__tmp1 = CC.newUInt32();
-  CC.-(v_rs1, v_rs2);
+  // sub
+  CC.sub(v_rs1, v_rs2);
   CC.mov(v__tmp1, v_rs1);
+  // Let
   CC.mov(v_rd, v__tmp1);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -82,6 +94,7 @@ void EXEC_SLL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -91,6 +104,7 @@ void EXEC_SLL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -101,12 +115,17 @@ void EXEC_SLL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
 
   Gp v__c2 = CC.newUInt32();
   Gp v__tmp3 = CC.newUInt32();
-  CC.&(v_rs2, v__c2);
+  // and_
+  CC.and_(v_rs2, v__c2);
   CC.mov(v__tmp3, v_rs2);
   Gp v__tmp4 = CC.newUInt32();
-  CC.<<(v_rs1, v__tmp3);
+  // Left shift
+  CC.shl(v_rs1, v__tmp3);
   CC.mov(v__tmp4, v_rs1);
+  // Let
   CC.mov(v_rd, v__tmp4);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -123,6 +142,7 @@ void EXEC_SLT(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -132,6 +152,7 @@ void EXEC_SLT(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -143,7 +164,10 @@ void EXEC_SLT(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   Gp v__tmp5 = CC.newUInt32();
   CC.cmp_lt(v_rs1, v_rs2);
   CC.mov(v__tmp5, v_rs1);
+  // Let
   CC.mov(v_rd, v__tmp5);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -160,6 +184,7 @@ void EXEC_SLTU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -169,6 +194,7 @@ void EXEC_SLTU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -180,7 +206,10 @@ void EXEC_SLTU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   Gp v__tmp6 = CC.newUInt32();
   CC.cmp_ltu(v_rs1, v_rs2);
   CC.mov(v__tmp6, v_rs1);
+  // Let
   CC.mov(v_rd, v__tmp6);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -197,6 +226,7 @@ void EXEC_XOR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -206,6 +236,7 @@ void EXEC_XOR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -215,9 +246,13 @@ void EXEC_XOR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v__tmp7 = CC.newUInt32();
-  CC.^(v_rs1, v_rs2);
+  // xor_
+  CC.xor_(v_rs1, v_rs2);
   CC.mov(v__tmp7, v_rs1);
+  // Let
   CC.mov(v_rd, v__tmp7);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -234,6 +269,7 @@ void EXEC_SRL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -243,6 +279,7 @@ void EXEC_SRL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -251,16 +288,23 @@ void EXEC_SRL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
     Node->setRet(0, v_rs2);
   }
 
+  // Type clarification
   Gp v__tmp8 = CC.newUInt32();
-  // as_unsigned not implemented in JIT, skip
+  CC.mov(v__tmp8, v_rs1);
   Gp v__c9 = CC.newUInt32();
   Gp v__tmp10 = CC.newUInt32();
-  CC.&(v_rs2, v__c9);
+  // and_
+  CC.and_(v_rs2, v__c9);
   CC.mov(v__tmp10, v_rs2);
   Gp v__tmp11 = CC.newUInt32();
-  CC.>>(v__tmp8, v__tmp10);
+  // Right shift
+  // Signed
+  CC.sar(v__tmp8, v__tmp10);
   CC.mov(v__tmp11, v__tmp8);
+  // Let
   CC.mov(v_rd, v__tmp11);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -277,6 +321,7 @@ void EXEC_SRA(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -286,6 +331,7 @@ void EXEC_SRA(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -294,16 +340,23 @@ void EXEC_SRA(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
     Node->setRet(0, v_rs2);
   }
 
+  // Type clarification
   Gp v__tmp12 = CC.newUInt32();
-  // as_signed not implemented in JIT, skip
+  CC.mov(v__tmp12, v_rs1);
   Gp v__c13 = CC.newUInt32();
   Gp v__tmp14 = CC.newUInt32();
-  CC.&(v_rs2, v__c13);
+  // and_
+  CC.and_(v_rs2, v__c13);
   CC.mov(v__tmp14, v_rs2);
   Gp v__tmp15 = CC.newUInt32();
-  CC.>>(v__tmp12, v__tmp14);
+  // Right shift
+  // Signed
+  CC.sar(v__tmp12, v__tmp14);
   CC.mov(v__tmp15, v__tmp12);
+  // Let
   CC.mov(v_rd, v__tmp15);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -320,6 +373,7 @@ void EXEC_OR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -329,6 +383,7 @@ void EXEC_OR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -338,9 +393,13 @@ void EXEC_OR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
   }
 
   Gp v__tmp16 = CC.newUInt32();
-  CC.|(v_rs1, v_rs2);
+  // or_
+  CC.or_(v_rs1, v_rs2);
   CC.mov(v__tmp16, v_rs1);
+  // Let
   CC.mov(v_rd, v__tmp16);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -357,6 +416,7 @@ void EXEC_AND(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -366,6 +426,7 @@ void EXEC_AND(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -375,9 +436,13 @@ void EXEC_AND(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v__tmp17 = CC.newUInt32();
-  CC.&(v_rs1, v_rs2);
+  // and_
+  CC.and_(v_rs1, v_rs2);
   CC.mov(v__tmp17, v_rs1);
+  // Let
   CC.mov(v_rd, v__tmp17);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -389,11 +454,12 @@ void EXEC_AND(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
 }
 
 
-void EXEC_ADDI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_ADDI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction ADDI
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -403,13 +469,20 @@ void EXEC_ADDI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
+  // Type clarification
   Gp v__tmp18 = CC.newUInt32();
-  // sext not implemented in JIT, skip
+  CC.mov(v__tmp18, v_imm);
   Gp v__tmp19 = CC.newUInt32();
-  CC.+(v_rs1, v__tmp18);
+  // add
+  CC.add(v_rs1, v__tmp18);
   CC.mov(v__tmp19, v_rs1);
+  // Let
   CC.mov(v_rd, v__tmp19);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -421,11 +494,12 @@ void EXEC_ADDI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 }
 
 
-void EXEC_SLTI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SLTI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction SLTI
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -435,11 +509,16 @@ void EXEC_SLTI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
   Gp v__tmp20 = CC.newUInt32();
   CC.cmp_lt(v_rs1, v_imm);
   CC.mov(v__tmp20, v_rs1);
+  // Let
   CC.mov(v_rd, v__tmp20);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -451,11 +530,12 @@ void EXEC_SLTI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 }
 
 
-void EXEC_SLTIU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SLTIU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction SLTIU
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -465,15 +545,22 @@ void EXEC_SLTIU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, X
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
+  // Type clarification
   Gp v__tmp21 = CC.newUInt32();
-  // as_unsigned not implemented in JIT, skip
+  CC.mov(v__tmp21, v_rs1);
+  // Type clarification
   Gp v__tmp22 = CC.newUInt32();
-  // as_unsigned not implemented in JIT, skip
+  CC.mov(v__tmp22, v_imm);
   Gp v__tmp23 = CC.newUInt32();
   CC.cmp_lt(v__tmp21, v__tmp22);
   CC.mov(v__tmp23, v__tmp21);
+  // Let
   CC.mov(v_rd, v__tmp23);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -485,11 +572,12 @@ void EXEC_SLTIU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, X
 }
 
 
-void EXEC_XORI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_XORI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction XORI
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -499,11 +587,17 @@ void EXEC_XORI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
   Gp v__tmp24 = CC.newUInt32();
-  CC.^(v_rs1, v_imm);
+  // xor_
+  CC.xor_(v_rs1, v_imm);
   CC.mov(v__tmp24, v_rs1);
+  // Let
   CC.mov(v_rd, v__tmp24);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -515,11 +609,12 @@ void EXEC_XORI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 }
 
 
-void EXEC_ORI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_ORI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction ORI
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -529,11 +624,17 @@ void EXEC_ORI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
   Gp v__tmp25 = CC.newUInt32();
-  CC.|(v_rs1, v_imm);
+  // or_
+  CC.or_(v_rs1, v_imm);
   CC.mov(v__tmp25, v_rs1);
+  // Let
   CC.mov(v_rd, v__tmp25);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -545,11 +646,12 @@ void EXEC_ORI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
 }
 
 
-void EXEC_ANDI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_ANDI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction ANDI
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -559,11 +661,17 @@ void EXEC_ANDI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
   Gp v__tmp26 = CC.newUInt32();
-  CC.&(v_rs1, v_imm);
+  // and_
+  CC.and_(v_rs1, v_imm);
   CC.mov(v__tmp26, v_rs1);
+  // Let
   CC.mov(v_rd, v__tmp26);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -575,11 +683,12 @@ void EXEC_ANDI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 }
 
 
-void EXEC_SLLI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SLLI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction SLLI
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -589,11 +698,17 @@ void EXEC_SLLI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
   Gp v__tmp27 = CC.newUInt32();
-  CC.<<(v_rs1, v_imm);
+  // Left shift
+  CC.shl(v_rs1, v_imm);
   CC.mov(v__tmp27, v_rs1);
+  // Let
   CC.mov(v_rd, v__tmp27);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -605,11 +720,12 @@ void EXEC_SLLI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 }
 
 
-void EXEC_SRLI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SRLI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction SRLI
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -619,13 +735,21 @@ void EXEC_SRLI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
+  // Type clarification
   Gp v__tmp28 = CC.newUInt32();
-  // as_unsigned not implemented in JIT, skip
+  CC.mov(v__tmp28, v_rs1);
   Gp v__tmp29 = CC.newUInt32();
-  CC.>>(v__tmp28, v_imm);
+  // Right shift
+  // Signed
+  CC.sar(v__tmp28, v_imm);
   CC.mov(v__tmp29, v__tmp28);
+  // Let
   CC.mov(v_rd, v__tmp29);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -637,11 +761,12 @@ void EXEC_SRLI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 }
 
 
-void EXEC_SRAI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SRAI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction SRAI
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -651,13 +776,21 @@ void EXEC_SRAI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
+  // Type clarification
   Gp v__tmp30 = CC.newUInt32();
-  // as_signed not implemented in JIT, skip
+  CC.mov(v__tmp30, v_rs1);
   Gp v__tmp31 = CC.newUInt32();
-  CC.>>(v__tmp30, v_imm);
+  // Right shift
+  // Signed
+  CC.sar(v__tmp30, v_imm);
   CC.mov(v__tmp31, v__tmp30);
+  // Let
   CC.mov(v_rd, v__tmp31);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -669,11 +802,12 @@ void EXEC_SRAI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 }
 
 
-void EXEC_LB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_LB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction LB
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -683,17 +817,24 @@ void EXEC_LB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
+  // Type clarification
   Gp v__tmp32 = CC.newUInt32();
-  // sext not implemented in JIT, skip
+  CC.mov(v__tmp32, v_imm);
   Gp v__tmp33 = CC.newUInt32();
-  CC.+(v_rs1, v__tmp32);
+  // add
+  CC.add(v_rs1, v__tmp32);
   CC.mov(v__tmp33, v_rs1);
   Gp v__tmp34 = CC.newUInt32();
-  v__tmp34 = CC.call(asmjit::imm(&GeneralSim::read8), v__tmp33);
-  Gp v__tmp35 = CC.newUInt32();
-  // sext not implemented in JIT, skip
+  // Type clarification
+  Gp v__tmp35 = CC.newUInt8();
+  CC.mov(v__tmp35, v__tmp34);
+  // Let
   CC.mov(v_rd, v__tmp35);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -705,11 +846,12 @@ void EXEC_LB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
 }
 
 
-void EXEC_LH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_LH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction LH
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -719,17 +861,24 @@ void EXEC_LH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
+  // Type clarification
   Gp v__tmp36 = CC.newUInt32();
-  // sext not implemented in JIT, skip
+  CC.mov(v__tmp36, v_imm);
   Gp v__tmp37 = CC.newUInt32();
-  CC.+(v_rs1, v__tmp36);
+  // add
+  CC.add(v_rs1, v__tmp36);
   CC.mov(v__tmp37, v_rs1);
   Gp v__tmp38 = CC.newUInt32();
-  v__tmp38 = CC.call(asmjit::imm(&GeneralSim::read16), v__tmp37);
-  Gp v__tmp39 = CC.newUInt32();
-  // sext not implemented in JIT, skip
+  // Type clarification
+  Gp v__tmp39 = CC.newUInt16();
+  CC.mov(v__tmp39, v__tmp38);
+  // Let
   CC.mov(v_rd, v__tmp39);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -741,11 +890,12 @@ void EXEC_LH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
 }
 
 
-void EXEC_LW(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_LW(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction LW
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -755,15 +905,21 @@ void EXEC_LW(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
+  // Type clarification
   Gp v__tmp40 = CC.newUInt32();
-  // sext not implemented in JIT, skip
+  CC.mov(v__tmp40, v_imm);
   Gp v__tmp41 = CC.newUInt32();
-  CC.+(v_rs1, v__tmp40);
+  // add
+  CC.add(v_rs1, v__tmp40);
   CC.mov(v__tmp41, v_rs1);
   Gp v__tmp42 = CC.newUInt32();
-  v__tmp42 = CC.call(asmjit::imm(&GeneralSim::read32), v__tmp41);
+  // Let
   CC.mov(v_rd, v__tmp42);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -775,11 +931,12 @@ void EXEC_LW(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
 }
 
 
-void EXEC_LBU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_LBU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction LBU
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -789,17 +946,24 @@ void EXEC_LBU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
+  // Type clarification
   Gp v__tmp43 = CC.newUInt32();
-  // sext not implemented in JIT, skip
+  CC.mov(v__tmp43, v_imm);
   Gp v__tmp44 = CC.newUInt32();
-  CC.+(v_rs1, v__tmp43);
+  // add
+  CC.add(v_rs1, v__tmp43);
   CC.mov(v__tmp44, v_rs1);
   Gp v__tmp45 = CC.newUInt32();
-  v__tmp45 = CC.call(asmjit::imm(&GeneralSim::read8), v__tmp44);
-  Gp v__tmp46 = CC.newUInt32();
-  // zext not implemented in JIT, skip
+  // Type clarification
+  Gp v__tmp46 = CC.newUInt8();
+  CC.mov(v__tmp46, v__tmp45);
+  // Let
   CC.mov(v_rd, v__tmp46);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -811,11 +975,12 @@ void EXEC_LBU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
 }
 
 
-void EXEC_LHU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_LHU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction LHU
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -825,17 +990,24 @@ void EXEC_LHU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
+  // Type clarification
   Gp v__tmp47 = CC.newUInt32();
-  // sext not implemented in JIT, skip
+  CC.mov(v__tmp47, v_imm);
   Gp v__tmp48 = CC.newUInt32();
-  CC.+(v_rs1, v__tmp47);
+  // add
+  CC.add(v_rs1, v__tmp47);
   CC.mov(v__tmp48, v_rs1);
   Gp v__tmp49 = CC.newUInt32();
-  v__tmp49 = CC.call(asmjit::imm(&GeneralSim::read16), v__tmp48);
-  Gp v__tmp50 = CC.newUInt32();
-  // zext not implemented in JIT, skip
+  // Type clarification
+  Gp v__tmp50 = CC.newUInt16();
+  CC.mov(v__tmp50, v__tmp49);
+  // Let
   CC.mov(v_rd, v__tmp50);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -847,10 +1019,11 @@ void EXEC_LHU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
 }
 
 
-void EXEC_SB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction SB
 {
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -860,6 +1033,7 @@ void EXEC_SB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XRe
   }
 
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -869,22 +1043,27 @@ void EXEC_SB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XRe
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
+  // Type clarification
   Gp v__tmp51 = CC.newUInt32();
-  // sext not implemented in JIT, skip
+  CC.mov(v__tmp51, v_imm);
   Gp v__tmp52 = CC.newUInt32();
-  CC.+(v_rs1, v__tmp51);
+  // add
+  CC.add(v_rs1, v__tmp51);
   CC.mov(v__tmp52, v_rs1);
+  // Type clarification
   Gp v__tmp53 = CC.newUInt32();
-  // zext not implemented in JIT, skip
-  CC.call(asmjit::imm(&GeneralSim::write32), v__tmp52, v__tmp53);
+  CC.mov(v__tmp53, v_rs2);
 }
 
 
-void EXEC_SH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction SH
 {
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -894,6 +1073,7 @@ void EXEC_SH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XRe
   }
 
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -903,22 +1083,27 @@ void EXEC_SH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XRe
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
+  // Type clarification
   Gp v__tmp54 = CC.newUInt32();
-  // sext not implemented in JIT, skip
+  CC.mov(v__tmp54, v_imm);
   Gp v__tmp55 = CC.newUInt32();
-  CC.+(v_rs1, v__tmp54);
+  // add
+  CC.add(v_rs1, v__tmp54);
   CC.mov(v__tmp55, v_rs1);
+  // Type clarification
   Gp v__tmp56 = CC.newUInt32();
-  // zext not implemented in JIT, skip
-  CC.call(asmjit::imm(&GeneralSim::write32), v__tmp55, v__tmp56);
+  CC.mov(v__tmp56, v_rs2);
 }
 
 
-void EXEC_SW(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_SW(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction SW
 {
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -928,6 +1113,7 @@ void EXEC_SW(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XRe
   }
 
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -937,29 +1123,38 @@ void EXEC_SW(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XRe
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
+  // Type clarification
   Gp v__tmp57 = CC.newUInt32();
-  // sext not implemented in JIT, skip
+  CC.mov(v__tmp57, v_imm);
   Gp v__tmp58 = CC.newUInt32();
-  CC.+(v_rs1, v__tmp57);
+  // add
+  CC.add(v_rs1, v__tmp57);
   CC.mov(v__tmp58, v_rs1);
-  CC.call(asmjit::imm(&GeneralSim::write32), v__tmp58, v_rs2);
 }
 
 
-void EXEC_JAL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, GeneralSim::Immediate imm)
+void EXEC_JAL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, GeneralSim::Immediate Imm)
 // JIT Instruction JAL
 {
   Gp v_rd = CC.newUInt32();
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
   Gp v__tmp59 = CC.newUInt32();
   v__tmp59 = CC.call(asmjit::imm(&GeneralSim::getPCWrapper));
   Gp v__c60 = CC.newUInt32();
-  Gp v__tmp61 = CC.newUInt32();
-  CC.+(v__tmp59, v__c60);
+  Gp v__tmp61 = CC.newUInt64();
+  // add
+  CC.add(v__tmp59, v__c60);
   CC.mov(v__tmp61, v__tmp59);
+  // Let
   CC.mov(v_rd, v__tmp61);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -970,18 +1165,20 @@ void EXEC_JAL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, Gen
 
   Gp v__tmp62 = CC.newUInt32();
   v__tmp62 = CC.call(asmjit::imm(&GeneralSim::getPCWrapper));
-  Gp v__tmp63 = CC.newUInt32();
-  CC.+(v__tmp62, v_imm);
+  Gp v__tmp63 = CC.newUInt64();
+  // add
+  CC.add(v__tmp62, v_imm);
   CC.mov(v__tmp63, v__tmp62);
   CC.call(asmjit::imm(&GeneralSim::setPCWrapper), v__tmp63);
 }
 
 
-void EXEC_JALR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate imm)
+void EXEC_JALR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction JALR
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -991,14 +1188,20 @@ void EXEC_JALR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
   Gp v__tmp64 = CC.newUInt32();
   v__tmp64 = CC.call(asmjit::imm(&GeneralSim::getPCWrapper));
   Gp v__c65 = CC.newUInt32();
-  Gp v__tmp66 = CC.newUInt32();
-  CC.+(v__tmp64, v__c65);
+  Gp v__tmp66 = CC.newUInt64();
+  // add
+  CC.add(v__tmp64, v__c65);
   CC.mov(v__tmp66, v__tmp64);
+  // Let
   CC.mov(v_rd, v__tmp66);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -1008,27 +1211,35 @@ void EXEC_JALR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   }
 
   Gp v__tmp67 = CC.newUInt32();
-  CC.+(v_rs1, v_imm);
+  // add
+  CC.add(v_rs1, v_imm);
   CC.mov(v__tmp67, v_rs1);
   Gp v__c68 = CC.newUInt32();
   Gp v__tmp69 = CC.newUInt32();
-  CC.&(v__tmp67, v__c68);
+  // and_
+  CC.and_(v__tmp67, v__c68);
   CC.mov(v__tmp69, v__tmp67);
   CC.call(asmjit::imm(&GeneralSim::setPCWrapper), v__tmp69);
 }
 
 
-void EXEC_LUI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, GeneralSim::Immediate imm)
+void EXEC_LUI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, GeneralSim::Immediate Imm)
 // JIT Instruction LUI
 {
   Gp v_rd = CC.newUInt32();
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
   Gp v__c70 = CC.newUInt32();
   Gp v__tmp71 = CC.newUInt32();
-  CC.<<(v_imm, v__c70);
+  // Left shift
+  CC.shl(v_imm, v__c70);
   CC.mov(v__tmp71, v_imm);
+  // Let
   CC.mov(v_rd, v__tmp71);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -1040,22 +1251,29 @@ void EXEC_LUI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, Gen
 }
 
 
-void EXEC_AUIPC(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, GeneralSim::Immediate imm)
+void EXEC_AUIPC(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, GeneralSim::Immediate Imm)
 // JIT Instruction AUIPC
 {
   Gp v_rd = CC.newUInt32();
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
   Gp v__tmp72 = CC.newUInt32();
   v__tmp72 = CC.call(asmjit::imm(&GeneralSim::getPCWrapper));
   Gp v__c73 = CC.newUInt32();
   Gp v__tmp74 = CC.newUInt32();
-  CC.<<(v_imm, v__c73);
+  // Left shift
+  CC.shl(v_imm, v__c73);
   CC.mov(v__tmp74, v_imm);
-  Gp v__tmp75 = CC.newUInt32();
-  CC.+(v__tmp72, v__tmp74);
+  Gp v__tmp75 = CC.newUInt64();
+  // add
+  CC.add(v__tmp72, v__tmp74);
   CC.mov(v__tmp75, v__tmp72);
+  // Let
   CC.mov(v_rd, v__tmp75);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -1067,10 +1285,11 @@ void EXEC_AUIPC(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, G
 }
 
 
-void EXEC_BEQ(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
+void EXEC_BEQ(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XReg rs2, GeneralSim::Immediate Imm)
 // JIT Instruction BEQ
 {
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1080,6 +1299,7 @@ void EXEC_BEQ(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1089,28 +1309,35 @@ void EXEC_BEQ(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
   Gp v__tmp76 = CC.newUInt32();
   v__tmp76 = CC.call(asmjit::imm(&GeneralSim::getPCWrapper));
   Gp v__tmp77 = CC.newUInt32();
+  // Cmp eq
   CC.cmp_eq(v_rs1, v_rs2);
   CC.mov(v__tmp77, v_rs1);
+  // Type clarification
   Gp v__tmp78 = CC.newUInt32();
-  // sext not implemented in JIT, skip
+  CC.mov(v__tmp78, v_imm);
   Gp v__tmp79 = CC.newUInt32();
-  CC.*(v__tmp77, v__tmp78);
-  CC.mov(v__tmp79, v__tmp77);
-  Gp v__tmp80 = CC.newUInt32();
-  CC.+(v__tmp76, v__tmp79);
+  // iimul
+  CC.iimul(v__tmp77, v__tmp78);
+  CC.mov(v__tmp79, v__tmp77});
+  Gp v__tmp80 = CC.newUInt64();
+  // add
+  CC.add(v__tmp76, v__tmp79);
   CC.mov(v__tmp80, v__tmp76);
   CC.call(asmjit::imm(&GeneralSim::setPCWrapper), v__tmp80);
 }
 
 
-void EXEC_BNE(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
+void EXEC_BNE(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XReg rs2, GeneralSim::Immediate Imm)
 // JIT Instruction BNE
 {
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1120,6 +1347,7 @@ void EXEC_BNE(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1129,28 +1357,34 @@ void EXEC_BNE(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
   Gp v__tmp81 = CC.newUInt32();
   v__tmp81 = CC.call(asmjit::imm(&GeneralSim::getPCWrapper));
   Gp v__tmp82 = CC.newUInt32();
   CC.cmp_ne(v_rs1, v_rs2);
   CC.mov(v__tmp82, v_rs1);
+  // Type clarification
   Gp v__tmp83 = CC.newUInt32();
-  // sext not implemented in JIT, skip
+  CC.mov(v__tmp83, v_imm);
   Gp v__tmp84 = CC.newUInt32();
-  CC.*(v__tmp82, v__tmp83);
-  CC.mov(v__tmp84, v__tmp82);
-  Gp v__tmp85 = CC.newUInt32();
-  CC.+(v__tmp81, v__tmp84);
+  // iimul
+  CC.iimul(v__tmp82, v__tmp83);
+  CC.mov(v__tmp84, v__tmp82});
+  Gp v__tmp85 = CC.newUInt64();
+  // add
+  CC.add(v__tmp81, v__tmp84);
   CC.mov(v__tmp85, v__tmp81);
   CC.call(asmjit::imm(&GeneralSim::setPCWrapper), v__tmp85);
 }
 
 
-void EXEC_BLT(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
+void EXEC_BLT(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XReg rs2, GeneralSim::Immediate Imm)
 // JIT Instruction BLT
 {
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1160,6 +1394,7 @@ void EXEC_BLT(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1169,28 +1404,34 @@ void EXEC_BLT(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
   Gp v__tmp86 = CC.newUInt32();
   v__tmp86 = CC.call(asmjit::imm(&GeneralSim::getPCWrapper));
   Gp v__tmp87 = CC.newUInt32();
   CC.cmp_lt(v_rs1, v_rs2);
   CC.mov(v__tmp87, v_rs1);
+  // Type clarification
   Gp v__tmp88 = CC.newUInt32();
-  // sext not implemented in JIT, skip
+  CC.mov(v__tmp88, v_imm);
   Gp v__tmp89 = CC.newUInt32();
-  CC.*(v__tmp87, v__tmp88);
-  CC.mov(v__tmp89, v__tmp87);
-  Gp v__tmp90 = CC.newUInt32();
-  CC.+(v__tmp86, v__tmp89);
+  // iimul
+  CC.iimul(v__tmp87, v__tmp88);
+  CC.mov(v__tmp89, v__tmp87});
+  Gp v__tmp90 = CC.newUInt64();
+  // add
+  CC.add(v__tmp86, v__tmp89);
   CC.mov(v__tmp90, v__tmp86);
   CC.call(asmjit::imm(&GeneralSim::setPCWrapper), v__tmp90);
 }
 
 
-void EXEC_BGE(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
+void EXEC_BGE(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XReg rs2, GeneralSim::Immediate Imm)
 // JIT Instruction BGE
 {
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1200,6 +1441,7 @@ void EXEC_BGE(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1209,28 +1451,34 @@ void EXEC_BGE(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
   Gp v__tmp91 = CC.newUInt32();
   v__tmp91 = CC.call(asmjit::imm(&GeneralSim::getPCWrapper));
   Gp v__tmp92 = CC.newUInt32();
   CC.cmp_ge(v_rs1, v_rs2);
   CC.mov(v__tmp92, v_rs1);
+  // Type clarification
   Gp v__tmp93 = CC.newUInt32();
-  // sext not implemented in JIT, skip
+  CC.mov(v__tmp93, v_imm);
   Gp v__tmp94 = CC.newUInt32();
-  CC.*(v__tmp92, v__tmp93);
-  CC.mov(v__tmp94, v__tmp92);
-  Gp v__tmp95 = CC.newUInt32();
-  CC.+(v__tmp91, v__tmp94);
+  // iimul
+  CC.iimul(v__tmp92, v__tmp93);
+  CC.mov(v__tmp94, v__tmp92});
+  Gp v__tmp95 = CC.newUInt64();
+  // add
+  CC.add(v__tmp91, v__tmp94);
   CC.mov(v__tmp95, v__tmp91);
   CC.call(asmjit::imm(&GeneralSim::setPCWrapper), v__tmp95);
 }
 
 
-void EXEC_BGEU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
+void EXEC_BGEU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XReg rs2, GeneralSim::Immediate Imm)
 // JIT Instruction BGEU
 {
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1240,6 +1488,7 @@ void EXEC_BGEU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, X
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1249,28 +1498,34 @@ void EXEC_BGEU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, X
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
   Gp v__tmp96 = CC.newUInt32();
   v__tmp96 = CC.call(asmjit::imm(&GeneralSim::getPCWrapper));
   Gp v__tmp97 = CC.newUInt32();
   CC.cmp_geu(v_rs1, v_rs2);
   CC.mov(v__tmp97, v_rs1);
+  // Type clarification
   Gp v__tmp98 = CC.newUInt32();
-  // sext not implemented in JIT, skip
+  CC.mov(v__tmp98, v_imm);
   Gp v__tmp99 = CC.newUInt32();
-  CC.*(v__tmp97, v__tmp98);
-  CC.mov(v__tmp99, v__tmp97);
-  Gp v__tmp100 = CC.newUInt32();
-  CC.+(v__tmp96, v__tmp99);
+  // iimul
+  CC.iimul(v__tmp97, v__tmp98);
+  CC.mov(v__tmp99, v__tmp97});
+  Gp v__tmp100 = CC.newUInt64();
+  // add
+  CC.add(v__tmp96, v__tmp99);
   CC.mov(v__tmp100, v__tmp96);
   CC.call(asmjit::imm(&GeneralSim::setPCWrapper), v__tmp100);
 }
 
 
-void EXEC_BLTU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
+void EXEC_BLTU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XReg rs2, GeneralSim::Immediate Imm)
 // JIT Instruction BLTU
 {
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1280,6 +1535,7 @@ void EXEC_BLTU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, X
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1289,19 +1545,24 @@ void EXEC_BLTU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, X
   }
 
   Gp v_imm = CC.newUInt32();
-  v_imm = imm.raw();
+  // Get Immediate 
+CC.mov(v_imm, Imm.raw()); 
+
   Gp v__tmp101 = CC.newUInt32();
   v__tmp101 = CC.call(asmjit::imm(&GeneralSim::getPCWrapper));
   Gp v__tmp102 = CC.newUInt32();
   CC.cmp_ltu(v_rs1, v_rs2);
   CC.mov(v__tmp102, v_rs1);
+  // Type clarification
   Gp v__tmp103 = CC.newUInt32();
-  // sext not implemented in JIT, skip
+  CC.mov(v__tmp103, v_imm);
   Gp v__tmp104 = CC.newUInt32();
-  CC.*(v__tmp102, v__tmp103);
-  CC.mov(v__tmp104, v__tmp102);
-  Gp v__tmp105 = CC.newUInt32();
-  CC.+(v__tmp101, v__tmp104);
+  // iimul
+  CC.iimul(v__tmp102, v__tmp103);
+  CC.mov(v__tmp104, v__tmp102});
+  Gp v__tmp105 = CC.newUInt64();
+  // add
+  CC.add(v__tmp101, v__tmp104);
   CC.mov(v__tmp105, v__tmp101);
   CC.call(asmjit::imm(&GeneralSim::setPCWrapper), v__tmp105);
 }
@@ -1310,7 +1571,12 @@ void EXEC_BLTU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, X
 void EXEC_ECALL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg)
 // JIT Instruction ECALL
 {
-  // Syscall skipped in JIT
+  // Syscall
+  InvokeNode* call;
+  cc.invoke(&call, CallConvId::kCDecl);
+  call->setTarget(imm(&GeneralSim::syscall));
+  call->setArg(0, ctx);
+
 }
 
 
@@ -1319,6 +1585,7 @@ void EXEC_MUL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1328,6 +1595,7 @@ void EXEC_MUL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1337,9 +1605,13 @@ void EXEC_MUL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v__tmp107 = CC.newUInt32();
-  CC.*(v_rs1, v_rs2);
-  CC.mov(v__tmp107, v_rs1);
+  // iimul
+  CC.iimul(v_rs1, v_rs2);
+  CC.mov(v__tmp107, v_rs1});
+  // Let
   CC.mov(v_rd, v__tmp107);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -1356,6 +1628,7 @@ void EXEC_MULH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1365,6 +1638,7 @@ void EXEC_MULH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1373,20 +1647,29 @@ void EXEC_MULH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
     Node->setRet(0, v_rs2);
   }
 
+  // Type clarification
   Gp v__tmp108 = CC.newUInt32();
-  // sext not implemented in JIT, skip
+  CC.mov(v__tmp108, v_rs1);
+  // Type clarification
   Gp v__tmp109 = CC.newUInt32();
-  // sext not implemented in JIT, skip
-  Gp v__tmp110 = CC.newUInt32();
-  CC.*(v__tmp108, v__tmp109);
-  CC.mov(v__tmp110, v__tmp108);
-  Gp v__tmp111 = CC.newUInt32();
-  // as_signed not implemented in JIT, skip
+  CC.mov(v__tmp109, v_rs2);
+  Gp v__tmp110 = CC.newUInt64();
+  // iimul
+  CC.iimul(v__tmp108, v__tmp109);
+  CC.mov(v__tmp110, v__tmp108});
+  // Type clarification
+  Gp v__tmp111 = CC.newUInt64();
+  CC.mov(v__tmp111, v__tmp110);
   Gp v__c112 = CC.newUInt32();
-  Gp v__tmp113 = CC.newUInt32();
-  CC.>>(v__tmp111, v__c112);
+  Gp v__tmp113 = CC.newUInt64();
+  // Right shift
+  // Signed
+  CC.sar(v__tmp111, v__c112);
   CC.mov(v__tmp113, v__tmp111);
+  // Let
   CC.mov(v_rd, v__tmp113);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -1403,6 +1686,7 @@ void EXEC_MULHSU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, 
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1412,6 +1696,7 @@ void EXEC_MULHSU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, 
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1420,20 +1705,29 @@ void EXEC_MULHSU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, 
     Node->setRet(0, v_rs2);
   }
 
+  // Type clarification
   Gp v__tmp114 = CC.newUInt32();
-  // sext not implemented in JIT, skip
+  CC.mov(v__tmp114, v_rs1);
+  // Type clarification
   Gp v__tmp115 = CC.newUInt32();
-  // zext not implemented in JIT, skip
-  Gp v__tmp116 = CC.newUInt32();
-  CC.*(v__tmp114, v__tmp115);
-  CC.mov(v__tmp116, v__tmp114);
-  Gp v__tmp117 = CC.newUInt32();
-  // as_signed not implemented in JIT, skip
+  CC.mov(v__tmp115, v_rs2);
+  Gp v__tmp116 = CC.newUInt64();
+  // iimul
+  CC.iimul(v__tmp114, v__tmp115);
+  CC.mov(v__tmp116, v__tmp114});
+  // Type clarification
+  Gp v__tmp117 = CC.newUInt64();
+  CC.mov(v__tmp117, v__tmp116);
   Gp v__c118 = CC.newUInt32();
-  Gp v__tmp119 = CC.newUInt32();
-  CC.>>(v__tmp117, v__c118);
+  Gp v__tmp119 = CC.newUInt64();
+  // Right shift
+  // Signed
+  CC.sar(v__tmp117, v__c118);
   CC.mov(v__tmp119, v__tmp117);
+  // Let
   CC.mov(v_rd, v__tmp119);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -1450,6 +1744,7 @@ void EXEC_MULHU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, X
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1459,6 +1754,7 @@ void EXEC_MULHU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, X
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1467,18 +1763,26 @@ void EXEC_MULHU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, X
     Node->setRet(0, v_rs2);
   }
 
+  // Type clarification
   Gp v__tmp120 = CC.newUInt32();
-  // zext not implemented in JIT, skip
+  CC.mov(v__tmp120, v_rs1);
+  // Type clarification
   Gp v__tmp121 = CC.newUInt32();
-  // zext not implemented in JIT, skip
-  Gp v__tmp122 = CC.newUInt32();
-  CC.*(v__tmp120, v__tmp121);
-  CC.mov(v__tmp122, v__tmp120);
+  CC.mov(v__tmp121, v_rs2);
+  Gp v__tmp122 = CC.newUInt64();
+  // imul
+  CC.imul(v__tmp120, v__tmp121);
+  CC.mov(v__tmp122, v__tmp120});
   Gp v__c123 = CC.newUInt32();
-  Gp v__tmp124 = CC.newUInt32();
-  CC.>>(v__tmp122, v__c123);
+  Gp v__tmp124 = CC.newUInt64();
+  // Right shift
+  // Signed
+  CC.sar(v__tmp122, v__c123);
   CC.mov(v__tmp124, v__tmp122);
+  // Let
   CC.mov(v_rd, v__tmp124);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -1495,6 +1799,7 @@ void EXEC_DIV(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1504,6 +1809,7 @@ void EXEC_DIV(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1512,13 +1818,23 @@ void EXEC_DIV(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
     Node->setRet(0, v_rs2);
   }
 
+  // Type clarification
   Gp v__tmp125 = CC.newUInt32();
-  // as_signed not implemented in JIT, skip
+  CC.mov(v__tmp125, v_rs1);
+  // Type clarification
   Gp v__tmp126 = CC.newUInt32();
-  // as_signed not implemented in JIT, skip
+  CC.mov(v__tmp126, v_rs2);
   Gp v__tmp127 = CC.newUInt32();
-  // Division not implemented in JIT, fallback or skip
+  // Div prelude
+  CC.mov(eax, v__tmp125);
+  CC.cdq();
+  // idiv, 32-bit
+  CC.idiv(v__tmp126);
+  CC.mov(v__tmp127, eax);
+  // Let
   CC.mov(v_rd, v__tmp127);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -1535,6 +1851,7 @@ void EXEC_DIVU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1544,6 +1861,7 @@ void EXEC_DIVU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1552,13 +1870,23 @@ void EXEC_DIVU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
     Node->setRet(0, v_rs2);
   }
 
+  // Type clarification
   Gp v__tmp128 = CC.newUInt32();
-  // as_unsigned not implemented in JIT, skip
+  CC.mov(v__tmp128, v_rs1);
+  // Type clarification
   Gp v__tmp129 = CC.newUInt32();
-  // as_unsigned not implemented in JIT, skip
+  CC.mov(v__tmp129, v_rs2);
   Gp v__tmp130 = CC.newUInt32();
-  // Division not implemented in JIT, fallback or skip
+  // Div prelude
+  CC.mov(eax, v__tmp128);
+  CC.cdq();
+  // idiv, 32-bit
+  CC.idiv(v__tmp129);
+  CC.mov(v__tmp130, eax);
+  // Let
   CC.mov(v_rd, v__tmp130);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -1575,6 +1903,7 @@ void EXEC_REM(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1584,6 +1913,7 @@ void EXEC_REM(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1592,13 +1922,23 @@ void EXEC_REM(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
     Node->setRet(0, v_rs2);
   }
 
+  // Type clarification
   Gp v__tmp131 = CC.newUInt32();
-  // as_signed not implemented in JIT, skip
+  CC.mov(v__tmp131, v_rs1);
+  // Type clarification
   Gp v__tmp132 = CC.newUInt32();
-  // as_signed not implemented in JIT, skip
+  CC.mov(v__tmp132, v_rs2);
   Gp v__tmp133 = CC.newUInt32();
-  // Modulo not implemented in JIT, fallback or skip
+  // Div prelude
+  CC.mov(eax, v__tmp131);
+  CC.cdq();
+  // idiv, 32-bit
+  CC.idiv(v__tmp132);
+  CC.mov(v__tmp133, edx);
+  // Let
   CC.mov(v_rd, v__tmp133);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
@@ -1615,6 +1955,7 @@ void EXEC_REMU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1624,6 +1965,7 @@ void EXEC_REMU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   }
 
   Gp v_rs2 = CC.newUInt32();
+  // Get Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
@@ -1632,13 +1974,23 @@ void EXEC_REMU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
     Node->setRet(0, v_rs2);
   }
 
+  // Type clarification
   Gp v__tmp134 = CC.newUInt32();
-  // as_unsigned not implemented in JIT, skip
+  CC.mov(v__tmp134, v_rs1);
+  // Type clarification
   Gp v__tmp135 = CC.newUInt32();
-  // as_unsigned not implemented in JIT, skip
+  CC.mov(v__tmp135, v_rs2);
   Gp v__tmp136 = CC.newUInt32();
-  // Modulo not implemented in JIT, fallback or skip
+  // Div prelude
+  CC.mov(eax, v__tmp134);
+  CC.cdq();
+  // idiv, 32-bit
+  CC.idiv(v__tmp135);
+  CC.mov(v__tmp136, edx);
+  // Let
   CC.mov(v_rd, v__tmp136);
+
+  // Set Register
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
