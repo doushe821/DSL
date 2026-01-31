@@ -3,7 +3,6 @@
 #include <iostream>
 #include <memory>
 
-#include "ExecContext.hpp"
 #include "GeneralSim.hpp"
 #include "Memory.hpp"
 #include "RegState.hpp"

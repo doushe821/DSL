@@ -70,6 +70,8 @@ module SimGen
         exec << <<~CPP
         #include "JIT.hpp"
         namespace SimJIT {
+        using namespace asmjit;
+        using namespace asmjit::x86;
         using XReg = uint16_t;
         #{all_jit_execs}
         void JIT::emitInstruction(const Instruction &Inst, ExecContext &Ctx) {

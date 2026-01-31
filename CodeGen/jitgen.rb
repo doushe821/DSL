@@ -22,7 +22,7 @@ module SimInfra
     def declare_ssa(var, signed = nil, width = 32)
       name = ssa(var)
       return if @declared[name]
-      emit Indent + "asmjit::x86::Gp #{name} = CC.newUInt32();"
+      emit Indent + "Gp #{name} = CC.newUInt32();"
       @declared[name] = true
     end
 
@@ -33,7 +33,7 @@ module SimInfra
       when SimInfra::Constant
         op.value.to_s
       when SimInfra::XReg
-        "CtxJIT->getRegWrapper(#{op.name})"
+        op
       when SimInfra::XImm
         "#{op.name}.raw()"
       when Symbol
@@ -88,6 +88,8 @@ module SimInfra
       "void EXEC_#{name}(#{params.join(', ')})"
     end
 
+    GetRegWrapperSign = "FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl)"
+    SetRegWrapperSign = "FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl)"
     def emit_stmt(stmt)
       name = stmt.name
       ops  = stmt.oprnds
@@ -98,16 +100,28 @@ module SimInfra
         declare_ssa(ops[0])
       when :getreg
         var, reg = ops
-        emit Indent + "CC.mov(asmjit::x86::rcx,  CtxPtrReg);"
-        emit Indent + "CC.mov(asmjit::x86::rdx, #{reg});"
-        emit Indent + "CC.call(&GeneralSim::getRegWrapper);"
-        emit Indent + "CC.mov(#{ssa(var)}, asmjit::x86::eax);"
+        emit Indent + 
+        <<~CPP    
+          {
+              InvokeNode* Node;
+              CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), #{GetRegWrapperSign});
+              Node->setArg(0, CtxPtrReg);
+              Node->setArg(1, imm(#{reg}));
+              Node->setRet(0, #{ssa(var)});
+            }
+        CPP
       when :setreg
         reg, var = ops
-        emit Indent + "CC.mov(asmjit::x86::rcx, CtxPtrReg);"
-        emit Indent + "CC.mov(asmjit::x86::rdx, #{reg})"
-        emit Indent + "CC.call(&GeneralSim::setRegWrapper)"
-        emit Indent + "CC.mov(asmjit::imm(&GeneralSim::setRegWrapper), #{reg.name}, #{ssa(var)});"
+        emit Indent +
+        <<~CPP
+          {
+              InvokeNode* Node;
+              CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), #{SetRegWrapperSign});
+              Node->setArg(0, CtxPtrReg);
+              Node->setArg(1, imm(#{reg}));
+              Node->setArg(2, #{ssa(var)});
+            }
+        CPP
       when :getimm
         var_ir, ximm = ops
         emit Indent + "v_#{var_ir} = #{ximm}.raw();"
