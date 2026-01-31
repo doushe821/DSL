@@ -12,13 +12,7 @@ private:
   uint32_t RawValue = 0;
   uint16_t BitSize = 0;
 
-  constexpr int32_t sext(int32_t Val, int N) const {
-    if (Val & (1 << (N - 1))) {
-      int Mask = ~((1 << N) - 1);
-      Val |= Mask;
-    }
-    return Val;
-  }
+
 
 public:
   constexpr Immediate() = default;
@@ -28,7 +22,13 @@ public:
   constexpr uint32_t raw() const { return RawValue; }
 
   constexpr uint8_t bits() const { return BitSize; }
-
+  constexpr int32_t sext(int32_t Val, int N) const {
+    if (Val & (1 << (N - 1))) {
+      int Mask = ~((1 << N) - 1);
+      Val |= Mask;
+    }
+    return Val;
+  }
   constexpr int32_t asSigned() const {
     return sext(RawValue, BitSize);
   }

@@ -52,7 +52,7 @@ static inline bool isPCDirtyWrapper(ExecContext *ctx) {
     return ctx->isPCDirty();
 }
 static inline void cleansePCWrapper(ExecContext *ctx) {
-    return ctx->cleansePC();
+    ctx->cleansePC();
 }
 static inline uint32_t getRegWrapper(ExecContext* ctx, XReg Idx) {
     return ctx->getReg(Idx);
@@ -78,6 +78,10 @@ static inline void write128(ExecContext* ctx, uintptr_t Addr, const uint8_t* Src
 }
 static inline void write256(ExecContext* ctx, uintptr_t Addr, const uint8_t* Src) {
     return ctx->write256(Addr, Src);
+}
+
+static inline uint64_t sextWrapper(ExecContext* ctx, uint64_t Val, int64_t N) {
+    return ctx->sext(Val, N);
 }
 
 static inline uint8_t read8(ExecContext* ctx, uintptr_t Addr) {

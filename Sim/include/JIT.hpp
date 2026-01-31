@@ -9,7 +9,7 @@
 
 namespace SimJIT {
 
-using BlockFn = void (*)(GeneralSim::ExecContext *);
+using BlockFn = uint32_t (*)(GeneralSim::ExecContext *);
 struct TranslatedBlock {
   BlockFn Fn;
   size_t StartPC;
@@ -26,9 +26,12 @@ public:
   TranslatedBlock translate(size_t PC);
 
 private:
-  void emitInstruction(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, Instruction Instr);
+  void emitInstruction(asmjit::x86::Compiler &CC, asmjit::x86::Gp CtxPtrReg,
+                       Instruction Instr);
   void emitGetPC(asmjit::x86::Compiler &CC, asmjit::x86::Gp CtxReg,
                  asmjit::x86::Gp DestReg);
+  void emitSetPC(asmjit::x86::Compiler &CC, asmjit::x86::Gp CtxReg,
+                 asmjit::x86::Gp SrcReg);
   GeneralSim::ExecContext &Ctx;
   const Decoder::Decoder &Decoder;
   std::unordered_map<uint32_t, TranslatedBlock> Cache;

@@ -6,6 +6,8 @@
 #include <asmjit/x86/x86operand.h>
 #include <cstdint>
 #include <vector>
+
+extern "C" void debug_print1(const char *msg) { printf("[JIT] %s\n", msg); }
 namespace SimJIT {
 TranslatedBlock JIT::translate(size_t PC) {
   TranslatedBlock TB;
@@ -39,12 +41,20 @@ TranslatedBlock JIT::translate(size_t PC) {
   Func->setArg(0, CtxReg);
 
   // Block prelude:
+  asmjit::x86::Gp LocalPc = CC.newUInt32();
+  emitGetPC(CC, CtxReg, LocalPc);
+  CC.add(LocalPc, PC - TB.StartPC - 4);
+  emitSetPC(CC, CtxReg, LocalPc);
 
   asmjit::InvokeNode *ClearDirty;
+
   CC.invoke(&ClearDirty, asmjit::imm(&GeneralSim::cleansePCWrapper),
             asmjit::FuncSignatureT<void, GeneralSim::ExecContext *>(
                 asmjit::CallConvId::kCDecl));
   ClearDirty->setArg(0, CtxReg);
+
+  // asmjit::x86::Gp InitialPc;
+  // emitGetPC(CC, CtxReg, InitialPc);
 
   // emition
   for (auto &Inst : Block) {
@@ -65,15 +75,15 @@ TranslatedBlock JIT::translate(size_t PC) {
   CC.jnz(LDone);
   asmjit::x86::Gp Pc = CC.newUInt32();
   emitGetPC(CC, CtxReg, Pc);
-  CC.add(Pc, 4); // increment if not dirty
 
+  CC.add(Pc, 4); // increment if not dirty
   asmjit::InvokeNode *SetPC;
   CC.invoke(&SetPC, asmjit::imm(&GeneralSim::setPCWrapper),
             asmjit::FuncSignatureT<void, GeneralSim::ExecContext *, uint32_t>(
                 asmjit::CallConvId::kCDecl));
   SetPC->setArg(0, CtxReg);
   SetPC->setArg(1, Pc);
-
+  
   CC.bind(LDone);
 
   CC.endFunc();
@@ -88,16 +98,27 @@ TranslatedBlock JIT::translate(size_t PC) {
 }
 
 void JIT::emitGetPC(asmjit::x86::Compiler &CC, asmjit::x86::Gp CtxReg,
-               asmjit::x86::Gp DestReg) {
-
-  asmjit::FuncSignatureT<uint32_t, GeneralSim::ExecContext *> Sig(
-      asmjit::CallConvId::kCDecl);
+                    asmjit::x86::Gp DestReg) {
 
   asmjit::InvokeNode *Invoke;
-  CC.invoke(&Invoke, asmjit::imm(&GeneralSim::getPCWrapper), Sig);
+  CC.invoke(&Invoke, asmjit::imm(&GeneralSim::getPCWrapper),
+            asmjit::FuncSignatureT<uint32_t, GeneralSim::ExecContext *>(
+                asmjit::CallConvId::kCDecl));
 
   Invoke->setArg(0, CtxReg);
   Invoke->setRet(0, DestReg);
+}
+
+void JIT::emitSetPC(asmjit::x86::Compiler &CC, asmjit::x86::Gp CtxReg,
+                    asmjit::x86::Gp SrcReg) {
+
+  asmjit::InvokeNode *Invoke;
+  CC.invoke(&Invoke, asmjit::imm(&GeneralSim::setPCWrapper),
+            asmjit::FuncSignatureT<void, GeneralSim::ExecContext *, uint32_t>(
+                asmjit::CallConvId::kCDecl));
+
+  Invoke->setArg(0, CtxReg);
+  Invoke->setArg(1, SrcReg);
 }
 
 } // namespace SimJIT

@@ -24,6 +24,7 @@ void CPU::step() {
   if (Finished) {
     return;
   }
+  PCDirty = false;
 
   auto RawInstr = Mem.read32(PC);
   auto DecodedInstr = Dcdr.decode(RawInstr);
@@ -33,10 +34,7 @@ void CPU::step() {
   Extr.execute(DecodedInstr, *this);
   // If branch was taken, PC should not be changed
   // by CPU.
-  if (OLD_PC == PC) {
-    PC += 4;
-    OLD_PC = PC;
-  }
+  PC += !PCDirty * 4;
 }
 
 void CPU::stepJIT() {
@@ -44,22 +42,21 @@ void CPU::stepJIT() {
   ++BB.ExecCount;
 
   if (JIT.hasBlock(PC)) {
-    std::cout << "PC = " << std::dec << PC << ", running JIT from cache\n";
+    std::cout << "PC = " << std::hex << PC << ", running JIT from cache\n";
     JIT.getBlock(PC).Fn(this);
     return;
   }
 
   if (BB.ExecCount >= JITHreshold) {
-    std::cout << "PC = " << std::dec << PC
+    std::cout << "PC = " << std::hex << PC
               << ", threshold passed, translating and running JIT\n";
     auto Block = JIT.translate(PC);
     Block.Fn(this);
     return;
   }
 
-  std::cout << "PC = " << std::dec << PC << ", interpreting\n";
+  std::cout << "PC = " << std::hex << PC << ", interpreting\n";
   step();
-  assert(PC == Ctx.getPC());
 }
 
 void CPU::run() {

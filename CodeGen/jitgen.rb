@@ -107,9 +107,13 @@ module SimInfra
       attrs = stmt.attrs || {}
 
       case name
-      when :new_var, :new_const
+      when :new_var
         declare_ssa(ops[0], ops[0].type.bits)
-
+      
+      when :new_const
+        nconst, value = ops
+        declare_ssa(nconst)
+        emit Indent + "CC.mov(#{ssa(nconst)}, #{value});"
       when :getreg
         var, reg = ops
         emit Indent + 
@@ -291,7 +295,25 @@ module SimInfra
         emit Indent + "// Bitwise not"
         emit Indent + "CC.not_(#{ssa(dst)});"
 
-      when :bitrev, :sext, :zext, :as_signed, :as_unsigned
+      when :sext
+        dst, src = ops
+        from = attrs[:from]
+        to = attrs[:to]
+        declare_ssa(dst, to)
+        emit Indent + 
+        <<~CPP
+        // sext
+          {
+            InvokeNode* Node;
+            CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
+            Node->setArg(0, CtxPtrReg);
+            Node->setArg(1, #{ssa(src)});
+            Node->setArg(2, #{from});
+            Node->setRet(0, #{ssa(dst)});
+          }
+        CPP
+
+      when :bitrev, :zext, :as_signed, :as_unsigned
         dst, a = ops
         emit Indent + "// Type clarification"
         declare_ssa(dst, a.type.bits)
@@ -333,48 +355,54 @@ module SimInfra
         declare_ssa(dst)
         emit Indent + "// Cmp eq"
         emit Indent + "CC.cmp(#{ssa(a)}, #{ssa(b)});"
-        emit Indent + "CC.sete(al);;"
-        emit Indent + "CC.movzx(#{ssa(dst)}, al);"
+        emit Indent + "asmjit::x86::Gp cond = CC.newUInt8();"
+        emit Indent + "CC.sete(cond);"
+        emit Indent + "CC.movzx(#{ssa(dst)}, cond);"
 
       when :cmp_ne
         dst, a, b = ops
         declare_ssa(dst)
         emit Indent + "// Cmp ne"
         emit Indent + "CC.cmp(#{ssa(a)}, #{ssa(b)});"
-        emit Indent + "CC.setne(al);;"
-        emit Indent + "CC.movzx(#{ssa(dst)}, al);"
+        emit Indent + "asmjit::x86::Gp cond = CC.newUInt8();"
+        emit Indent + "CC.setne(cond);"
+        emit Indent + "CC.movzx(#{ssa(dst)}, cond);"
 
       when :cmp_lt
         dst, a, b = ops
         declare_ssa(dst)
         emit Indent + "// Cmp lt"
         emit Indent + "CC.cmp(#{ssa(a)}, #{ssa(b)});"
-        emit Indent + "CC.setl(al);;"
-        emit Indent + "CC.movzx(#{ssa(dst)}, al);"
+        emit Indent + "asmjit::x86::Gp cond = CC.newUInt8();"
+        emit Indent + "CC.setl(cond);"
+        emit Indent + "CC.movzx(#{ssa(dst)}, cond);"
 
       when :cmp_ge
         dst, a, b = ops
         declare_ssa(dst)
         emit Indent + "// Cmp ge"
         emit Indent + "CC.cmp(#{ssa(a)}, #{ssa(b)});"
-        emit Indent + "CC.setge(al);;"
-        emit Indent + "CC.movzx(#{ssa(dst)}, al);"
+        emit Indent + "asmjit::x86::Gp cond = CC.newUInt8();"
+        emit Indent + "CC.setge(cond);"
+        emit Indent + "CC.movzx(#{ssa(dst)}, cond);"
 
       when :cmp_ltu
         dst, a, b = ops
         declare_ssa(dst)
         emit Indent + "// Cmp ltu"
         emit Indent + "CC.cmp(#{ssa(a)}, #{ssa(b)});"
-        emit Indent + "CC.setb(al);;"
-        emit Indent + "CC.movzx(#{ssa(dst)}, al);"
+        emit Indent + "asmjit::x86::Gp cond = CC.newUInt8();"
+        emit Indent + "CC.setb(cond);"
+        emit Indent + "CC.movzx(#{ssa(dst)}, cond);"
 
       when :cmp_geu
         dst, a, b = ops
         declare_ssa(dst)
         emit Indent + "// Cmp geu"
         emit Indent + "CC.cmp(#{ssa(a)}, #{ssa(b)});"
-        emit Indent + "CC.setae(al);;"
-        emit Indent + "CC.movzx(#{ssa(dst)}, al);"
+        emit Indent + "asmjit::x86::Gp cond = CC.newUInt8();"
+        emit Indent + "CC.setae(cond);"
+        emit Indent + "CC.movzx(#{ssa(dst)}, cond);"
 
       when :syscall
         emit Indent +
