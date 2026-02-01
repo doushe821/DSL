@@ -70,6 +70,10 @@ DSL/Sim
 ### JIT
 
 ## Usage
+```
+git clone https://github.com/doushe821/DSL.git
+git submodule update --init --recursive
+```
 Describe target architecture in Target directory (there will be dsl syntax rules in future). This repository contains RV32IM description for reference.
 
 Generate decoder, encoder, register file, e.t.c.:
