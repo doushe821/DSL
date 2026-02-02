@@ -62,6 +62,11 @@ module SimInfra
             end
 
             scope.instance_eval &block
+            scope.tree.each do |stmt| 
+              if stmt.name == :setpc
+                @info.control_flow = :branch
+              end
+            end
         end
     end
 
