@@ -13,10 +13,11 @@ module SimGen
     @@bin_instrs = []
     def initialize
       yaml = File.read('IR.yaml')
-      @@parsed_ir = YAML.safe_load(yaml,
-        permitted_classes: [SimInfra::Field, SimInfra::Scope, SimInfra::IrStmt,
+      @@parsed_full_descr = YAML.safe_load(yaml,
+        permitted_classes: [SimInfra::FullDescription, SimInfra::Field, SimInfra::Scope, SimInfra::IrStmt,
         SimInfra::Var, SimInfra::XReg, SimInfra::ImmFieldPart, SimInfra::XImm, 
         Symbol, SimInfra::Scope::Type, SimInfra::Memory, SimInfra::Constant], aliases: true)
+      @@parsed_ir = @@parsed_full_descr[:ISA]
 
       @@parsed_ir.each do |instr|
         binary_value = 0
@@ -34,7 +35,6 @@ module SimGen
             end
           end
         end
-        puts fixed_mask
         @@bin_instrs.push(BinInstr.new(instr[:name], binary_value, fixed_mask))
       end
 
@@ -47,7 +47,7 @@ module SimGen
       treeFile.close
       # debug
 
-      SimGen::GenStateGenerator.new
+      SimGen::GenStateGenerator.new(@@parsed_full_descr[:Registers])
       # INterpreter
       generate_general_instruction_description
       emitter = SimInfra::CppEmitter.new

@@ -1,11 +1,9 @@
 # TODO: connect to other codegen modules
 module SimGen
   class GenStateGenerator
-    def initialize
+    def initialize(regs)
       
       require 'yaml'
-      
-      regs = YAML.load_file("Regfile.yaml")
       
       names = regs.map { |r| r[:name] }
       raise "Duplicate register names!" if names.uniq.size != names.size

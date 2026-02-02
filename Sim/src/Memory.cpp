@@ -2,7 +2,6 @@
 #include <vector>
 #include <cassert>
 #include <cstring>
-#include <iostream>
 
 namespace GeneralSim {
 GeneralSim::Memory::Memory(size_t size) : MemImpl(std::make_unique<Impl>(size)) {}
@@ -28,10 +27,9 @@ uint16_t Memory::read16(uintptr_t Addr) const {
 
 uint32_t Memory::read32(uintptr_t Addr) const {
     assert(Addr + 3 < MemImpl->Mem.size());
-    return MemImpl->Mem[Addr] |
-           (MemImpl->Mem[Addr+1] << 8) |
-           (MemImpl->Mem[Addr+2] << 16) |
-           (MemImpl->Mem[Addr+3] << 24);
+    uint32_t Ret;
+    std::memcpy(&Ret, &MemImpl->Mem[Addr], 4);
+    return Ret;
 }
 
 uint64_t Memory::read64(uintptr_t Addr) const {
@@ -64,10 +62,7 @@ void Memory::write16(uintptr_t Addr, uint16_t Value) {
 
 void Memory::write32(uintptr_t Addr, uint32_t Value) {
     assert(Addr + 3 < MemImpl->Mem.size());
-    MemImpl->Mem[Addr]     = Value & 0xFF;
-    MemImpl->Mem[Addr + 1] = (Value >> 8) & 0xFF;
-    MemImpl->Mem[Addr + 2] = (Value >> 16) & 0xFF;
-    MemImpl->Mem[Addr + 3] = (Value >> 24) & 0xFF;
+    std::memcpy(&MemImpl->Mem[Addr], &Value, 4);
 }
 
 void Memory::write64(uintptr_t Addr, uint64_t Value) {

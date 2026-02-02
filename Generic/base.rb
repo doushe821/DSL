@@ -6,18 +6,15 @@ module SimInfra
     def self.serialize(msg= nil)
         return @@instructions, @@registers_specs if Object.const_defined?(:IRB)
         require 'yaml'
-
-        yaml_regfile_data = YAML.dump(@@registers_specs.map(&:to_h))
-        File.open("Regfile.yaml", "w") do |file|
-            file.write(yaml_regfile_data)
-        end
-
-        yaml_IR_data = YAML.dump(@@instructions.map(&:to_h))
+    
+        descr = FullDescription.new(@@instructions.map(&:to_h), @@registers_specs.map(&:to_h))
+        yaml_IR_data = YAML.dump(descr)     
         File.open("IR.yaml", "w") do |file|
             file.write(yaml_IR_data)
         end
     end
-
+    
+    FullDescription = Struct.new(:ISA, :Registers)
     # reset state
     def siminfra_reset_module_state; @@instructions = []; @@registers_specs = [] end
 

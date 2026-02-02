@@ -68,7 +68,6 @@ module DecoderTree
     best_score = -Float::INFINITY
     
     allowed_slices = get_allowed_slices(words, max_slice: max_slice)
-    puts allowed_slices
 
     allowed_slices.each do |slice|
       result = score_slice(words, slice[0], slice[1])
@@ -102,7 +101,6 @@ module DecoderTree
 
   def self.get_allowed_slices(words, max_slice: nil)
     allowed_slices_mask = words.map(&:fixed_mask).reduce { |a, b| a & b }
-    puts allowed_slices_mask
     slices_from_mask(allowed_slices_mask, max_slice: max_slice)
   end
 
