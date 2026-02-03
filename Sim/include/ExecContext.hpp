@@ -31,17 +31,11 @@ public:
   virtual void setPC(uint32_t Value) = 0;
 
   virtual void syscall() = 0;
-
-  virtual int bitrev(int Val, int NBits = 32) = 0;
-  virtual constexpr uint64_t sext(uint64_t Val, int64_t N) = 0;
-  virtual constexpr uint64_t zext(uint64_t V, int64_t N) = 0;
-  virtual constexpr int saturateUnsigned(unsigned Val, unsigned N) = 0;
 };
 
 // Wrappers for JIT
 // They are needed, because I don't want JIT to have Execution Context
 // As it's meant to be owned by CPU only
-// 
 static inline uint32_t getPCWrapper(ExecContext* ctx) {
     return ctx->getPC();
 }
@@ -61,7 +55,7 @@ static inline void setRegWrapper(ExecContext* ctx, XReg Idx, uint32_t Val) {
     return ctx->setReg(Idx, Val);
 }
 
-static inline void write8(ExecContext* ctx, uintptr_t Addr, uint32_t Val) {
+static inline void write8(ExecContext* ctx, uintptr_t Addr, uint32_t Val)  {
     return ctx->write8(Addr, Val);
 }
 static inline void write16(ExecContext* ctx, uintptr_t Addr, uint32_t Val) {
@@ -79,11 +73,6 @@ static inline void write128(ExecContext* ctx, uintptr_t Addr, const uint8_t* Src
 static inline void write256(ExecContext* ctx, uintptr_t Addr, const uint8_t* Src) {
     return ctx->write256(Addr, Src);
 }
-
-static inline uint64_t sextWrapper(ExecContext* ctx, uint64_t Val, int64_t N) {
-    return ctx->sext(Val, N);
-}
-
 static inline uint8_t read8(ExecContext* ctx, uintptr_t Addr) {
     return ctx->read8(Addr);
 }
@@ -105,7 +94,5 @@ static inline void read256(ExecContext* ctx, uintptr_t Addr,  uint8_t* Dest) {
 static inline void syscall(ExecContext* Ctx) {
     return Ctx->syscall();
 }
-
-  
 
 } // namespace GeneralSim

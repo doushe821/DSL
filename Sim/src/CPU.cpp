@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 
+#include "RegAliases.hpp"
 #include "GeneralSim.hpp"
 #include "Memory.hpp"
 #include "RegState.hpp"
@@ -30,10 +31,7 @@ void CPU::step() {
   auto DecodedInstr = Dcdr.decode(RawInstr);
 
   // Implicit upcast from CPU to ExecContext here.
-  // std::cout << DecodedInstr.
   Extr.execute(DecodedInstr, *this);
-  // If branch was taken, PC should not be changed
-  // by CPU.
   PC += !PCDirty * 4;
 }
 
@@ -42,20 +40,16 @@ void CPU::stepJIT() {
   ++BB.ExecCount;
 
   if (JIT.hasBlock(PC)) {
-    //std::cout << "PC = " << std::hex << PC << ", running JIT from cache\n";
     JIT.getBlock(PC).Fn(this);
     return;
   }
 
   if (BB.ExecCount >= JITHreshold) {
-    //std::cout << "PC = " << std::hex << PC
-    //          << ", threshold passed, translating and running JIT\n";
     auto Block = JIT.translate(PC);
     Block.Fn(this);
     return;
   }
 
- // std::cout << "PC = " << std::hex << PC << ", interpreting\n";
   step();
 }
 

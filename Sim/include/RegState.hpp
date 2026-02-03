@@ -1,7 +1,6 @@
 #pragma once
 #include <cstdint>
 #include <cstddef>
-#include <array>
 #include <cassert>
 namespace GeneralSim {
 class RegState {

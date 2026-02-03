@@ -1,12 +1,15 @@
-#include "JIT.hpp"
-#include "ExecContext.hpp"
-#include "Instructions.hpp"
 #include <asmjit/core/compiler.h>
 #include <asmjit/core/func.h>
 #include <asmjit/x86/x86operand.h>
 #include <cstdint>
 #include <vector>
 
+#include "ExecContext.hpp"
+#include "Instructions.hpp"
+#include "JIT.hpp"
+
+// TODO direct reg access in JIT
+// TODO local pco
 extern "C" void debug_print1(const char *msg) { printf("[JIT] %s\n", msg); }
 namespace SimJIT {
 TranslatedBlock JIT::translate(size_t PC) {
@@ -77,13 +80,8 @@ TranslatedBlock JIT::translate(size_t PC) {
   emitGetPC(CC, CtxReg, Pc);
 
   CC.add(Pc, 4); // increment if not dirty
-  asmjit::InvokeNode *SetPC;
-  CC.invoke(&SetPC, asmjit::imm(&GeneralSim::setPCWrapper),
-            asmjit::FuncSignatureT<void, GeneralSim::ExecContext *, uint32_t>(
-                asmjit::CallConvId::kCDecl));
-  SetPC->setArg(0, CtxReg);
-  SetPC->setArg(1, Pc);
-  
+  emitSetPC(CC, CtxReg, Pc);
+
   CC.bind(LDone);
 
   CC.endFunc();
