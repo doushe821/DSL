@@ -40,13 +40,13 @@ void CPU::stepJIT() {
   ++BB.ExecCount;
 
   if (JIT.hasBlock(PC)) {
-    JIT.getBlock(PC).Fn(this, RState.get()); // FIXME 
+    JIT.getBlock(PC).Fn(this, RState.get()->raw());
     return;
   }
 
   if (BB.ExecCount >= JITHreshold) {
-    auto Block = JIT.translate(PC);
-    Block.Fn(this, RState.get()); // FIXME shitty design
+    auto Block = JIT.translate(PC, *RState.get());
+    Block.Fn(this, RState.get()->raw());
     return;
   }
 

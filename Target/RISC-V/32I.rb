@@ -256,7 +256,7 @@ module RV32I
     asm { "JAL #{rd}, #{imm}" }
     code {
       rd[] = pc + 4
-      setpc pc + imm
+      setpc pc + sext(imm, from: 21, to: 32)
 
     }
     
@@ -267,7 +267,7 @@ module RV32I
     asm { "JALR #{rd}, #{imm}(#{rs1})" }
     code {
       rd[] = pc + 4
-      setpc (rs1 + imm) & ~1
+      setpc (rs1 + sext(imm, from: 12, to: 32)) & ~1
     }
     
   }

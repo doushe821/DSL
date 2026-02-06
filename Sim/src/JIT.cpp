@@ -1,5 +1,6 @@
 #include <asmjit/core/compiler.h>
 #include <asmjit/core/func.h>
+#include <asmjit/core/operand.h>
 #include <asmjit/x86/x86operand.h>
 #include <cstdint>
 #include <vector>
@@ -7,13 +8,10 @@
 #include "ExecContext.hpp"
 #include "Instructions.hpp"
 #include "JIT.hpp"
+#include "RegState.hpp"
 
-
-// TODO direct reg access in JIT
-// TODO local pco
-extern "C" void debug_print1(const char *msg) { printf("[JIT] %s\n", msg); }
 namespace SimJIT {
-TranslatedBlock JIT::translate(size_t PC) {
+TranslatedBlock JIT::translate(size_t PC, const GeneralSim::RegState &RState) {
   TranslatedBlock TB;
   TB.StartPC = PC;
   std::vector<Instruction> Block;
@@ -37,13 +35,8 @@ TranslatedBlock JIT::translate(size_t PC) {
   asmjit::x86::Compiler CC(&Code);
 
   // Block prelude:
-  // Setting args for emitter function
-  // Getting ptr to regstate for direct access.
-  // Getting local copy of PC that will be used by exec functions
-
-  asmjit::FuncNode *Func =
-      CC.addFunc(asmjit::FuncSignatureT<void, GeneralSim::ExecContext *,
-                                        GeneralSim::RegLayout *>(
+  asmjit::FuncNode *Func = CC.addFunc(
+      asmjit::FuncSignatureT<void, GeneralSim::ExecContext *, reg_t *>(
           asmjit::CallConvId::kCDecl));
 
   asmjit::x86::Gp CtxReg = CC.newIntPtr();
@@ -53,36 +46,32 @@ TranslatedBlock JIT::translate(size_t PC) {
   Func->setArg(1, RegArrayPtr);
 
   // Initialize local PC
-  asmjit::x86::Mem LocalPc = CC.newStack(4, 4);
-  CC.mov(LocalPc, TB.StartPC);
+  asmjit::x86::Gp LocalPc = CC.newUInt32();
 
-  // Initialize local pc dirty
-  asmjit::x86::Mem LocalPcDirty = CC.newStack(4, 4);
-  CC.mov(LocalPcDirty, 0);
+  CC.mov(LocalPc, asmjit::imm(uint32_t(TB.StartPC)));
 
-  // emition
   for (auto &Inst : Block) {
-    emitInstruction(CC, CtxReg, RegArrayPtr, LocalPc, LocalPcDirty, Inst);
-    CC.add(LocalPc, 4);
+    emitInstruction(CC, CtxReg, RegArrayPtr, LocalPc, Inst, RState);
+    auto OP = getOpcode(Inst);
+    CC.add(LocalPc, asmjit::imm(instSize(OP)));
   }
 
   // Block epilogue:
   // Adjust PC according to LocalPcDirty
-
-  asmjit::x86::Gp LocalPcReg = CC.newUInt32();
-  CC.mov(LocalPcReg, LocalPc);
+  asmjit::x86::Gp ExpectedPc = CC.newUInt32();
+  CC.mov(ExpectedPc, PC);
+  CC.sub(ExpectedPc, LocalPc);
 
   asmjit::Label LDone = CC.newLabel();
-
-  CC.cmp(LocalPcDirty, 0);
+  CC.test(ExpectedPc, ExpectedPc);
   CC.jz(LDone);
 
-  CC.sub(LocalPcReg, 4); // 1 excessive PC incrementation if branch were taken.
+  CC.sub(LocalPc,
+         asmjit::imm(4)); // 1 excessive PC incrementation if branch were taken.
 
   CC.bind(LDone);
 
-  emitSetPC(CC, CtxReg,
-            LocalPcReg); // Pc is already correct if no branches were taken
+  emitSetPC(CC, CtxReg, LocalPc);
 
   CC.endFunc();
   CC.finalize();

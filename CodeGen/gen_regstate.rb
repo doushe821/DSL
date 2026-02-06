@@ -20,9 +20,12 @@ module SimGen
       #include <cstdint>
       #include <cassert>
 
-      #include "RegLayout.hpp"
       namespace GeneralSim {
-      class RegState : public RegLayout { // FIXME should not be public, debug only
+      static constexpr uint64_t NUM_REGS = 32;
+      using reg_t = uint32_t;
+      class RegState { // TODO Check invariants
+      private:
+          alignas(32) reg_t Regs[NUM_REGS];
       public:
           using reg_t = uint32_t; // TODO Expand
 
@@ -30,8 +33,7 @@ module SimGen
           
           reg_t read(unsigned Idx) const;
           void write(unsigned Idx, reg_t Value);
-
-      private:
+          reg_t* raw() { return Regs; }
           // constant registers
           static constexpr bool IsConst[NUM_REGS] = {
       CPP
@@ -41,7 +43,7 @@ module SimGen
       header += <<~CPP
           };
 
-          static constexpr reg_t const_value[NUM_REGS] = {
+          static constexpr reg_t ConstValue[NUM_REGS] = {
       CPP
       const_vals.each { |v| header += "        #{v},\n" }
       header += <<~CPP
@@ -49,20 +51,6 @@ module SimGen
       };
       } // namespace GeneralSim
       CPP
-
-      rlayoutheader = <<~CPP
-      #pragma once 
-      #include <cstdint>
-      using reg_t = uint32_t;
-      namespace GeneralSim {
-      static constexpr uint64_t NUM_REGS = #{regs.size};
-      struct RegLayout {
-        alignas(32) reg_t Regs[NUM_REGS];
-      };
-      } // namespace GeneralSim
-      CPP
-      File.write("Sim/include/RegLayout.hpp", rlayoutheader)
-      puts "Generated RegLayout.hpp"
 
       File.write("Sim/include/RegState.hpp", header)
       puts "Generated RegState.hpp"

@@ -76,14 +76,14 @@ module SimGen
       File.open('Sim/src/JITExecutor.cpp', 'w') do |exec|
         exec << <<~CPP
         #include "JIT.hpp"
-        #include "RegState.hpp"
         #include "Helpers.hpp"
+        #include "RegState.hpp"
         namespace SimJIT {
         using namespace asmjit;
         using namespace asmjit::x86;
         using XReg = uint16_t;
         #{all_jit_execs}
-        void JIT::emitInstruction(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, Instruction Instr) {
+        void JIT::emitInstruction(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Gp LocalPc, Instruction Instr, const GeneralSim::RegState &RState) {
           std::visit([&](auto&& I) {
             using T = std::decay_t<decltype(I)>;
             #{jimitter.emit_instructions_visit_JIT(@@parsed_ir)}

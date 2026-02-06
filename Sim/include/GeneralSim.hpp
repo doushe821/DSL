@@ -92,7 +92,7 @@ public:
   // So do not use it outside of loader.
   // Or use wisely.
   // But better don't.
-  unsigned char *getRawMem() { return Mem.data(); }; // FIXME
+  unsigned char *getRawMem() { return Mem.data(); };
 
   uint32_t getReg(XReg Idx) const override;
   void setReg(XReg Idx, uint32_t Value) override;

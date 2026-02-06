@@ -72,7 +72,7 @@ module SimInfra
       name = instr[:name]
       args = instr[:args]
 
-      params = ["asmjit::x86::Compiler& CC", "asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty"]
+      params = ["asmjit::x86::Compiler& CC", "asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Gp LocalPc, const GeneralSim::RegState &RState"]
 
       args.each do |arg|
         case arg
@@ -120,14 +120,6 @@ module SimInfra
         <<~CPP    
           // Get Register
             CC.mov(#{ssa(var)}, dword_ptr(RegArrayPtr, #{reg} * sizeof(reg_t)));
-            // RegArrayPtr
-            //{
-            //  InvokeNode* Node;
-            //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), #{GetRegWrapperSign});
-            //  Node->setArg(0, CtxPtr);
-            //  Node->setArg(1, imm(#{reg}));
-            //  Node->setRet(0, #{ssa(var)});
-            //}
         CPP
 
       when :setreg
@@ -135,14 +127,8 @@ module SimInfra
         emit Indent +
         <<~CPP
           // Set Register
-            CC.mov(dword_ptr(RegArrayPtr, #{reg} * sizeof(reg_t)), #{ssa(var)});
-            //{
-            //  InvokeNode* Node;
-            //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), #{SetRegWrapperSign});
-            //  Node->setArg(0, CtxPtr);
-            //  Node->setArg(1, imm(#{reg}));
-            //  Node->setArg(2, #{ssa(var)});
-            //}
+            if (!RState.IsConst[#{reg}]) // check for constant regs
+              CC.mov(dword_ptr(RegArrayPtr, #{reg} * sizeof(reg_t)), #{ssa(var)});
         CPP
 
       when :getpc
@@ -152,12 +138,6 @@ module SimInfra
         <<~CPP
           // Get pc
             CC.mov(#{ssa(var)}, LocalPc);
-            //{
-            //  InvokeNode* Node;
-            //  CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), #{GetPCWrapperSign});
-            //  Node->setArg(0, CtxPtr);
-            //  Node->setRet(0, #{ssa(var)});
-            //}
         CPP
 
       when :setpc
@@ -165,14 +145,7 @@ module SimInfra
         emit Indent +
         <<~CPP
           // Set pc
-            CC.add(LocalPc, #{ssa(var)});
-            CC.mov(LocalPcDirty, #{ssa(var)});
-            // {
-            //   InvokeNode* Node;
-            //   CC.invoke(&Node, imm(&GeneralSim::setPCWrapper), #{SetPCWrapperSign});
-            //   Node->setArg(0, CtxPtr);
-            //   Node->setArg(1, #{ssa(var)});
-            // }
+            CC.mov(LocalPc, #{ssa(var)});
         CPP
 
 
@@ -459,7 +432,7 @@ module SimInfra
       name = instr[:name]
       args = instr[:args]
 
-      params = ["CC", "CtxPtr", "RegArrayPtr", "LocalPc", "LocalPcDirty"]
+      params = ["CC", "CtxPtr", "RegArrayPtr", "LocalPc", "RState"]
       args.each { |arg| params << "I.#{arg.name}" }
         "if constexpr (std::is_same_v<T, #{name}>) {
     EXEC_#{name}(#{params.join(', ')}); }"

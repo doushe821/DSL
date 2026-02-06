@@ -2,9 +2,12 @@
 #include <cstdint>
 #include <cassert>
 
-#include "RegLayout.hpp"
 namespace GeneralSim {
-class RegState : public RegLayout { // FIXME should not be public, debug only
+static constexpr uint64_t NUM_REGS = 32;
+using reg_t = uint32_t;
+class RegState { // TODO Check invariants
+private:
+    alignas(32) reg_t Regs[NUM_REGS];
 public:
     using reg_t = uint32_t; // TODO Expand
 
@@ -12,8 +15,7 @@ public:
     
     reg_t read(unsigned Idx) const;
     void write(unsigned Idx, reg_t Value);
-
-private:
+    reg_t* raw() { return Regs; }
     // constant registers
     static constexpr bool IsConst[NUM_REGS] = {
         true,
@@ -50,7 +52,7 @@ private:
         false,
 };
 
-static constexpr reg_t const_value[NUM_REGS] = {
+static constexpr reg_t ConstValue[NUM_REGS] = {
         0,
         0,
         0,
