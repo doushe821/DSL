@@ -147,13 +147,13 @@ module SimInfra
         from = attrs[:from]
         to = attrs[:to]
         declare_ssa(dst, src.type.signed, to)
-        emit Indent + "#{ssa(dst)} = Ctx.sext(#{operand(src)}, #{from});"
+        emit Indent + "#{ssa(dst)} = Helpers::sext(#{operand(src)}, #{from});"
       when :zext
         dst, src = ops
         from = attrs[:from]
         to = attrs[:to]
         declare_ssa(dst, src.type.signed, to)
-        emit Indent + "#{ssa(dst)} = Ctx.zext(#{operand(src)}, #{from});"
+        emit Indent + "#{ssa(dst)} = Helpers::zext(#{operand(src)}, #{from});"
       when :load
         dst, addr = ops
         declare_ssa(dst)

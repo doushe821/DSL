@@ -76,6 +76,8 @@ module SimGen
       File.open('Sim/src/JITExecutor.cpp', 'w') do |exec|
         exec << <<~CPP
         #include "JIT.hpp"
+        #include "RegState.hpp"
+        #include "Helpers.hpp"
         namespace SimJIT {
         using namespace asmjit;
         using namespace asmjit::x86;
@@ -97,6 +99,7 @@ module SimGen
         execto << <<~CPP
         #pragma once
         #include "ExecContext.hpp"
+        #include "TestInfra.hpp"
         namespace TestSim {
         using XReg = uint16_t;
         using ExecContext = GeneralSim::ExecContext;
@@ -125,6 +128,7 @@ module SimGen
         exec_header << <<~CPP
         #pragma once
         #include "ExecContext.hpp"
+        #include "Helpers.hpp"
         #include "Instructions.hpp"
         
         namespace GeneralSim {

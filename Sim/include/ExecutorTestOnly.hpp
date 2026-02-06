@@ -1,5 +1,6 @@
 #pragma once
 #include "ExecContext.hpp"
+#include "TestInfra.hpp"
 namespace TestSim {
 using XReg = uint16_t;
 using ExecContext = GeneralSim::ExecContext;
@@ -200,7 +201,7 @@ void EXEC_ADDI(ExecContext& Ctx, XReg rd, XReg rs1, GeneralSim::Immediate imm)
   v_imm = imm.raw();
 
   int32_t v__tmp18 = 0;
-  v__tmp18 = Ctx.sext(v_imm, 12);
+  v__tmp18 = Helpers::sext(v_imm, 12);
   uint32_t v__tmp19 = 0;
   v__tmp19 = v_rs1 + v__tmp18;
   v_rd = v__tmp19;
@@ -363,13 +364,13 @@ void EXEC_LB(ExecContext& Ctx, XReg rd, XReg rs1, GeneralSim::Immediate imm)
   v_imm = imm.raw();
 
   int32_t v__tmp32 = 0;
-  v__tmp32 = Ctx.sext(v_imm, 12);
+  v__tmp32 = Helpers::sext(v_imm, 12);
   uint32_t v__tmp33 = 0;
   v__tmp33 = v_rs1 + v__tmp32;
   uint32_t v__tmp34 = 0;
   v__tmp34 = Ctx.read8(v__tmp33);
   uint32_t v__tmp35 = 0;
-  v__tmp35 = Ctx.sext(v__tmp34, 8);
+  v__tmp35 = Helpers::sext(v__tmp34, 8);
   v_rd = v__tmp35;
   Ctx.setReg(rd, v_rd);
 }
@@ -386,13 +387,13 @@ void EXEC_LH(ExecContext& Ctx, XReg rd, XReg rs1, GeneralSim::Immediate imm)
   v_imm = imm.raw();
 
   int32_t v__tmp36 = 0;
-  v__tmp36 = Ctx.sext(v_imm, 12);
+  v__tmp36 = Helpers::sext(v_imm, 12);
   uint32_t v__tmp37 = 0;
   v__tmp37 = v_rs1 + v__tmp36;
   uint32_t v__tmp38 = 0;
   v__tmp38 = Ctx.read16(v__tmp37);
   uint32_t v__tmp39 = 0;
-  v__tmp39 = Ctx.sext(v__tmp38, 16);
+  v__tmp39 = Helpers::sext(v__tmp38, 16);
   v_rd = v__tmp39;
   Ctx.setReg(rd, v_rd);
 }
@@ -409,7 +410,7 @@ void EXEC_LW(ExecContext& Ctx, XReg rd, XReg rs1, GeneralSim::Immediate imm)
   v_imm = imm.raw();
 
   int32_t v__tmp40 = 0;
-  v__tmp40 = Ctx.sext(v_imm, 12);
+  v__tmp40 = Helpers::sext(v_imm, 12);
   uint32_t v__tmp41 = 0;
   v__tmp41 = v_rs1 + v__tmp40;
   uint32_t v__tmp42 = 0;
@@ -430,13 +431,13 @@ void EXEC_LBU(ExecContext& Ctx, XReg rd, XReg rs1, GeneralSim::Immediate imm)
   v_imm = imm.raw();
 
   int32_t v__tmp43 = 0;
-  v__tmp43 = Ctx.sext(v_imm, 12);
+  v__tmp43 = Helpers::sext(v_imm, 12);
   uint32_t v__tmp44 = 0;
   v__tmp44 = v_rs1 + v__tmp43;
   uint32_t v__tmp45 = 0;
   v__tmp45 = Ctx.read8(v__tmp44);
   uint32_t v__tmp46 = 0;
-  v__tmp46 = Ctx.zext(v__tmp45, 8);
+  v__tmp46 = Helpers::zext(v__tmp45, 8);
   v_rd = v__tmp46;
   Ctx.setReg(rd, v_rd);
 }
@@ -453,13 +454,13 @@ void EXEC_LHU(ExecContext& Ctx, XReg rd, XReg rs1, GeneralSim::Immediate imm)
   v_imm = imm.raw();
 
   int32_t v__tmp47 = 0;
-  v__tmp47 = Ctx.sext(v_imm, 12);
+  v__tmp47 = Helpers::sext(v_imm, 12);
   uint32_t v__tmp48 = 0;
   v__tmp48 = v_rs1 + v__tmp47;
   uint32_t v__tmp49 = 0;
   v__tmp49 = Ctx.read16(v__tmp48);
   uint32_t v__tmp50 = 0;
-  v__tmp50 = Ctx.zext(v__tmp49, 16);
+  v__tmp50 = Helpers::zext(v__tmp49, 16);
   v_rd = v__tmp50;
   Ctx.setReg(rd, v_rd);
 }
@@ -478,11 +479,11 @@ void EXEC_SB(ExecContext& Ctx, XReg rs2, XReg rs1, GeneralSim::Immediate imm)
   v_imm = imm.raw();
 
   int32_t v__tmp51 = 0;
-  v__tmp51 = Ctx.sext(v_imm, 12);
+  v__tmp51 = Helpers::sext(v_imm, 12);
   uint32_t v__tmp52 = 0;
   v__tmp52 = v_rs1 + v__tmp51;
   int32_t v__tmp53 = 0;
-  v__tmp53 = Ctx.zext(v_rs2, 8);
+  v__tmp53 = Helpers::zext(v_rs2, 8);
   Ctx.write32(v__tmp52, v__tmp53);
 }
 
@@ -500,11 +501,11 @@ void EXEC_SH(ExecContext& Ctx, XReg rs2, XReg rs1, GeneralSim::Immediate imm)
   v_imm = imm.raw();
 
   int32_t v__tmp54 = 0;
-  v__tmp54 = Ctx.sext(v_imm, 12);
+  v__tmp54 = Helpers::sext(v_imm, 12);
   uint32_t v__tmp55 = 0;
   v__tmp55 = v_rs1 + v__tmp54;
   int32_t v__tmp56 = 0;
-  v__tmp56 = Ctx.zext(v_rs2, 16);
+  v__tmp56 = Helpers::zext(v_rs2, 16);
   Ctx.write32(v__tmp55, v__tmp56);
 }
 
@@ -522,7 +523,7 @@ void EXEC_SW(ExecContext& Ctx, XReg rs2, XReg rs1, GeneralSim::Immediate imm)
   v_imm = imm.raw();
 
   int32_t v__tmp57 = 0;
-  v__tmp57 = Ctx.sext(v_imm, 12);
+  v__tmp57 = Helpers::sext(v_imm, 12);
   uint32_t v__tmp58 = 0;
   v__tmp58 = v_rs1 + v__tmp57;
   Ctx.write32(v__tmp58, v_rs2);
@@ -633,7 +634,7 @@ void EXEC_BEQ(ExecContext& Ctx, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
   uint32_t v__tmp77 = 0;
   v__tmp77 = (v_rs1 == v_rs2);
   int32_t v__tmp78 = 0;
-  v__tmp78 = Ctx.sext(v_imm, 13);
+  v__tmp78 = Helpers::sext(v_imm, 13);
   uint32_t v__tmp79 = 0;
   v__tmp79 = v__tmp77 * v__tmp78;
   uint32_t v__tmp80 = 0;
@@ -659,7 +660,7 @@ void EXEC_BNE(ExecContext& Ctx, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
   uint32_t v__tmp82 = 0;
   v__tmp82 = (v_rs1 != v_rs2);
   int32_t v__tmp83 = 0;
-  v__tmp83 = Ctx.sext(v_imm, 13);
+  v__tmp83 = Helpers::sext(v_imm, 13);
   uint32_t v__tmp84 = 0;
   v__tmp84 = v__tmp82 * v__tmp83;
   uint32_t v__tmp85 = 0;
@@ -685,7 +686,7 @@ void EXEC_BLT(ExecContext& Ctx, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
   uint32_t v__tmp87 = 0;
   v__tmp87 = (static_cast<int32_t>(v_rs1) < static_cast<int32_t>(v_rs2));
   int32_t v__tmp88 = 0;
-  v__tmp88 = Ctx.sext(v_imm, 13);
+  v__tmp88 = Helpers::sext(v_imm, 13);
   uint32_t v__tmp89 = 0;
   v__tmp89 = v__tmp87 * v__tmp88;
   uint32_t v__tmp90 = 0;
@@ -711,7 +712,7 @@ void EXEC_BGE(ExecContext& Ctx, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
   uint32_t v__tmp92 = 0;
   v__tmp92 = (static_cast<int32_t>(v_rs1) >= static_cast<int32_t>(v_rs2));
   int32_t v__tmp93 = 0;
-  v__tmp93 = Ctx.sext(v_imm, 13);
+  v__tmp93 = Helpers::sext(v_imm, 13);
   uint32_t v__tmp94 = 0;
   v__tmp94 = v__tmp92 * v__tmp93;
   uint32_t v__tmp95 = 0;
@@ -737,7 +738,7 @@ void EXEC_BGEU(ExecContext& Ctx, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
   uint32_t v__tmp97 = 0;
   v__tmp97 = (v_rs1 >= v_rs2);
   int32_t v__tmp98 = 0;
-  v__tmp98 = Ctx.sext(v_imm, 13);
+  v__tmp98 = Helpers::sext(v_imm, 13);
   uint32_t v__tmp99 = 0;
   v__tmp99 = v__tmp97 * v__tmp98;
   uint32_t v__tmp100 = 0;
@@ -763,7 +764,7 @@ void EXEC_BLTU(ExecContext& Ctx, XReg rs1, XReg rs2, GeneralSim::Immediate imm)
   uint32_t v__tmp102 = 0;
   v__tmp102 = (v_rs1 < v_rs2);
   int32_t v__tmp103 = 0;
-  v__tmp103 = Ctx.sext(v_imm, 13);
+  v__tmp103 = Helpers::sext(v_imm, 13);
   uint32_t v__tmp104 = 0;
   v__tmp104 = v__tmp102 * v__tmp103;
   uint32_t v__tmp105 = 0;
@@ -808,9 +809,9 @@ void EXEC_MULH(ExecContext& Ctx, XReg rd, XReg rs1, XReg rs2)
   v_rs2 = Ctx.getReg(rs2);
 
   int64_t v__tmp108 = 0;
-  v__tmp108 = Ctx.sext(v_rs1, 32);
+  v__tmp108 = Helpers::sext(v_rs1, 32);
   int64_t v__tmp109 = 0;
-  v__tmp109 = Ctx.sext(v_rs2, 32);
+  v__tmp109 = Helpers::sext(v_rs2, 32);
   uint64_t v__tmp110 = 0;
   v__tmp110 = v__tmp108 * v__tmp109;
   int64_t v__tmp111 = 0;
@@ -836,9 +837,9 @@ void EXEC_MULHSU(ExecContext& Ctx, XReg rd, XReg rs1, XReg rs2)
   v_rs2 = Ctx.getReg(rs2);
 
   int64_t v__tmp114 = 0;
-  v__tmp114 = Ctx.sext(v_rs1, 32);
+  v__tmp114 = Helpers::sext(v_rs1, 32);
   int64_t v__tmp115 = 0;
-  v__tmp115 = Ctx.zext(v_rs2, 32);
+  v__tmp115 = Helpers::zext(v_rs2, 32);
   uint64_t v__tmp116 = 0;
   v__tmp116 = v__tmp114 * v__tmp115;
   int64_t v__tmp117 = 0;
@@ -864,9 +865,9 @@ void EXEC_MULHU(ExecContext& Ctx, XReg rd, XReg rs1, XReg rs2)
   v_rs2 = Ctx.getReg(rs2);
 
   int64_t v__tmp120 = 0;
-  v__tmp120 = Ctx.zext(v_rs1, 32);
+  v__tmp120 = Helpers::zext(v_rs1, 32);
   int64_t v__tmp121 = 0;
-  v__tmp121 = Ctx.zext(v_rs2, 32);
+  v__tmp121 = Helpers::zext(v_rs2, 32);
   uint64_t v__tmp122 = 0;
   v__tmp122 = v__tmp120 * v__tmp121;
   uint32_t v__c123 = 0;

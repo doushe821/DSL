@@ -305,10 +305,9 @@ module SimInfra
         // sext
           {
             InvokeNode* Node;
-            CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-            Node->setArg(0, CtxPtrReg);
-            Node->setArg(1, #{ssa(src)});
-            Node->setArg(2, #{from});
+            CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+            Node->setArg(0, #{ssa(src)});
+            Node->setArg(1, #{from});
             Node->setRet(0, #{ssa(dst)});
           }
         CPP

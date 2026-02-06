@@ -3,7 +3,6 @@
 #include <catch2/catch_all.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <cstdint>
-#include <iostream>
 #define CATCH_CONFIG_MAIN
 
 // include your CPU/Decoder/Executor headers
@@ -19,7 +18,7 @@ using XReg = uint16_t;
 // ###################
 
 TEST_CASE("ADD / SUB / ADDI / SLT edge cases") {
-  GeneralSim::FakeExecContext ctx;
+  TestSim::FakeExecContext ctx;
   ctx.setReg(XReg(1), 5);
   ctx.setReg(XReg(2), 10);
 
@@ -53,7 +52,7 @@ TEST_CASE("ADD / SUB / ADDI / SLT edge cases") {
 }
 
 TEST_CASE("AND / OR / XOR / SLL / SRL / SRA edge cases") {
-  GeneralSim::FakeExecContext ctx;
+  TestSim::FakeExecContext ctx;
   ctx.setReg(XReg(1), 0b1100);
   ctx.setReg(XReg(2), 0b1010);
 
@@ -81,7 +80,7 @@ TEST_CASE("AND / OR / XOR / SLL / SRL / SRA edge cases") {
 }
 
 TEST_CASE("Load / Store with edge cases") {
-  GeneralSim::FakeExecContext ctx;
+  TestSim::FakeExecContext ctx;
 
   // store values
   TestSim::EXEC_SW(ctx, XReg(1), XReg(0),
@@ -105,7 +104,7 @@ TEST_CASE("Load / Store with edge cases") {
 }
 
 TEST_CASE("x0 and PC behavior") {
-  GeneralSim::FakeExecContext ctx;
+  TestSim::FakeExecContext ctx;
   ctx.setReg(XReg(0), 123);
   REQUIRE(ctx.getReg(XReg(0)) == 0);
 
@@ -116,7 +115,7 @@ TEST_CASE("x0 and PC behavior") {
 }
 
 TEST_CASE("Executor: shift amount masked to 5 bits") {
-  GeneralSim::FakeExecContext ctx;
+  TestSim::FakeExecContext ctx;
   ctx.setReg(1, 1);
   ctx.setReg(2, 33); // 33 & 31 == 1
 
@@ -126,7 +125,7 @@ TEST_CASE("Executor: shift amount masked to 5 bits") {
 }
 
 TEST_CASE("Executor: SLT vs SLTU differ") {
-  GeneralSim::FakeExecContext ctx;
+  TestSim::FakeExecContext ctx;
   ctx.setReg(1, -1);
   ctx.setReg(2, 1);
 
@@ -138,7 +137,7 @@ TEST_CASE("Executor: SLT vs SLTU differ") {
 }
 
 TEST_CASE("Executor: LB sign extends, LBU zero extends") {
-  GeneralSim::FakeExecContext ctx;
+  TestSim::FakeExecContext ctx;
   ctx.write8(0, 0x80);
 
   TestSim::EXEC_LB(ctx, XReg{1}, XReg{0}, GeneralSim::Immediate(0, 32));
@@ -151,7 +150,7 @@ TEST_CASE("Executor: LB sign extends, LBU zero extends") {
 
 
 TEST_CASE("MUL / MULH family torture") {
-  GeneralSim::FakeExecContext ctx;
+  TestSim::FakeExecContext ctx;
 
   // 1 * 1
   ctx.setReg(XReg(1), 1);
@@ -200,7 +199,7 @@ TEST_CASE("MUL / MULH family torture") {
 
 
 TEST_CASE("DIV / DIVU torture") {
-  GeneralSim::FakeExecContext ctx;
+  TestSim::FakeExecContext ctx;
 
   // normal
   ctx.setReg(XReg(1), 10);
@@ -222,7 +221,7 @@ TEST_CASE("DIV / DIVU torture") {
 
 
 TEST_CASE("REM / REMU torture") {
-  GeneralSim::FakeExecContext ctx;
+  TestSim::FakeExecContext ctx;
 
   // normal
   ctx.setReg(XReg(1), 10);
@@ -281,7 +280,7 @@ TEST_CASE("Decoder: B-type immediate reconstruction") {
 // ###################
 
 TEST_CASE("Decode + execute roundtrip") {
-  GeneralSim::FakeExecContext ctx;
+  TestSim::FakeExecContext ctx;
   ctx.setReg(1, 5);
   ctx.setReg(2, 7);
 

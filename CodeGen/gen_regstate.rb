@@ -19,8 +19,9 @@ module SimGen
       #pragma once
       #include <cstdint>
       #include <cstddef>
-      #include <array>
       #include <cassert>
+      
+      #include "JIT.hpp"
       namespace GeneralSim {
       class RegState {
       public:
@@ -33,6 +34,7 @@ module SimGen
           void write(unsigned Idx, reg_t Value);
 
       private:
+          friend SimJIT::JIT;
           alignas(32) reg_t Regs[NUM_REGS];
 
           // constant registers

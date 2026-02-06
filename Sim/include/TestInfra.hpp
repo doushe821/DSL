@@ -3,20 +3,20 @@
 #include "GeneralSimTypes.hpp"
 #include <cstdint>
 #include <unordered_map>
-namespace GeneralSim {
-struct FakeExecContext : ExecContext {
+namespace TestSim {
+struct FakeExecContext : GeneralSim::ExecContext {
     bool Finished{false};
     uint32_t regs[32]{};
     std::unordered_map<uint64_t,uint8_t> mem;
     uint64_t PC = 0;
     bool PCDirty {false};
 
-    uint32_t getReg(XReg r) const override {
+    uint32_t getReg(GeneralSim::XReg r) const override {
         if (r == 0) return 0; // x0 hardwired
         return regs[r];
     }
 
-    void setReg(XReg r, uint32_t v) override {
+    void setReg(GeneralSim::XReg r, uint32_t v) override {
         if (r == 0) return; // x0 ignored
         regs[r] = v;
     }
@@ -45,53 +45,58 @@ struct FakeExecContext : ExecContext {
   constexpr void syscall() override {
     Finished = true;
   };
-
-  constexpr int bitrev(int Val, int NBits = 32) override { // Does it in log(n)
-    assert(NBits <= 64);
-    uint64_t Mask = (NBits == 64) ? ~0ULL : ((1ULL << NBits) - 1);
-    Val &= Mask;
-
-    for (int Step = 1; Step < NBits; Step <<= 1) {
-      uint64_t M = ((1ULL << Step) - 1) | (((1ULL << Step) - 1) << (2 * Step));
-
-      uint64_t Pattern = 0;
-      for (unsigned I = 0; I < 64; I += 2 * Step)
-        Pattern |= M << I;
-
-      uint64_t A = (Val & Pattern);
-      uint64_t B = (Val & (Pattern << Step));
-
-      Val = (A << Step) | (B >> Step);
-    }
-
-    return Val & Mask;
-  }
-
-  constexpr uint64_t sext(uint64_t Val, int64_t N) override {
-      if (N <= 0 || N > 64) return Val;
-
-      uint64_t top_bit = uint64_t(1) << (N - 1);
-      
-      if (Val & top_bit) {
-          uint64_t mask = (N == 64) ? ~uint64_t(0) : ~((uint64_t(1) << N) - 1);
-          Val |= mask;
-      }
-      return Val;
-  }
-
-  constexpr uint64_t zext(uint64_t V, int64_t N) override {
-    assert(N <= 64);
-    if (N == 64)
-      return V;
-    return V & ((1ULL << N) - uint64_t(1));
-  }
-
-  constexpr int saturateUnsigned(unsigned Val, unsigned N) override {
-    unsigned Limit = (1 << N) - 1;
-    if (Val > Limit) {
-      Val = Limit;
-    }
-    return Val;
-  }
 };
 } // namespace GeneralSim
+
+namespace TestSim::Helpers {
+
+constexpr int bitrev(int Val, int NBits = 32) { // Does it in log(n)
+  assert(NBits <= 64);
+  uint64_t Mask = (NBits == 64) ? ~0ULL : ((1ULL << NBits) - 1);
+  Val &= Mask;
+  
+  for (int Step = 1; Step < NBits; Step <<= 1) {
+  uint64_t M = ((1ULL << Step) - 1) | (((1ULL << Step) - 1) << (2 * Step));
+  
+  uint64_t Pattern = 0;
+  for (unsigned I = 0; I < 64; I += 2 * Step)
+  Pattern |= M << I;
+
+uint64_t A = (Val & Pattern);
+  uint64_t B = (Val & (Pattern << Step));
+
+  Val = (A << Step) | (B >> Step);
+}
+
+  return Val & Mask;
+}
+
+constexpr uint64_t sext(uint64_t Val, int64_t N) {
+  if (N <= 0 || N > 64) return Val;
+  
+  uint64_t top_bit = uint64_t(1) << (N - 1);
+  
+  if (Val & top_bit) {
+    uint64_t mask = (N == 64) ? ~uint64_t(0) : ~((uint64_t(1) << N) - 1);
+    Val |= mask;
+  }
+  return Val;
+}
+
+constexpr uint64_t zext(uint64_t V, int64_t N) {
+  assert(N <= 64);
+  if (N == 64) {
+    return V;
+  }
+  return V & ((1ULL << N) - uint64_t(1));
+}
+
+constexpr int saturateUnsigned(unsigned Val, unsigned N) {
+  unsigned Limit = (1 << N) - 1;
+  if (Val > Limit) {
+    Val = Limit;
+  }
+  return Val;
+}
+
+} // namespace TestSim::Helpers

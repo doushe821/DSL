@@ -1,4 +1,6 @@
 #include "JIT.hpp"
+#include "RegState.hpp"
+#include "Helpers.hpp"
 namespace SimJIT {
 using namespace asmjit;
 using namespace asmjit::x86;
@@ -485,10 +487,9 @@ void EXEC_ADDI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   // sext
   {
     InvokeNode* Node;
-    CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v_imm);
-    Node->setArg(2, 12);
+    CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+    Node->setArg(0, v_imm);
+    Node->setArg(1, 12);
     Node->setRet(0, v__tmp18);
   }
 
@@ -847,10 +848,9 @@ void EXEC_LB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
   // sext
   {
     InvokeNode* Node;
-    CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v_imm);
-    Node->setArg(2, 12);
+    CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+    Node->setArg(0, v_imm);
+    Node->setArg(1, 12);
     Node->setRet(0, v__tmp32);
   }
 
@@ -872,10 +872,9 @@ void EXEC_LB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
   // sext
   {
     InvokeNode* Node;
-    CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v__tmp34);
-    Node->setArg(2, 8);
+    CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+    Node->setArg(0, v__tmp34);
+    Node->setArg(1, 8);
     Node->setRet(0, v__tmp35);
   }
 
@@ -916,10 +915,9 @@ void EXEC_LH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
   // sext
   {
     InvokeNode* Node;
-    CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v_imm);
-    Node->setArg(2, 12);
+    CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+    Node->setArg(0, v_imm);
+    Node->setArg(1, 12);
     Node->setRet(0, v__tmp36);
   }
 
@@ -941,10 +939,9 @@ void EXEC_LH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
   // sext
   {
     InvokeNode* Node;
-    CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v__tmp38);
-    Node->setArg(2, 16);
+    CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+    Node->setArg(0, v__tmp38);
+    Node->setArg(1, 16);
     Node->setRet(0, v__tmp39);
   }
 
@@ -985,10 +982,9 @@ void EXEC_LW(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
   // sext
   {
     InvokeNode* Node;
-    CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v_imm);
-    Node->setArg(2, 12);
+    CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+    Node->setArg(0, v_imm);
+    Node->setArg(1, 12);
     Node->setRet(0, v__tmp40);
   }
 
@@ -1043,10 +1039,9 @@ void EXEC_LBU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   // sext
   {
     InvokeNode* Node;
-    CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v_imm);
-    Node->setArg(2, 12);
+    CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+    Node->setArg(0, v_imm);
+    Node->setArg(1, 12);
     Node->setRet(0, v__tmp43);
   }
 
@@ -1104,10 +1099,9 @@ void EXEC_LHU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   // sext
   {
     InvokeNode* Node;
-    CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v_imm);
-    Node->setArg(2, 12);
+    CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+    Node->setArg(0, v_imm);
+    Node->setArg(1, 12);
     Node->setRet(0, v__tmp47);
   }
 
@@ -1174,10 +1168,9 @@ void EXEC_SB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XRe
   // sext
   {
     InvokeNode* Node;
-    CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v_imm);
-    Node->setArg(2, 12);
+    CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+    Node->setArg(0, v_imm);
+    Node->setArg(1, 12);
     Node->setRet(0, v__tmp51);
   }
 
@@ -1231,10 +1224,9 @@ void EXEC_SH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XRe
   // sext
   {
     InvokeNode* Node;
-    CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v_imm);
-    Node->setArg(2, 12);
+    CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+    Node->setArg(0, v_imm);
+    Node->setArg(1, 12);
     Node->setRet(0, v__tmp54);
   }
 
@@ -1288,10 +1280,9 @@ void EXEC_SW(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XRe
   // sext
   {
     InvokeNode* Node;
-    CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v_imm);
-    Node->setArg(2, 12);
+    CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+    Node->setArg(0, v_imm);
+    Node->setArg(1, 12);
     Node->setRet(0, v__tmp57);
   }
 
@@ -1553,10 +1544,9 @@ void EXEC_BEQ(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
   // sext
   {
     InvokeNode* Node;
-    CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v_imm);
-    Node->setArg(2, 13);
+    CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+    Node->setArg(0, v_imm);
+    Node->setArg(1, 13);
     Node->setRet(0, v__tmp78);
   }
 
@@ -1625,10 +1615,9 @@ void EXEC_BNE(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
   // sext
   {
     InvokeNode* Node;
-    CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v_imm);
-    Node->setArg(2, 13);
+    CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+    Node->setArg(0, v_imm);
+    Node->setArg(1, 13);
     Node->setRet(0, v__tmp83);
   }
 
@@ -1697,10 +1686,9 @@ void EXEC_BLT(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
   // sext
   {
     InvokeNode* Node;
-    CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v_imm);
-    Node->setArg(2, 13);
+    CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+    Node->setArg(0, v_imm);
+    Node->setArg(1, 13);
     Node->setRet(0, v__tmp88);
   }
 
@@ -1769,10 +1757,9 @@ void EXEC_BGE(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
   // sext
   {
     InvokeNode* Node;
-    CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v_imm);
-    Node->setArg(2, 13);
+    CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+    Node->setArg(0, v_imm);
+    Node->setArg(1, 13);
     Node->setRet(0, v__tmp93);
   }
 
@@ -1841,10 +1828,9 @@ void EXEC_BGEU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, X
   // sext
   {
     InvokeNode* Node;
-    CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v_imm);
-    Node->setArg(2, 13);
+    CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+    Node->setArg(0, v_imm);
+    Node->setArg(1, 13);
     Node->setRet(0, v__tmp98);
   }
 
@@ -1913,10 +1899,9 @@ void EXEC_BLTU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, X
   // sext
   {
     InvokeNode* Node;
-    CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v_imm);
-    Node->setArg(2, 13);
+    CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+    Node->setArg(0, v_imm);
+    Node->setArg(1, 13);
     Node->setRet(0, v__tmp103);
   }
 
@@ -2030,10 +2015,9 @@ void EXEC_MULH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   // sext
   {
     InvokeNode* Node;
-    CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v_rs1);
-    Node->setArg(2, 32);
+    CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+    Node->setArg(0, v_rs1);
+    Node->setArg(1, 32);
     Node->setRet(0, v__tmp108);
   }
 
@@ -2041,10 +2025,9 @@ void EXEC_MULH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   // sext
   {
     InvokeNode* Node;
-    CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v_rs2);
-    Node->setArg(2, 32);
+    CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+    Node->setArg(0, v_rs2);
+    Node->setArg(1, 32);
     Node->setRet(0, v__tmp109);
   }
 
@@ -2114,10 +2097,9 @@ void EXEC_MULHSU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, 
   // sext
   {
     InvokeNode* Node;
-    CC.invoke(&Node, imm(GeneralSim::sextWrapper), FuncSignatureT<uint64_t, GeneralSim::ExecContext*, uint64_t, int64_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v_rs1);
-    Node->setArg(2, 32);
+    CC.invoke(&Node, imm(GeneralSim::Helpers::sext), FuncSignatureT<uint64_t, uint64_t, int64_t>(CallConvId::kCDecl));
+    Node->setArg(0, v_rs1);
+    Node->setArg(1, 32);
     Node->setRet(0, v__tmp114);
   }
 

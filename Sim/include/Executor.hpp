@@ -1,5 +1,6 @@
 #pragma once
 #include "ExecContext.hpp"
+#include "Helpers.hpp"
 #include "Instructions.hpp"
 
 namespace GeneralSim {
