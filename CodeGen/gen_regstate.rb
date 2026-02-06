@@ -18,15 +18,13 @@ module SimGen
       header = <<~CPP
       #pragma once
       #include <cstdint>
-      #include <cstddef>
       #include <cassert>
-      
-      #include "JIT.hpp"
+
+      #include "RegLayout.hpp"
       namespace GeneralSim {
-      class RegState {
+      class RegState : public RegLayout { // FIXME should not be public, debug only
       public:
           using reg_t = uint32_t; // TODO Expand
-          static constexpr size_t NUM_REGS = #{regs.size};
 
           RegState();
           
@@ -34,9 +32,6 @@ module SimGen
           void write(unsigned Idx, reg_t Value);
 
       private:
-          friend SimJIT::JIT;
-          alignas(32) reg_t Regs[NUM_REGS];
-
           // constant registers
           static constexpr bool IsConst[NUM_REGS] = {
       CPP
@@ -54,6 +49,20 @@ module SimGen
       };
       } // namespace GeneralSim
       CPP
+
+      rlayoutheader = <<~CPP
+      #pragma once 
+      #include <cstdint>
+      using reg_t = uint32_t;
+      namespace GeneralSim {
+      static constexpr uint64_t NUM_REGS = #{regs.size};
+      struct RegLayout {
+        alignas(32) reg_t Regs[NUM_REGS];
+      };
+      } // namespace GeneralSim
+      CPP
+      File.write("Sim/include/RegLayout.hpp", rlayoutheader)
+      puts "Generated RegLayout.hpp"
 
       File.write("Sim/include/RegState.hpp", header)
       puts "Generated RegState.hpp"

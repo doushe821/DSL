@@ -6,10 +6,12 @@
 
 #include "Decoder.hpp"
 #include "ExecContext.hpp"
+#include "RegLayout.hpp"
+
+using reg_t = uint32_t; // TODO Expand
 
 namespace SimJIT {
-
-using BlockFn = uint32_t (*)(GeneralSim::ExecContext *);
+using BlockFn = uint32_t (*)(GeneralSim::ExecContext *, GeneralSim::RegLayout *);
 struct TranslatedBlock {
   BlockFn Fn;
   size_t StartPC;
@@ -26,8 +28,9 @@ public:
   TranslatedBlock translate(size_t PC);
 
 private:
-  void emitInstruction(asmjit::x86::Compiler &CC, asmjit::x86::Gp CtxPtrReg,
-                       Instruction Instr);
+  void emitInstruction(asmjit::x86::Compiler &CC, asmjit::x86::Gp CtxPtr,
+                       asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc,
+                       asmjit::x86::Mem LocalPcDirty, Instruction Instr);
   void emitGetPC(asmjit::x86::Compiler &CC, asmjit::x86::Gp CtxReg,
                  asmjit::x86::Gp DestReg);
   void emitSetPC(asmjit::x86::Compiler &CC, asmjit::x86::Gp CtxReg,

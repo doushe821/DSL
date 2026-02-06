@@ -11,4 +11,10 @@ static inline uint32_t zext(uint32_t v, unsigned bits) {
     return v & ((1u << bits) - 1);
 }
 
+
+static inline uint32_t getMaskedValue(uint32_t Value, int StartBit,
+                                      int FinishBit) {
+  return (Value >> StartBit) & ((1 << (FinishBit - StartBit + 1)) - 1);
+}
+
 }

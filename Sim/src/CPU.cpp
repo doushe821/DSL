@@ -3,9 +3,9 @@
 #include <iostream>
 #include <memory>
 
-#include "RegAliases.hpp"
 #include "GeneralSim.hpp"
 #include "Memory.hpp"
+#include "RegAliases.hpp"
 #include "RegState.hpp"
 
 namespace GeneralSim {
@@ -40,13 +40,13 @@ void CPU::stepJIT() {
   ++BB.ExecCount;
 
   if (JIT.hasBlock(PC)) {
-    JIT.getBlock(PC).Fn(this);
+    JIT.getBlock(PC).Fn(this, RState.get()); // FIXME 
     return;
   }
 
   if (BB.ExecCount >= JITHreshold) {
     auto Block = JIT.translate(PC);
-    Block.Fn(this);
+    Block.Fn(this, RState.get()); // FIXME shitty design
     return;
   }
 
@@ -139,8 +139,10 @@ void CPU::stepPretty(Memory &PrevMem, std::unique_ptr<RegState> &PrevRegState) {
   }
 }
 
-void CPU::dumpPretty(Memory &PrevMem, std::unique_ptr<RegState> &PrevRegState) {
-  for (size_t I = 0; I < RState->NUM_REGS; ++I) {
+void CPU::dumpPretty(
+    Memory &PrevMem,
+    std::unique_ptr<RegState> &PrevRegState) { // TODO move to RegState?
+  for (size_t I = 0; I < NUM_REGS; ++I) {
     auto RegVal = RState->read(I);
     auto PrevRegVal = PrevRegState->read(I);
     if (RegVal != PrevRegVal) {
@@ -194,7 +196,7 @@ void CPU::write256(uintptr_t Addr, const uint8_t *Src) {
 }
 
 void CPU::dumpState() {
-  for (size_t I = 0; I < RState->NUM_REGS; ++I) {
+  for (size_t I = 0; I < NUM_REGS; ++I) {
     auto RegVal = RState->read(I);
     std::cout << "Reg" << I << " = " << RegVal
               << " (unsigned) : " << std::bit_cast<int32_t>(RegVal)

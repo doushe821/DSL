@@ -5,29 +5,33 @@ namespace SimJIT {
 using namespace asmjit;
 using namespace asmjit::x86;
 using XReg = uint16_t;
-void EXEC_ADD(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, XReg rs2)
+void EXEC_ADD(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, XReg rs2)
 // JIT Instruction ADD
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   Gp v__tmp0 = CC.newUInt32();
   // add
@@ -37,40 +41,45 @@ void EXEC_ADD(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   CC.mov(v_rd, v__tmp0);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_SUB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, XReg rs2)
+void EXEC_SUB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, XReg rs2)
 // JIT Instruction SUB
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   Gp v__tmp1 = CC.newUInt32();
   // sub
@@ -80,40 +89,45 @@ void EXEC_SUB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   CC.mov(v_rd, v__tmp1);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_SLL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, XReg rs2)
+void EXEC_SLL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, XReg rs2)
 // JIT Instruction SLL
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   Gp v__c2 = CC.newUInt32();
   CC.mov(v__c2, 31);
@@ -129,40 +143,45 @@ void EXEC_SLL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   CC.mov(v_rd, v__tmp4);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_SLT(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, XReg rs2)
+void EXEC_SLT(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, XReg rs2)
 // JIT Instruction SLT
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   Gp v__tmp5 = CC.newUInt32();
   // Cmp lt
@@ -174,40 +193,45 @@ void EXEC_SLT(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   CC.mov(v_rd, v__tmp5);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_SLTU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, XReg rs2)
+void EXEC_SLTU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, XReg rs2)
 // JIT Instruction SLTU
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   Gp v__tmp6 = CC.newUInt32();
   // Cmp ltu
@@ -219,40 +243,45 @@ void EXEC_SLTU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   CC.mov(v_rd, v__tmp6);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_XOR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, XReg rs2)
+void EXEC_XOR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, XReg rs2)
 // JIT Instruction XOR
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   Gp v__tmp7 = CC.newUInt32();
   // xor_
@@ -262,40 +291,45 @@ void EXEC_XOR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   CC.mov(v_rd, v__tmp7);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_SRL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, XReg rs2)
+void EXEC_SRL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, XReg rs2)
 // JIT Instruction SRL
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   // Type clarification
   Gp v__tmp8 = CC.newUInt32();
@@ -315,40 +349,45 @@ void EXEC_SRL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   CC.mov(v_rd, v__tmp11);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_SRA(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, XReg rs2)
+void EXEC_SRA(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, XReg rs2)
 // JIT Instruction SRA
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   // Type clarification
   Gp v__tmp12 = CC.newUInt32();
@@ -368,40 +407,45 @@ void EXEC_SRA(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   CC.mov(v_rd, v__tmp15);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_OR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, XReg rs2)
+void EXEC_OR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, XReg rs2)
 // JIT Instruction OR
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   Gp v__tmp16 = CC.newUInt32();
   // or_
@@ -411,40 +455,45 @@ void EXEC_OR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
   CC.mov(v_rd, v__tmp16);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_AND(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, XReg rs2)
+void EXEC_AND(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, XReg rs2)
 // JIT Instruction AND
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   Gp v__tmp17 = CC.newUInt32();
   // and_
@@ -454,30 +503,33 @@ void EXEC_AND(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   CC.mov(v_rd, v__tmp17);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_ADDI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
+void EXEC_ADDI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction ADDI
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -501,30 +553,33 @@ void EXEC_ADDI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   CC.mov(v_rd, v__tmp19);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_SLTI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
+void EXEC_SLTI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction SLTI
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -540,30 +595,33 @@ void EXEC_SLTI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   CC.mov(v_rd, v__tmp20);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_SLTIU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
+void EXEC_SLTIU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction SLTIU
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -585,30 +643,33 @@ void EXEC_SLTIU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, X
   CC.mov(v_rd, v__tmp23);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_XORI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
+void EXEC_XORI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction XORI
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -622,30 +683,33 @@ void EXEC_XORI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   CC.mov(v_rd, v__tmp24);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_ORI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
+void EXEC_ORI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction ORI
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -659,30 +723,33 @@ void EXEC_ORI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   CC.mov(v_rd, v__tmp25);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_ANDI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
+void EXEC_ANDI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction ANDI
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -696,30 +763,33 @@ void EXEC_ANDI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   CC.mov(v_rd, v__tmp26);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_SLLI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
+void EXEC_SLLI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction SLLI
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -733,30 +803,33 @@ void EXEC_SLLI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   CC.mov(v_rd, v__tmp27);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_SRLI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
+void EXEC_SRLI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction SRLI
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -774,30 +847,33 @@ void EXEC_SRLI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   CC.mov(v_rd, v__tmp29);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_SRAI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
+void EXEC_SRAI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction SRAI
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -815,30 +891,33 @@ void EXEC_SRAI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   CC.mov(v_rd, v__tmp31);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_LB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
+void EXEC_LB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction LB
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -863,7 +942,7 @@ void EXEC_LB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::read8), FuncSignatureT<uint8_t, GeneralSim::ExecContext*, uintptr_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
+    Node->setArg(0, CtxPtr);
     Node->setArg(1, v__tmp33);
     Node->setRet(0, v__tmp34);
   }
@@ -882,30 +961,33 @@ void EXEC_LB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
   CC.mov(v_rd, v__tmp35);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_LH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
+void EXEC_LH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction LH
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -930,7 +1012,7 @@ void EXEC_LH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::read16), FuncSignatureT<uint16_t, GeneralSim::ExecContext*, uintptr_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
+    Node->setArg(0, CtxPtr);
     Node->setArg(1, v__tmp37);
     Node->setRet(0, v__tmp38);
   }
@@ -949,30 +1031,33 @@ void EXEC_LH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
   CC.mov(v_rd, v__tmp39);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_LW(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
+void EXEC_LW(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction LW
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -997,7 +1082,7 @@ void EXEC_LW(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::read32), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uintptr_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
+    Node->setArg(0, CtxPtr);
     Node->setArg(1, v__tmp41);
     Node->setRet(0, v__tmp42);
   }
@@ -1006,30 +1091,33 @@ void EXEC_LW(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg
   CC.mov(v_rd, v__tmp42);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_LBU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
+void EXEC_LBU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction LBU
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -1054,7 +1142,7 @@ void EXEC_LBU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::read8), FuncSignatureT<uint8_t, GeneralSim::ExecContext*, uintptr_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
+    Node->setArg(0, CtxPtr);
     Node->setArg(1, v__tmp44);
     Node->setRet(0, v__tmp45);
   }
@@ -1066,30 +1154,33 @@ void EXEC_LBU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   CC.mov(v_rd, v__tmp46);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_LHU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
+void EXEC_LHU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction LHU
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -1114,7 +1205,7 @@ void EXEC_LHU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::read16), FuncSignatureT<uint16_t, GeneralSim::ExecContext*, uintptr_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
+    Node->setArg(0, CtxPtr);
     Node->setArg(1, v__tmp48);
     Node->setRet(0, v__tmp49);
   }
@@ -1126,39 +1217,44 @@ void EXEC_LHU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   CC.mov(v_rd, v__tmp50);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_SB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XReg rs1, GeneralSim::Immediate Imm)
+void EXEC_SB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rs2, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction SB
 {
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -1185,7 +1281,7 @@ void EXEC_SB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XRe
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::write32), FuncSignatureT<void, GeneralSim::ExecContext*, uintptr_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
+    Node->setArg(0, CtxPtr);
     Node->setArg(1, v__tmp52);
     Node->setArg(2, v__tmp53);
   }
@@ -1193,28 +1289,32 @@ void EXEC_SB(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XRe
 }
 
 
-void EXEC_SH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XReg rs1, GeneralSim::Immediate Imm)
+void EXEC_SH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rs2, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction SH
 {
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -1241,7 +1341,7 @@ void EXEC_SH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XRe
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::write32), FuncSignatureT<void, GeneralSim::ExecContext*, uintptr_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
+    Node->setArg(0, CtxPtr);
     Node->setArg(1, v__tmp55);
     Node->setArg(2, v__tmp56);
   }
@@ -1249,28 +1349,32 @@ void EXEC_SH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XRe
 }
 
 
-void EXEC_SW(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XReg rs1, GeneralSim::Immediate Imm)
+void EXEC_SW(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rs2, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction SW
 {
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -1294,7 +1398,7 @@ void EXEC_SW(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XRe
   {
     InvokeNode* Node;
     CC.invoke(&Node, imm(&GeneralSim::write32), FuncSignatureT<void, GeneralSim::ExecContext*, uintptr_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
+    Node->setArg(0, CtxPtr);
     Node->setArg(1, v__tmp58);
     Node->setArg(2, v_rs2);
   }
@@ -1302,7 +1406,7 @@ void EXEC_SW(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs2, XRe
 }
 
 
-void EXEC_JAL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, GeneralSim::Immediate Imm)
+void EXEC_JAL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, GeneralSim::Immediate Imm)
 // JIT Instruction JAL
 {
   Gp v_rd = CC.newUInt32();
@@ -1312,12 +1416,13 @@ void EXEC_JAL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, Gen
 
   Gp v__tmp59 = CC.newUInt32();
   // Get pc
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setRet(0, v__tmp59);
-  }
+  CC.mov(v__tmp59, LocalPc);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setRet(0, v__tmp59);
+  //}
 
   Gp v__c60 = CC.newUInt32();
   CC.mov(v__c60, 4);
@@ -1329,51 +1434,57 @@ void EXEC_JAL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, Gen
   CC.mov(v_rd, v__tmp61);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
   Gp v__tmp62 = CC.newUInt32();
   // Get pc
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setRet(0, v__tmp62);
-  }
+  CC.mov(v__tmp62, LocalPc);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setRet(0, v__tmp62);
+  //}
 
   Gp v__tmp63 = CC.newUInt32();
   // add
   CC.add(v__tmp62, v_imm);
   CC.mov(v__tmp63, v__tmp62);
   // Set pc
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setPCWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v__tmp63);
-  }
+  CC.add(LocalPc, v__tmp63);
+  CC.mov(LocalPcDirty, v__tmp63);
+  // {
+  //   InvokeNode* Node;
+  //   CC.invoke(&Node, imm(&GeneralSim::setPCWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //   Node->setArg(0, CtxPtr);
+  //   Node->setArg(1, v__tmp63);
+  // }
 
 }
 
 
-void EXEC_JALR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
+void EXEC_JALR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, GeneralSim::Immediate Imm)
 // JIT Instruction JALR
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -1381,12 +1492,13 @@ void EXEC_JALR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
 
   Gp v__tmp64 = CC.newUInt32();
   // Get pc
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setRet(0, v__tmp64);
-  }
+  CC.mov(v__tmp64, LocalPc);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setRet(0, v__tmp64);
+  //}
 
   Gp v__c65 = CC.newUInt32();
   CC.mov(v__c65, 4);
@@ -1398,13 +1510,14 @@ void EXEC_JALR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   CC.mov(v_rd, v__tmp66);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
   Gp v__tmp67 = CC.newUInt32();
   // add
@@ -1417,17 +1530,19 @@ void EXEC_JALR(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   CC.and_(v__tmp67, v__c68);
   CC.mov(v__tmp69, v__tmp67);
   // Set pc
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setPCWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v__tmp69);
-  }
+  CC.add(LocalPc, v__tmp69);
+  CC.mov(LocalPcDirty, v__tmp69);
+  // {
+  //   InvokeNode* Node;
+  //   CC.invoke(&Node, imm(&GeneralSim::setPCWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //   Node->setArg(0, CtxPtr);
+  //   Node->setArg(1, v__tmp69);
+  // }
 
 }
 
 
-void EXEC_LUI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, GeneralSim::Immediate Imm)
+void EXEC_LUI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, GeneralSim::Immediate Imm)
 // JIT Instruction LUI
 {
   Gp v_rd = CC.newUInt32();
@@ -1445,18 +1560,19 @@ void EXEC_LUI(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, Gen
   CC.mov(v_rd, v__tmp71);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_AUIPC(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, GeneralSim::Immediate Imm)
+void EXEC_AUIPC(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, GeneralSim::Immediate Imm)
 // JIT Instruction AUIPC
 {
   Gp v_rd = CC.newUInt32();
@@ -1466,12 +1582,13 @@ void EXEC_AUIPC(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, G
 
   Gp v__tmp72 = CC.newUInt32();
   // Get pc
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setRet(0, v__tmp72);
-  }
+  CC.mov(v__tmp72, LocalPc);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setRet(0, v__tmp72);
+  //}
 
   Gp v__c73 = CC.newUInt32();
   CC.mov(v__c73, 12);
@@ -1487,39 +1604,44 @@ void EXEC_AUIPC(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, G
   CC.mov(v_rd, v__tmp75);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_BEQ(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XReg rs2, GeneralSim::Immediate Imm)
+void EXEC_BEQ(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rs1, XReg rs2, GeneralSim::Immediate Imm)
 // JIT Instruction BEQ
 {
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -1527,12 +1649,13 @@ void EXEC_BEQ(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
 
   Gp v__tmp76 = CC.newUInt32();
   // Get pc
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setRet(0, v__tmp76);
-  }
+  CC.mov(v__tmp76, LocalPc);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setRet(0, v__tmp76);
+  //}
 
   Gp v__tmp77 = CC.newUInt32();
   // Cmp eq
@@ -1559,38 +1682,44 @@ void EXEC_BEQ(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
   CC.add(v__tmp76, v__tmp79);
   CC.mov(v__tmp80, v__tmp76);
   // Set pc
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setPCWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v__tmp80);
-  }
+  CC.add(LocalPc, v__tmp80);
+  CC.mov(LocalPcDirty, v__tmp80);
+  // {
+  //   InvokeNode* Node;
+  //   CC.invoke(&Node, imm(&GeneralSim::setPCWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //   Node->setArg(0, CtxPtr);
+  //   Node->setArg(1, v__tmp80);
+  // }
 
 }
 
 
-void EXEC_BNE(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XReg rs2, GeneralSim::Immediate Imm)
+void EXEC_BNE(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rs1, XReg rs2, GeneralSim::Immediate Imm)
 // JIT Instruction BNE
 {
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -1598,12 +1727,13 @@ void EXEC_BNE(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
 
   Gp v__tmp81 = CC.newUInt32();
   // Get pc
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setRet(0, v__tmp81);
-  }
+  CC.mov(v__tmp81, LocalPc);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setRet(0, v__tmp81);
+  //}
 
   Gp v__tmp82 = CC.newUInt32();
   // Cmp ne
@@ -1630,38 +1760,44 @@ void EXEC_BNE(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
   CC.add(v__tmp81, v__tmp84);
   CC.mov(v__tmp85, v__tmp81);
   // Set pc
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setPCWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v__tmp85);
-  }
+  CC.add(LocalPc, v__tmp85);
+  CC.mov(LocalPcDirty, v__tmp85);
+  // {
+  //   InvokeNode* Node;
+  //   CC.invoke(&Node, imm(&GeneralSim::setPCWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //   Node->setArg(0, CtxPtr);
+  //   Node->setArg(1, v__tmp85);
+  // }
 
 }
 
 
-void EXEC_BLT(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XReg rs2, GeneralSim::Immediate Imm)
+void EXEC_BLT(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rs1, XReg rs2, GeneralSim::Immediate Imm)
 // JIT Instruction BLT
 {
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -1669,12 +1805,13 @@ void EXEC_BLT(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
 
   Gp v__tmp86 = CC.newUInt32();
   // Get pc
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setRet(0, v__tmp86);
-  }
+  CC.mov(v__tmp86, LocalPc);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setRet(0, v__tmp86);
+  //}
 
   Gp v__tmp87 = CC.newUInt32();
   // Cmp lt
@@ -1701,38 +1838,44 @@ void EXEC_BLT(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
   CC.add(v__tmp86, v__tmp89);
   CC.mov(v__tmp90, v__tmp86);
   // Set pc
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setPCWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v__tmp90);
-  }
+  CC.add(LocalPc, v__tmp90);
+  CC.mov(LocalPcDirty, v__tmp90);
+  // {
+  //   InvokeNode* Node;
+  //   CC.invoke(&Node, imm(&GeneralSim::setPCWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //   Node->setArg(0, CtxPtr);
+  //   Node->setArg(1, v__tmp90);
+  // }
 
 }
 
 
-void EXEC_BGE(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XReg rs2, GeneralSim::Immediate Imm)
+void EXEC_BGE(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rs1, XReg rs2, GeneralSim::Immediate Imm)
 // JIT Instruction BGE
 {
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -1740,12 +1883,13 @@ void EXEC_BGE(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
 
   Gp v__tmp91 = CC.newUInt32();
   // Get pc
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setRet(0, v__tmp91);
-  }
+  CC.mov(v__tmp91, LocalPc);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setRet(0, v__tmp91);
+  //}
 
   Gp v__tmp92 = CC.newUInt32();
   // Cmp ge
@@ -1772,38 +1916,44 @@ void EXEC_BGE(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XR
   CC.add(v__tmp91, v__tmp94);
   CC.mov(v__tmp95, v__tmp91);
   // Set pc
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setPCWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v__tmp95);
-  }
+  CC.add(LocalPc, v__tmp95);
+  CC.mov(LocalPcDirty, v__tmp95);
+  // {
+  //   InvokeNode* Node;
+  //   CC.invoke(&Node, imm(&GeneralSim::setPCWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //   Node->setArg(0, CtxPtr);
+  //   Node->setArg(1, v__tmp95);
+  // }
 
 }
 
 
-void EXEC_BGEU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XReg rs2, GeneralSim::Immediate Imm)
+void EXEC_BGEU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rs1, XReg rs2, GeneralSim::Immediate Imm)
 // JIT Instruction BGEU
 {
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -1811,12 +1961,13 @@ void EXEC_BGEU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, X
 
   Gp v__tmp96 = CC.newUInt32();
   // Get pc
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setRet(0, v__tmp96);
-  }
+  CC.mov(v__tmp96, LocalPc);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setRet(0, v__tmp96);
+  //}
 
   Gp v__tmp97 = CC.newUInt32();
   // Cmp geu
@@ -1843,38 +1994,44 @@ void EXEC_BGEU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, X
   CC.add(v__tmp96, v__tmp99);
   CC.mov(v__tmp100, v__tmp96);
   // Set pc
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setPCWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v__tmp100);
-  }
+  CC.add(LocalPc, v__tmp100);
+  CC.mov(LocalPcDirty, v__tmp100);
+  // {
+  //   InvokeNode* Node;
+  //   CC.invoke(&Node, imm(&GeneralSim::setPCWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //   Node->setArg(0, CtxPtr);
+  //   Node->setArg(1, v__tmp100);
+  // }
 
 }
 
 
-void EXEC_BLTU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, XReg rs2, GeneralSim::Immediate Imm)
+void EXEC_BLTU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rs1, XReg rs2, GeneralSim::Immediate Imm)
 // JIT Instruction BLTU
 {
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   Gp v_imm = CC.newUInt32();
   // Get Immediate 
@@ -1882,12 +2039,13 @@ void EXEC_BLTU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, X
 
   Gp v__tmp101 = CC.newUInt32();
   // Get pc
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setRet(0, v__tmp101);
-  }
+  CC.mov(v__tmp101, LocalPc);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getPCWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setRet(0, v__tmp101);
+  //}
 
   Gp v__tmp102 = CC.newUInt32();
   // Cmp ltu
@@ -1914,50 +2072,56 @@ void EXEC_BLTU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rs1, X
   CC.add(v__tmp101, v__tmp104);
   CC.mov(v__tmp105, v__tmp101);
   // Set pc
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setPCWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, v__tmp105);
-  }
+  CC.add(LocalPc, v__tmp105);
+  CC.mov(LocalPcDirty, v__tmp105);
+  // {
+  //   InvokeNode* Node;
+  //   CC.invoke(&Node, imm(&GeneralSim::setPCWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //   Node->setArg(0, CtxPtr);
+  //   Node->setArg(1, v__tmp105);
+  // }
 
 }
 
 
-void EXEC_ECALL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg)
+void EXEC_ECALL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty)
 // JIT Instruction ECALL
 {
   // Syscall
   InvokeNode* Call;
   CC.invoke(&Call, imm(&GeneralSim::syscall), FuncSignatureT<void, GeneralSim::ExecContext*>(CallConvId::kCDecl));
-  Call->setArg(0, CtxPtrReg);
+  Call->setArg(0, CtxPtr);
 
 }
 
 
-void EXEC_MUL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, XReg rs2)
+void EXEC_MUL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, XReg rs2)
 // JIT Instruction MUL
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   Gp v__tmp107 = CC.newUInt32();
   // imul
@@ -1967,49 +2131,55 @@ void EXEC_MUL(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   CC.mov(v_rd, v__tmp107);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_MULH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, XReg rs2)
+void EXEC_MULH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, XReg rs2)
 // JIT Instruction MULH
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   Gp v__tmp108 = CC.newUInt64();
   // sext
@@ -2049,49 +2219,55 @@ void EXEC_MULH(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   CC.mov(v_rd, v__tmp113);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_MULHSU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, XReg rs2)
+void EXEC_MULHSU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, XReg rs2)
 // JIT Instruction MULHSU
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   Gp v__tmp114 = CC.newUInt64();
   // sext
@@ -2124,49 +2300,55 @@ void EXEC_MULHSU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, 
   CC.mov(v_rd, v__tmp119);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_MULHU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, XReg rs2)
+void EXEC_MULHU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, XReg rs2)
 // JIT Instruction MULHU
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   // Type clarification
   Gp v__tmp120 = CC.newUInt32();
@@ -2189,49 +2371,55 @@ void EXEC_MULHU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, X
   CC.mov(v_rd, v__tmp124);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_DIV(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, XReg rs2)
+void EXEC_DIV(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, XReg rs2)
 // JIT Instruction DIV
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   // Type clarification
   Gp v__tmp125 = CC.newUInt32();
@@ -2250,49 +2438,55 @@ void EXEC_DIV(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   CC.mov(v_rd, v__tmp127);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_DIVU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, XReg rs2)
+void EXEC_DIVU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, XReg rs2)
 // JIT Instruction DIVU
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   // Type clarification
   Gp v__tmp128 = CC.newUInt32();
@@ -2311,49 +2505,55 @@ void EXEC_DIVU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   CC.mov(v_rd, v__tmp130);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_REM(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, XReg rs2)
+void EXEC_REM(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, XReg rs2)
 // JIT Instruction REM
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   // Type clarification
   Gp v__tmp131 = CC.newUInt32();
@@ -2372,49 +2572,55 @@ void EXEC_REM(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XRe
   CC.mov(v_rd, v__tmp133);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
 
-void EXEC_REMU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XReg rs1, XReg rs2)
+void EXEC_REMU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, XReg rd, XReg rs1, XReg rs2)
 // JIT Instruction REMU
 {
   Gp v_rd = CC.newUInt32();
   Gp v_rs1 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs1));
-    Node->setRet(0, v_rs1);
-  }
+  CC.mov(v_rs1, dword_ptr(RegArrayPtr, rs1 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs1));
+  //  Node->setRet(0, v_rs1);
+  //}
 
   Gp v_rs2 = CC.newUInt32();
   // Get Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rs2));
-    Node->setRet(0, v_rs2);
-  }
+  CC.mov(v_rs2, dword_ptr(RegArrayPtr, rs2 * sizeof(reg_t)));
+  // RegArrayPtr
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::getRegWrapper), FuncSignatureT<uint32_t, GeneralSim::ExecContext*, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rs2));
+  //  Node->setRet(0, v_rs2);
+  //}
 
   // Type clarification
   Gp v__tmp134 = CC.newUInt32();
@@ -2433,75 +2639,77 @@ void EXEC_REMU(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, XReg rd, XR
   CC.mov(v_rd, v__tmp136);
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
   // Set Register
-  {
-    InvokeNode* Node;
-    CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
-    Node->setArg(0, CtxPtrReg);
-    Node->setArg(1, imm(rd));
-    Node->setArg(2, v_rd);
-  }
+  CC.mov(dword_ptr(RegArrayPtr, rd * sizeof(reg_t)), v_rd);
+  //{
+  //  InvokeNode* Node;
+  //  CC.invoke(&Node, imm(&GeneralSim::setRegWrapper), FuncSignatureT<void, GeneralSim::ExecContext*, uint32_t, uint32_t>(CallConvId::kCDecl));
+  //  Node->setArg(0, CtxPtr);
+  //  Node->setArg(1, imm(rd));
+  //  Node->setArg(2, v_rd);
+  //}
 
 }
 
-void JIT::emitInstruction(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtrReg, Instruction Instr) {
+void JIT::emitInstruction(asmjit::x86::Compiler& CC, asmjit::x86::Gp CtxPtr, asmjit::x86::Gp RegArrayPtr, asmjit::x86::Mem LocalPc, asmjit::x86::Mem LocalPcDirty, Instruction Instr) {
   std::visit([&](auto&& I) {
     using T = std::decay_t<decltype(I)>;
     if constexpr (std::is_same_v<T, ADD>) {
-    EXEC_ADD(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, SUB>) {
-    EXEC_SUB(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, SLL>) {
-    EXEC_SLL(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, SLT>) {
-    EXEC_SLT(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, SLTU>) {
-    EXEC_SLTU(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, XOR>) {
-    EXEC_XOR(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, SRL>) {
-    EXEC_SRL(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, SRA>) {
-    EXEC_SRA(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, OR>) {
-    EXEC_OR(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, AND>) {
-    EXEC_AND(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, ADDI>) {
-    EXEC_ADDI(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SLTI>) {
-    EXEC_SLTI(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SLTIU>) {
-    EXEC_SLTIU(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, XORI>) {
-    EXEC_XORI(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, ORI>) {
-    EXEC_ORI(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, ANDI>) {
-    EXEC_ANDI(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SLLI>) {
-    EXEC_SLLI(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SRLI>) {
-    EXEC_SRLI(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SRAI>) {
-    EXEC_SRAI(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, LB>) {
-    EXEC_LB(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, LH>) {
-    EXEC_LH(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, LW>) {
-    EXEC_LW(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, LBU>) {
-    EXEC_LBU(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, LHU>) {
-    EXEC_LHU(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SB>) {
-    EXEC_SB(CC, CtxPtrReg, I.rs2, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SH>) {
-    EXEC_SH(CC, CtxPtrReg, I.rs2, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SW>) {
-    EXEC_SW(CC, CtxPtrReg, I.rs2, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, JAL>) {
-    EXEC_JAL(CC, CtxPtrReg, I.rd, I.imm); } else if constexpr (std::is_same_v<T, JALR>) {
-    EXEC_JALR(CC, CtxPtrReg, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, LUI>) {
-    EXEC_LUI(CC, CtxPtrReg, I.rd, I.imm); } else if constexpr (std::is_same_v<T, AUIPC>) {
-    EXEC_AUIPC(CC, CtxPtrReg, I.rd, I.imm); } else if constexpr (std::is_same_v<T, BEQ>) {
-    EXEC_BEQ(CC, CtxPtrReg, I.rs1, I.rs2, I.imm); } else if constexpr (std::is_same_v<T, BNE>) {
-    EXEC_BNE(CC, CtxPtrReg, I.rs1, I.rs2, I.imm); } else if constexpr (std::is_same_v<T, BLT>) {
-    EXEC_BLT(CC, CtxPtrReg, I.rs1, I.rs2, I.imm); } else if constexpr (std::is_same_v<T, BGE>) {
-    EXEC_BGE(CC, CtxPtrReg, I.rs1, I.rs2, I.imm); } else if constexpr (std::is_same_v<T, BGEU>) {
-    EXEC_BGEU(CC, CtxPtrReg, I.rs1, I.rs2, I.imm); } else if constexpr (std::is_same_v<T, BLTU>) {
-    EXEC_BLTU(CC, CtxPtrReg, I.rs1, I.rs2, I.imm); } else if constexpr (std::is_same_v<T, ECALL>) {
-    EXEC_ECALL(CC, CtxPtrReg); } else if constexpr (std::is_same_v<T, MUL>) {
-    EXEC_MUL(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, MULH>) {
-    EXEC_MULH(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, MULHSU>) {
-    EXEC_MULHSU(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, MULHU>) {
-    EXEC_MULHU(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, DIV>) {
-    EXEC_DIV(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, DIVU>) {
-    EXEC_DIVU(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, REM>) {
-    EXEC_REM(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, REMU>) {
-    EXEC_REMU(CC, CtxPtrReg, I.rd, I.rs1, I.rs2); }
+    EXEC_ADD(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, SUB>) {
+    EXEC_SUB(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, SLL>) {
+    EXEC_SLL(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, SLT>) {
+    EXEC_SLT(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, SLTU>) {
+    EXEC_SLTU(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, XOR>) {
+    EXEC_XOR(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, SRL>) {
+    EXEC_SRL(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, SRA>) {
+    EXEC_SRA(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, OR>) {
+    EXEC_OR(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, AND>) {
+    EXEC_AND(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, ADDI>) {
+    EXEC_ADDI(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SLTI>) {
+    EXEC_SLTI(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SLTIU>) {
+    EXEC_SLTIU(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, XORI>) {
+    EXEC_XORI(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, ORI>) {
+    EXEC_ORI(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, ANDI>) {
+    EXEC_ANDI(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SLLI>) {
+    EXEC_SLLI(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SRLI>) {
+    EXEC_SRLI(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SRAI>) {
+    EXEC_SRAI(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, LB>) {
+    EXEC_LB(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, LH>) {
+    EXEC_LH(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, LW>) {
+    EXEC_LW(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, LBU>) {
+    EXEC_LBU(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, LHU>) {
+    EXEC_LHU(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SB>) {
+    EXEC_SB(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rs2, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SH>) {
+    EXEC_SH(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rs2, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, SW>) {
+    EXEC_SW(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rs2, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, JAL>) {
+    EXEC_JAL(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.imm); } else if constexpr (std::is_same_v<T, JALR>) {
+    EXEC_JALR(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.imm); } else if constexpr (std::is_same_v<T, LUI>) {
+    EXEC_LUI(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.imm); } else if constexpr (std::is_same_v<T, AUIPC>) {
+    EXEC_AUIPC(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.imm); } else if constexpr (std::is_same_v<T, BEQ>) {
+    EXEC_BEQ(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rs1, I.rs2, I.imm); } else if constexpr (std::is_same_v<T, BNE>) {
+    EXEC_BNE(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rs1, I.rs2, I.imm); } else if constexpr (std::is_same_v<T, BLT>) {
+    EXEC_BLT(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rs1, I.rs2, I.imm); } else if constexpr (std::is_same_v<T, BGE>) {
+    EXEC_BGE(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rs1, I.rs2, I.imm); } else if constexpr (std::is_same_v<T, BGEU>) {
+    EXEC_BGEU(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rs1, I.rs2, I.imm); } else if constexpr (std::is_same_v<T, BLTU>) {
+    EXEC_BLTU(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rs1, I.rs2, I.imm); } else if constexpr (std::is_same_v<T, ECALL>) {
+    EXEC_ECALL(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty); } else if constexpr (std::is_same_v<T, MUL>) {
+    EXEC_MUL(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, MULH>) {
+    EXEC_MULH(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, MULHSU>) {
+    EXEC_MULHSU(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, MULHU>) {
+    EXEC_MULHU(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, DIV>) {
+    EXEC_DIV(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, DIVU>) {
+    EXEC_DIVU(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, REM>) {
+    EXEC_REM(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.rs2); } else if constexpr (std::is_same_v<T, REMU>) {
+    EXEC_REMU(CC, CtxPtr, RegArrayPtr, LocalPc, LocalPcDirty, I.rd, I.rs1, I.rs2); }
     }, Instr);
 }
 } // namespace GeneralSim

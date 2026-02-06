@@ -1,14 +1,12 @@
 #pragma once
 #include <cstdint>
-#include <cstddef>
 #include <cassert>
 
-#include "JIT.hpp"
+#include "RegLayout.hpp"
 namespace GeneralSim {
-class RegState {
+class RegState : public RegLayout { // FIXME should not be public, debug only
 public:
     using reg_t = uint32_t; // TODO Expand
-    static constexpr size_t NUM_REGS = 32;
 
     RegState();
     
@@ -16,9 +14,6 @@ public:
     void write(unsigned Idx, reg_t Value);
 
 private:
-    friend SimJIT::JIT;
-    alignas(32) reg_t Regs[NUM_REGS];
-
     // constant registers
     static constexpr bool IsConst[NUM_REGS] = {
         true,

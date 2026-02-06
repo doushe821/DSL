@@ -13,12 +13,6 @@
 #include "Memory.hpp"
 
 namespace GeneralSim {
-
-static inline uint32_t getMaskedValue(uint32_t Value, int StartBit,
-                                      int FinishBit) {
-  return (Value >> StartBit) & ((1 << (FinishBit - StartBit + 1)) - 1);
-}
-
 class RegState;
 class CPU : ExecContext {
 private:
