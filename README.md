@@ -60,14 +60,55 @@ DSL/Sim
 
 ## Implementation details
 ### DSL
+Following elements of architecture must be described: 
+1. Instructions encoding
+2. Instructions semantics
+3. Registers
+
+#### Encoding description
+Firstly, user must describe one of the formats: format's name is defined
+by user and the only restriction is Ruby syntax. Then, in ``main.rb`` require 
+base, builder and regbuilder and then, require all your description files. 
+after that, require gen and gen_ragstate for C++ code emition.
+Encoding must have fields. Fields can be added with field() and immpart() methods.
+Use second one when immediate bits are scattered across the binary instruction's fields. Use first one to describe any other field. You technically can put regular immediate in immpart() instead of field and it won't even affect performance, so feel 
+free to choose. 
+
+```Ruby
+Field = Struct.new(:name, :from, :to, :value, :fixed)
+ImmFieldPart = Struct.new(:name, :from, :to, :hi, :lo, :value)
+```
+From and to are defined from the end of the word, so e.g. opcode field in RISC-V would be ``(:opcode, 6, 0, opcode_value, true)``. Last parameter is false by default and MUST be specified by user if the field is constant. 
+After describing encoding, you should describe instruction's semantics and asm:
+```Ruby
+InstructionInfo= Struct.new(:name, :fields, :format, :code, :args, :asm, :control_flow)
+```
+You can explicitly set ``:control_flow`` to ``:branch`` or ``:jump`` (for now, it doesn't matter as long as it is not nil), however, you do not need to do that as there is ``setpc`` operation that automatically sets control flow parameter.
+You can fill those fields however you like, but if you want some reference, check ``Target/RISC-V`` of this repository.
+
+Interesting part: semantics description.
+
+I tried to make it as close to semantics description from official ISA descriptions as possible.
+
+1. []= sets register
+2. setpc sets pc, you can get pc value by simply typing pc as it is register separate
+from your description.
+3. Logical and arithmetical operations are default.
+4. s/zext(variable, from: smalle_value, to: bigger_value) is for sign/zero extension.
+5. as_signed/unsigned() is for telling emitter sign of the variable.
+6. Do all comparisons with cmp_..() method.
+7. Memory access with load/store.
 
 ### Decoder
+Builds decoder tree that is emitted to C++ code with lots of switches based on 
+set of fixed bits. If you forget to specify some bits as fixed, tree will be suboptimal. It uses information gain metric paired with penalty for fan-out and imbalance gain.
 
 ### Interpreter
-
+Decodes one instruction, executes one instruction, can be executed with "pretty" dumps after each execution with CLI arguments. 
 ### Memory
-
+Highly modular, connected to ``GeneralSim::CPU`` with an interface, so model of memory can be easily changed without touching CPU at all. Moreover, you can add MMU and CPU will still require hardly any changes.
 ### JIT
+Breaks encapsulation a bit, but it is worth it for the performance gain (4-5 times faster than interpreter). It has direct access to registers, but still accesses memory via interface functions, because it feels right (TODO: improve argumentation).
 
 ## Usage
 ```
